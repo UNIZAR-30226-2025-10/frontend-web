@@ -1,0 +1,16 @@
+<body>
+    <div class="steps">
+        <div class="step active">1</div>
+        <div class="step"></div>
+        <div class="step"></div>
+    </div>
+
+    <section class="container">
+        <form (ngSubmit)="onSubmit()">
+            <label for="email">Se enviará un código al correo electrónico proporcionado. Deberás introducir dicho código en la siguiente pantalla.</label>
+            <input type="text" id="email" [(ngModel)]="email" name="email" placeholder="Introduce tu correo electrónico" required>
+            
+            <button type="submit" class="btn">Siguiente</button>
+        </form>
+    </section>
+</body>

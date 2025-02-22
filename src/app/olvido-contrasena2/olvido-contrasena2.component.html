@@ -1,0 +1,15 @@
+<body>
+    <div class="steps">
+        <div class="step"></div>
+        <div class="step active">2</div>
+        <div class="step"></div>
+    </div>
+
+    <section class="container">
+        <form (ngSubmit)="onSubmit()">
+            <input type="text" id="codigo" [(ngModel)]="codigo" name="codigo" placeholder="Introduce el código" required>
+            
+            <button type="submit" class="btn">Siguiente</button>
+        </form>
+    </section>
+</body>

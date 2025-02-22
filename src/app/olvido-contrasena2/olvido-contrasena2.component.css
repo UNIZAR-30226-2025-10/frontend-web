@@ -1,0 +1,96 @@
+body {
+    background-color: #8ca4ff;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+}
+.steps {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+.step {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #1A1F60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+    color: white;
+    font-weight: bold;
+}
+.step.active {
+    width: 45px;
+    height: 45px;
+    background-color: #000e3b;
+    margin-top: -5px;
+}
+.container {
+    background-color: #000e3b;
+    padding: 50px;
+    border-radius: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 550px;
+}
+input {
+    background-color: #000e3b;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0px;
+    border-radius: 5px;
+    border: 1.5px solid white;
+    padding-right: 50px; /* Deja espacio para el ícono */
+}
+.btn {
+    background-color: #8ca4ff;
+    color: #000e3b;
+    padding: 10px;
+    border: none;
+    border-radius: 70px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+.btn:hover {
+    background-color: #2e4074;
+}
+@media (max-width: 576px) {
+    body {
+        background-color: #000e3b;
+        margin: 0px 25px
+    }
+    .step {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background-color: #9fafea;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 5px;
+        color: white;
+        font-weight: bold;
+    }
+    .step.active {
+        width: 45px;
+        height: 45px;
+        background-color: #8ca4ff;
+        margin-top: -5px;
+    }
+    .container {
+        padding: 20px;
+    }
+    input, .btn {
+        font-size: 0.9rem;
+    }
+}

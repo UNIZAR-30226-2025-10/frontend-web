@@ -1,0 +1,15 @@
+<body>
+    <div class="steps">
+        <div class="step"></div>
+        <div class="step"></div>
+        <div class="step active">3</div>
+    </div>
+
+    <section class="container">
+        <form (ngSubmit)="onSubmit()">
+            <input type="text" id="newpassword" [(ngModel)]="newpassword" name="newpassword" placeholder="Introduce la nueva contraseña" required>
+            
+            <button type="submit" class="btn">Establecer Contraseña</button>
+        </form>
+    </section>
+</body>
