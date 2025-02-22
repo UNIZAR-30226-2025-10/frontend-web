@@ -1,0 +1,121 @@
+body {
+    background-color: #8ca4ff;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.container {
+    background-color: #000e3b;
+    padding: 50px;
+    border-radius: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 550px;
+    margin: 40px 0px;
+}
+.logo {
+    width: 80px;
+    margin-bottom: 10px;
+}
+h2 {
+    margin-bottom: 20px;
+    color: #8ca4ff;
+}
+label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+}
+input {
+    background-color: #000e3b;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0px;
+    border-radius: 5px;
+    border: 1.5px solid white;
+    padding-right: 50px;
+}
+.password-container {
+    position: relative;
+    width: 100%;
+}
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: white;
+    font-size: 1.2rem;
+}
+.btn {
+    background-color: #8ca4ff;
+    color: #000e3b;
+    padding: 10px;
+    border: none;
+    border-radius: 70px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+.btn:hover {
+    background-color: #2e4074;
+}
+.btn:disabled {
+    background-color: #8ca4ff; /* Color de fondo gris */
+    color: #f8f4f4; /* Color del texto */
+    cursor: not-allowed; /* Cursor indicando que está deshabilitado */
+    opacity: 0.5; /* Opacidad reducida */
+}
+a {
+    color: #ffffff;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+}
+a:hover {
+    color: #ffffff;
+}
+a:hover strong {
+    color: #8ca4ff;
+    text-decoration: underline;
+}
+.password-requirements {
+    text-align: left;
+    font-size: 0.85rem;
+    margin-top: 7px;
+}
+.password-requirements i {
+    margin-right: 5px;
+}
+.valid {
+    color: #0f0;
+}
+.invalid {
+    color: #8ca4ff;
+}
+@media (max-width: 576px) {
+    body {
+        background-color: #000e3b;
+        margin: 0px 25px
+    }
+    .container {
+        padding: 20px;
+    }
+    .logo {
+        width: 60px;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+    label, input, .btn {
+        font-size: 0.9rem;
+    }
+}
