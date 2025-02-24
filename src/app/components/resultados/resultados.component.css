@@ -1,0 +1,119 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+
+.scroll-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 10px;
+    padding-bottom: 10px;
+    scrollbar-width: none;
+    white-space: nowrap;
+}
+
+.scroll-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.results-container {
+    transition: margin-left 0.3s ease-in-out;
+    margin-left: 0;
+    width: 100%;
+}
+
+.sidebar-open .results-container {
+    margin-left: 150px; /* O el ancho del sidebar */
+    width: calc(100% - 150px);
+}
+
+
+.content {
+    margin-top: 2%;
+    font-family: 'Poppins', sans-serif;
+    padding: 20px;
+    background-color: #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+/* 🔹 Contenedores de artistas, canciones, álbumes y playlists */
+.artists-container, .tracks-container, .albums-container, .playlists-container {
+    padding: 15px;
+    border-radius: 10px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+
+/* 🔹 Títulos de secciones */
+h2 {
+    font-size: 25px;
+    margin-bottom: 0px; /* 🔥 Menos espacio entre título y tarjetas */
+}
+
+/* 🔹 Tarjetas mejor ajustadas */
+.artist-card, .track-card, .album-card, .playlist-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    padding: 12px; /* 🔥 Reduce el padding interno */
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 160px; /* 🔥 Tamaño ligeramente más compacto */
+    height: 200px; /* 🔥 Reduce la altura */
+}
+
+.artist-card strong, .track-card strong, .album-card strong, .playlist-card strong {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.artist-card p, .track-card p, .album-card p, .playlist-card p {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* 🔵 Imagen en círculo (artistas) */
+.artist-card img {
+    width: 120px; /* 🔥 Reduce el tamaño para compactar */
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 5px; /* 🔥 Menos espacio debajo de la imagen */
+}
+
+/* 🔳 Imágenes cuadradas (canciones, álbumes, playlists) */
+.track-card img, .album-card img, .playlist-card img {
+    width: 120px; /* 🔥 Mismo tamaño que las imágenes circulares */
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 5px; /* 🔥 Menos espacio debajo de la imagen */
+}
+
+/* 🔹 Asegurar alineación del texto */
+.artist-card p, .track-card p, .album-card p, .playlist-card p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* 🔥 Hover */
+.artist-card:hover, .track-card:hover, .album-card:hover, .playlist-card:hover {
+    background: rgb(230, 230, 230);
+    transform: scale(1.03); /* 🔥 Efecto más sutil */
+}

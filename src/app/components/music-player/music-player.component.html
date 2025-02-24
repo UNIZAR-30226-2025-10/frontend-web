@@ -1,0 +1,27 @@
+<div class="music-player">
+    <!-- Información de la canción -->
+    <div class="track-info" *ngIf="currentTrack">
+     <img *ngIf="currentTrack.album?.images?.length" [src]="currentTrack.album.images[0]?.url" alt="Portada" class="album-cover" />
+  
+  
+      <div class="track-details">
+        <h3>{{ currentTrack.name }}</h3>
+        <p>{{ currentTrack.artists[0]?.name }}</p>
+      </div>
+    </div>
+  
+    <!-- Controles de reproducción -->
+    <div class="controls">
+      <button class="control-btn" (click)="prevTrack()">⏮</button>
+      <button class="play-btn" (click)="togglePlay()">
+        {{ isPlaying ? '⏸' : '▶' }}
+      </button>
+      <button class="control-btn" (click)="nextTrack()">⏭</button>
+    </div>
+  
+    <!-- Control de volumen -->
+    <div class="volume-control">
+      <input type="range" min="0" max="100" [(ngModel)]="volume" (input)="changeVolume()" />
+    </div>
+  </div>
+  

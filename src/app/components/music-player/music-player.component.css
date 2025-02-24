@@ -1,0 +1,130 @@
+/* Estilo del reproductor */
+.music-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; /* Altura fija para el reproductor */
+    background: white; /* Fondo sólido, sin transparencia */
+    color: #000E3B;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    z-index: 999; /* Asegura que el reproductor esté encima del contenido */
+    overflow: hidden; /* Evita que el contenido se desborde */
+}
+
+/* Ajustes para el contenido de la página */
+body {
+    overflow-x: hidden; /* Evita el desplazamiento horizontal no deseado */
+}
+
+/* Información de la canción */
+.track-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    color: #000E3B;
+    max-width: 30%; /* Limita el ancho máximo de la información de la canción */
+}
+
+.album-cover {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    margin-right: 12px;
+}
+
+.track-details {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    margin-left: 2%;
+    margin-bottom: 0; 
+}
+
+.track-info h3, .track-info p {
+    margin: 0; 
+}
+
+/* Controles */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #000E3B;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.control-btn,
+.play-btn {
+    background: none;
+    border: none;
+    color: #000E3B;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.play-btn {
+    background: white;
+    color: #000E3B;
+    font-weight: bold;
+    padding: 8px 16px;
+}
+
+.control-btn:hover,
+.play-btn:hover {
+    opacity: 0.7;
+}
+
+/* Control de volumen - centrándolo y ajustando su posición */
+.volume-control {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-grow: 1;
+    flex-shrink: 0; /* Impide que se reduzca de tamaño */
+}
+
+.volume-control input {
+    width: 80px;
+    cursor: pointer;
+    accent-color: #000E3B;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+    .music-player {
+        flex-direction: column;
+        padding: 15px;
+        text-align: center;
+        height: auto; /* Permite que la altura se ajuste en pantallas pequeñas */
+    }
+
+    .track-info {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .track-info h3, .track-info p {
+        margin: 0; 
+    }
+
+    .controls {
+        justify-content: center;
+    }
+
+    .volume-control {
+        margin-top: 10px;
+        width: 100%; /* Asegura que el control de volumen tenga más espacio */
+    }
+}

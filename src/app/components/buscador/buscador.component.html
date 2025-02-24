@@ -1,0 +1,30 @@
+<div class="menu">
+    <div class="left-icons">
+        <img src="logo.png" alt="logo" class="logo">
+        <button class="home-btn" (click)="goHome()"><i class="fas fa-home"></i></button>
+      <div class="search-box">
+          <input type="text" [(ngModel)]="searchQuery" (input)="getAll()" placeholder="Buscar..." class="buscador">
+      </div>
+      <button (click)="toggleSidebar()"><img src="noizz.png" alt="noizz" class="noizz"></button>
+  </div>
+    <div class="right-icons">
+      <button class="notis-btn"><i class="fa fa-bell"></i></button>
+        <button class="profile-btn"><i class="fas fa-user"></i></button>
+    </div>
+
+
+<div class="sidebar" [class.active]="sidebarOpen">
+    <a [routerLink]="['#']">Mostrar todos</a>
+    <div class="user-icons">
+        <div *ngFor="let user of users">
+            <img [src]="user.img" [alt]="user.name">
+            <div class="status-indicator" [ngClass]="user.status"></div>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="user-me_icon">
+        <div class="user-me">YO</div>
+    </div>
+</div>
+</div>
+
