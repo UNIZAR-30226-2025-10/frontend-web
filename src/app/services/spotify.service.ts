@@ -10,7 +10,7 @@ export class SpotifyService {
   public credenciales = {
     clientId: 'c6fffd38c7014fef9865b162d1f61366',
     clientSecret: '6effa3323f884c5897f601d4321f5296',
-    accessToken: 'BQBnuMWSWG7KIqkC-jHfvhueMdgfnVR9WpKeHk8bVE-rG-g77N1sVdNUEi0UkcOyD43mfzhVn6QiffPp-9aYMLg4vL4K3_J7GacdhKmy428uI9n-cbjd4PgXrYctkXoO1JAfXsgDBag',
+    accessToken: 'BQDQHupICk6m-47QVWfDgOrtfUn8f_HsbQ1kiGbzzGvY26RTXJgT7Vj42n_a20cdZ0bcAbce8LICKxD9DdcQ8bt8Eo3ymgmb3cKoarsLIiZleZns39KkX_yDkn7Tm5--btuB7bss3S8',
     tokenExpiration: 0, // Puedes omitir la expiración si solo usas este token de forma estática
   };
 

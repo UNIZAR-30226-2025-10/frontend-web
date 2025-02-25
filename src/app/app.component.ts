@@ -16,7 +16,7 @@ import { ResultadosComponent } from './components/resultados/resultados.componen
     </app-buscador>
 
     <app-resultados 
-      *ngIf="hasResults() && !isAlbumPage"
+      *ngIf="hasResults() "
       [artists]="artists"
       [tracks]="tracks"
       [albums]="albums"
@@ -60,9 +60,20 @@ export class AppComponent {
     this.playlists = data.playlists || [];
   
     if (this.hasResults() && this.router.url !== '/home') {
-      this.router.navigate(['/home']); // Redirige solo si no estás en /home
+      this.router.navigate(['/home']); // Redirige a home para mostrar resultados
     }
+  
+    // Cierra resultados cuando se navega a otro lugar
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.artists = [];
+        this.tracks = [];
+        this.albums = [];
+        this.playlists = [];
+      }
+    });
   }
+  
   ngAfterViewInit() {
     this.adjustBodyPadding();
     window.addEventListener('resize', this.adjustBodyPadding);

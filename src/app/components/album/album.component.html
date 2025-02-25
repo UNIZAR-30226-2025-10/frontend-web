@@ -1,3 +1,4 @@
+<div [class.sidebar-open]="sidebarOpen">
 <div *ngIf="album" class="album-container">
     <div class="album-header">
       <img [src]="album.images[0]?.url" [alt]="album.name" class="album-image">
@@ -29,4 +30,5 @@
       </li>
     </ul>
   </div>
+</div>
   

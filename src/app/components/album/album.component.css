@@ -1,12 +1,18 @@
-.album-container {
+.album-container { 
     font-family: 'poppins', sans-serif;
     background: #f8f9fa;
-    padding: 20px;
+    padding: 50px;
     border-radius: 10px;
-    width: 600px;
-    margin: auto;
+    width: 100%;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: margin-left 0.3s ease-in-out;
+    margin-left: 0;
   }
+
+  .sidebar-open .album-container {
+    margin-left: 150px; 
+    width: calc(100% - 150px);
+}
   .album-header {
     display: flex;
     align-items: center;
