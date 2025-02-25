@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SpotifyService } from '../../services/spotify.service';
 import { PlayerService } from '../../services/player.service';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-album',
@@ -14,11 +15,14 @@ import { PlayerService } from '../../services/player.service';
 export class AlbumComponent implements OnInit {
   album: any = null;
   artistNames: string = '';
+  sidebarOpen = false;
+
 
   constructor(
     private route: ActivatedRoute,
     private spotifyService: SpotifyService,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private sidebarService: SidebarService
   ) {}
 
   ngOnInit() {
@@ -26,6 +30,9 @@ export class AlbumComponent implements OnInit {
     if (albumId) {
       this.getAlbum(albumId);
     }
+    this.sidebarService.sidebarOpen$.subscribe(open => {
+      this.sidebarOpen = open;
+    });
   }
 
   getAlbum(albumId: string) {

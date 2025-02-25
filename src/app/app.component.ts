@@ -63,5 +63,27 @@ export class AppComponent {
       this.router.navigate(['/home']); // Redirige solo si no estás en /home
     }
   }
+  ngAfterViewInit() {
+    this.adjustBodyPadding();
+    window.addEventListener('resize', this.adjustBodyPadding);
+  }
+
+  adjustBodyPadding() {
+    const musicPlayer = document.querySelector('.music-player') as HTMLElement;
+    const buscador = document.querySelector('.menu') as HTMLElement;
+    let paddingBottom = 0;
+    let paddingTop = 0;
+
+    if (musicPlayer) {
+      paddingBottom = musicPlayer.offsetHeight;
+    }
+
+    if (buscador) {
+      paddingTop = buscador.offsetHeight;
+    }
+
+    document.body.style.paddingBottom = `${paddingBottom}px`;
+    document.body.style.paddingTop = `${paddingTop}px`;
+  } 
   
 }

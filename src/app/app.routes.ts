@@ -19,5 +19,6 @@ export const routes: Routes = [
   { path: 'registroArtista', component: RegistroArtistaComponent},
   { path: 'olvidoContrasena1', component: OlvidoContrasena1Component},
   { path: 'olvidoContrasena2', component: OlvidoContrasena2Component},
-  { path: 'olvidoContrasena3', component: OlvidoContrasena3Component}
+  { path: 'olvidoContrasena3', component: OlvidoContrasena3Component},
+  { path: 'album/:id', component: AlbumComponent},
 ];
