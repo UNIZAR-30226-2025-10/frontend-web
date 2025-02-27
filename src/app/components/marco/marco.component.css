@@ -26,6 +26,7 @@
   display: flex; /* Los hijos (sidebar y resultados) estarán en una fila */
   flex-grow: 1; /* Hace que este contenedor ocupe todo el espacio restante */
   overflow: hidden;
+  height: 0px;
 }
 
 /* Sidebar */
@@ -51,7 +52,15 @@ app-sidebar.active {
   background-color: #dddcdc;
   border-radius: 12px;
   margin: 0.7% 0.7% 0% 0.7%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 0px 0px 15px 0px;
 }
+
+.ruta::-webkit-scrollbar {
+  display: none; /* Para navegadores basados en WebKit (Chrome, Safari, etc.) */
+}
+
 
 
 @media (max-width: 480px) {

@@ -1,78 +1,54 @@
+<button class="boton-atras" (click)="volverAtras()">
+    <span class="flecha"></span>
+</button>
 
-<div class="content" *ngIf="artists.length > 0 || tracks.length > 0 || albums.length > 0 || playlists.length > 0">
-    <div *ngIf="tracks.length > 0">
-        <h2>Canciones</h2>
-        <div class="tracks-container">
-            <div class="scroll-wrapper" id="scrollContainer" onscroll="checkScroll()">           
-            <div *ngFor="let track of tracks" class="track-card" (click)="onTrackClick(track)">
-                <img *ngIf="track.album.images?.length" [src]="track.album.images[0]?.url" alt="{{ track.name }}">
+
+<div *ngIf="tracks.length > 0">
+    <h2><strong>Canciones</strong></h2>
+    <div class="tracks-container">       
+        <div *ngFor="let track of tracks; let i = index" class="track-card" (click)="onTrackClick(track)" [ngClass]="{ 'primer-elemento': i === 0 }">
+            <div class="dentro-track-card">
+                <img [src]="track.album.images?.length ? track.album.images[0]?.url : 'no_cancion.png'" alt="{{ track.name }}"> 
                 <strong>{{ track.name }}</strong>
-                <p>Canción de {{ track.artists[0]?.name }}</p>
-            </div>
-            </div>
+                <p>{{ track.artists[0]?.name }}</p> 
+            </div>          
         </div>
-        </div>
+    </div>
+</div>
 
-        
-    <div *ngIf="artists.length > 0">
-        <h2>Artistas</h2>
-        <div class="artists-container">
-        <div class="scroll-wrapper" id="scrollContainer" onscroll="checkScroll()"> 
-        <div *ngFor="let artist of artists" class="artist-card">
+<div *ngIf="artists.length > 0">
+    <h2><strong>Artistas</strong></h2>
+    <div class="artists-container">       
+        <div *ngFor="let artist of artists; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
             <img *ngIf="artist.images?.length" [src]="artist.images[0]?.url" alt="{{ artist.name }}">
             <strong>{{ artist.name }}</strong>
         </div>
-        </div>
-        </div>
     </div>
-    
-    <div *ngIf="albums.length > 0">
-        <h2>Álbumes </h2>
-        <div class="albums-container">
-            <div class="scroll-wrapper" id="scrollContainer" onscroll="checkScroll()"> 
-        <div *ngFor="let album of albums" class="album-card">
-            <img *ngIf="album.images?.length" [src]="album.images[0]?.url" alt="{{ album.name }}">
-        <strong>{{ album.name }}</strong>
-        <p>Álbum de {{ album.artists[0]?.name }}</p>
-        </div>
-        </div>
-    </div>
-    <!--
-    <div *ngIf="playlists.length > 0">
-        <h2>Playlists Encontradas</h2>
-        <div class="playlists-container">
-        <div *ngFor="let playlist of playlists" class="playlist-card">
-            <img *ngIf="playlist.images?.length" [src]="playlist.images[0]?.url" alt="{{ playlist.name }}">
-            {{ playlist.name }}
-        </div>
-        </div>
-    </div>
-    -->
 </div>
 
+<div *ngIf="albums.length > 0">
+    <h2><strong>Álbumes</strong></h2>
+    <div class="albums-container">       
+        <div *ngFor="let album of albums; let i = index" class="album-card" [ngClass]="{ 'primer-elemento': i === 0 }">     
+            <div class="dentro-track-card">    
+                <img *ngIf="album.images?.length" [src]="album.images[0]?.url" alt="{{ album.name }}">
+                <strong>{{ album.name }}</strong>
+                <p>Álbum de {{ album.artists[0]?.name }}</p>
+            </div> 
+        </div>
+    </div>
+</div>
 
-<script>
-    let scrollContainer = document.getElementById('scrollContainer');
-    let leftBtn = document.getElementById('leftBtn');
-    let rightBtn = document.getElementById('rightBtn');
-  
-    function scrollLeftAction() {
-        scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
-        setTimeout(checkScroll, 500);
-    }
-  
-    function scrollRightAction() {
-        scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
-        setTimeout(checkScroll, 500);
-    }
-  
-    function checkScroll() {
-        setTimeout(() => {
-            leftBtn.style.display = scrollContainer.scrollLeft > 0 ? 'block' : 'none';
-            rightBtn.style.display = (scrollContainer.scrollLeft + scrollContainer.clientWidth) < scrollContainer.scrollWidth ? 'block' : 'none';
-        }, 100);
-    }
-  
-    // Verificar botones al cargar la página
-    checkScroll();
-</script>
+<!--<div *ngIf="artists.length > 0">
+    <h2><strong>Playlists</strong></h2>
+    <div class="artists-container">       
+        <div *ngFor="let playlist of playlists; let i = index" class="playlist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+            <img *ngIf="playlist.images?.length" [src]="playlist.images[0]?.url" alt="{{ playlist.name }}">
+            <strong>{{ playlist.name }}</strong>
+        </div>
+    </div>
+</div>-->
+
+
+    
+

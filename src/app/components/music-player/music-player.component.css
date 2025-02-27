@@ -81,7 +81,6 @@ body {
     display: flex;
     align-items: center;
     flex-grow: 1;
-    overflow: hidden;
 }
 
 .album-cover {
@@ -286,6 +285,7 @@ body {
 
         .parte_central {
             width: 1px;
+            display: none;
         }
     
         /* Ocultar todo lo demás */

@@ -10,6 +10,7 @@ import { AlbumComponent } from './components/album/album.component';
 import { MarcoComponent } from './components/marco/marco.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResultadosComponent } from './components/resultados/resultados.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -20,6 +21,7 @@ export const routes: Routes = [
   { path: 'olvidoContrasena1', component: OlvidoContrasena1Component},
   { path: 'olvidoContrasena2', component: OlvidoContrasena2Component},
   { path: 'olvidoContrasena3', component: OlvidoContrasena3Component},
+  { path: 'sidebar', component: SidebarComponent},
   { path: 'home', component: MarcoComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },

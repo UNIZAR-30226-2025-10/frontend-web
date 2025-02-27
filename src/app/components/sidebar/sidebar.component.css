@@ -3,7 +3,8 @@
     display: flex; /* Asegura que el contenedor sea flexible */
     flex-direction: column; /* Organiza los elementos en columna */
     align-items: center; /* Centra los elementos horizontalmente */
-    justify-content: center; /* Centra los elementos verticalmente */    
+    justify-content: center; /* Centra los elementos verticalmente */  
+    height: 100%;
 }
 
 a {
@@ -17,7 +18,6 @@ a {
 .user-icons {
     flex-grow: 1; /* Permite que ocupe el espacio disponible */
     overflow-y: auto; /* Permite scroll */
-    height: calc(100vh - 229.5px); /* Ajustar altura */
     display: flex;
     flex-direction: column;
     gap: 3px;

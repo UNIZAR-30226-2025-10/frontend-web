@@ -6,6 +6,8 @@ import { SpotifyService } from '../../services/spotify.service';
 import { RouterModule } from '@angular/router';
 import { SidebarService } from '../../services/sidebar.service';
 import { ResultadosService } from '../../services/resultados.service';
+import { LimpiarBuscadorService } from '../../services/limpiar-buscador.service';  // Ajusta la ruta según corresponda
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-buscador',
@@ -18,14 +20,31 @@ export class BuscadorComponent {
   searchQuery: string = '';
   sidebarOpen = false;
   previousUrl: string = '';
+  private subscription!: Subscription;
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
-  constructor(private spotifyService: SpotifyService, private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService) {}
+  constructor(private spotifyService: SpotifyService, private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService) {}
 
   ngOnInit() {
     // Guardar la URL actual antes de la búsqueda
     this.previousUrl = this.router.url;
+
+    this.subscription = this.limpiarBuscadorService.limpiarBuscador$.subscribe(data => {
+      if (data === true) {
+        // Aquí puedes limpiar el campo de búsqueda, por ejemplo
+        this.searchQuery = '';  // Limpiar el input de búsqueda
+      }
+    });
+  }
+
+
+
+  ngOnDestroy(): void {
+    // Nos desuscribimos para evitar pérdidas de memoria
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   getAll() {

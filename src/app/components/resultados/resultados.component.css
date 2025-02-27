@@ -1,36 +1,40 @@
-.scroll-wrapper {
+.boton-atras {
     display: flex;
-    flex-wrap: nowrap; /* 🔥 Mantiene todo en una fila */
-    overflow-x: auto;  /* 🔥 Activa el scroll horizontal */
-    scroll-behavior: smooth;
-    gap: 10px;
-    padding-bottom: 10px;
-    scrollbar-width: none;
-    white-space: nowrap; /* 🔥 Evita saltos de línea */
-    max-width: 100%; /* 🔥 Se ajusta al tamaño de la pantalla */
+    align-items: center;
+    background: transparent;
+    border: none ; /* Puedes ajustar el color */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 16px;
 }
 
-.scroll-wrapper::-webkit-scrollbar {
-    display: none;
+.flecha {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-left: 3px solid #000e3b; /* Flecha hacia la izquierda */
+    border-bottom: 3px solid #000e3b; /* Flecha hacia abajo */
+    transform: rotate(-315deg); /* Rotar para formar una flecha */
+    margin-right: 8px;
+    transition: transform 0.3s ease;
 }
 
-
-.content {
-    font-family: 'Poppins', sans-serif;
-    background-color: #dddcdc;
-    border-radius: 12px;
-    flex: 1; /* Ocupa el 85% del espacio restante */
-    padding: 20px;
-    overflow-y: auto;
-    transition: margin-left 0.3s ease-in-out;
+.boton-atras:hover .flecha {
+    border-left: 3px solid #66686f; /* Flecha hacia la izquierda */
+    border-bottom: 3px solid #66686f; 
 }
 
-
-.content::-webkit-scrollbar {
-    display: none;
+h2 {
+    font-size: 25px;
+    margin-bottom: 0px; /* 🔥 Menos espacio entre título y tarjetas */
+    color: #000e3b;
+    margin: 0px 0px 3px 30px;
 }
 
-/* 🔹 Contenedores de artistas, canciones, álbumes y playlists */
+.primer-elemento {
+    margin-left: 1%; /* O el margen que necesites */
+}
+
 .tracks-container, 
 .artists-container, 
 .albums-container, 
@@ -42,11 +46,8 @@
     max-width: 100%; /* 🔥 Se ajusta al ancho del contenedor */
 }
 
-
-/* 🔹 Títulos de secciones */
-h2 {
-    font-size: 25px;
-    margin-bottom: 0px; /* 🔥 Menos espacio entre título y tarjetas */
+.tracks-container::-webkit-scrollbar, .artists-container::-webkit-scrollbar, .albums-container::-webkit-scrollbar, .playlists-container::-webkit-scrollbar  {
+    display: none;
 }
 
 .artist-card, .track-card, .album-card, .playlist-card {
@@ -54,17 +55,18 @@ h2 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: black;
+    color:#000e3b ;
     padding: 12px;
     border-radius: 12px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 160px; /* 🔥 Tamaño base */
-    height: 200px;
+    width: 150px; /* 🔥 Tamaño base */
+    height: 171px;
     min-width: 140px; /* 🔥 Evita que desaparezca en pantallas pequeñas */
     flex: 0 0 auto; /* 🔥 Permite ajuste flexible */
     max-width: 100%; /* 🔥 Evita que se salga del contenedor */
+    position: relative;
 }
 
 .artist-card strong, .track-card strong, .album-card strong, .playlist-card strong {
@@ -79,10 +81,11 @@ h2 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
 }
 
-
-/* 🔵 Imagen en círculo (artistas) */
 .artist-card img {
     width: 120px; /* 🔥 Reduce el tamaño para compactar */
     height: 120px;
@@ -91,47 +94,26 @@ h2 {
     margin-bottom: 5px; /* 🔥 Menos espacio debajo de la imagen */
 }
 
-.artist-card img, .track-card img, .album-card img, .playlist-card img {
+.track-card img, .album-card img, .playlist-card img {
     width: 100px;
     height: 100px;
     object-fit: cover;
     border-radius: 8px;
 }
 
-/* 🔹 Asegurar alineación del texto */
-.artist-card p, .track-card p, .album-card p, .playlist-card p {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 500;
-}
 
-/* 🔥 Hover */
 .artist-card:hover, .track-card:hover, .album-card:hover, .playlist-card:hover {
     background: rgb(230, 230, 230);
     transform: scale(1.03); /* 🔥 Efecto más sutil */
 }
 
-/* 🔥 RESPONSIVE */
-@media (max-width: 768px) {
-    .artist-card, .track-card, .album-card, .playlist-card {
-        width: 130px; /* 🔥 Se reducen un poco en móviles */
-        height: 180px;
-    }
 
-    .track-card img, .album-card img, .playlist-card img, .artist-card img {
-        width: 80px;
-        height: 80px;
-    }
-}
-
-@media (max-width: 480px) {
-    .artist-card, .track-card, .album-card, .playlist-card {
-        width: 110px; /* 🔥 Aún más pequeño en pantallas pequeñas */
-        height: 160px;
-    }
-
-    .track-card img, .album-card img, .playlist-card img, .artist-card img {
-        width: 70px;
-        height: 70px;
-    }
+.dentro-track-card {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos (imagen y texto) en columna */
+    align-items: flex-start; /* Alinea la imagen y el texto horizontalmente */
+    justify-content: center; /* Alinea la imagen y el texto verticalmente */
+    text-align: center;
+    padding: 8px;
+    max-width: 100%;
 }
