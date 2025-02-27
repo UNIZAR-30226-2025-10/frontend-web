@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { PlayerService } from '../../services/player.service';
+import { Subscription } from 'rxjs';
 
 declare global {
   interface Window {
@@ -7,10 +11,7 @@ declare global {
   }
 }
 
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { SpotifyService } from '../../services/spotify.service';
-import { PlayerService } from '../../services/player.service';
+
 
 @Component({
   selector: 'app-music-player',
@@ -19,112 +20,74 @@ import { PlayerService } from '../../services/player.service';
   standalone: true,
   imports: [CommonModule, FormsModule]
 })
-export class MusicPlayerComponent implements OnInit {
+export class MusicPlayerComponent implements OnInit, OnDestroy {
 
+  @ViewChild('audioElement') audioElementRef!: ElementRef<HTMLAudioElement>; 
   currentTrack: any = null;
   isPlaying: boolean = false;
+  private trackSubscription!: Subscription;
+  currentTime: number = 0; // Tiempo actual de la canción
+  duration: number = 0;
   volume: number = 50;
   player: any;  
+  isFavorite = false;
 
-  constructor(private spotifyService: SpotifyService, private playerService: PlayerService) {}
+  constructor(private playerService: PlayerService) {}
 
   ngOnInit() {
-    this.playerService.currentTrack$.subscribe(track => {
+    // Nos suscribimos al observable para recibir el track actualizado
+    this.trackSubscription = this.playerService.currentTrack$.subscribe(track => {
       if (track) {
         this.playTrack(track);
+      } else {
+        this.stopTrack();
       }
     });
-
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      this.player = new window.Spotify.Player({
-        name: 'Mi reproductor de música',
-        getOAuthToken: (cb: any) => { cb(this.spotifyService.getToken()); },  
-        volume: 0.8,
-      });
-
-      this.player.addListener('ready', ({ device_id }: { device_id: string }) => {
-        console.log('Ready with Device ID', device_id);
-      });
-
-      this.player.addListener('not_ready', ({ device_id }: { device_id: string }) => {
-        console.log('Device is not ready', device_id);
-      });
-
-      this.player.connect().then((success: boolean) => {
-        if (success) {
-          console.log('The Web Playback SDK is successfully connected to Spotify!');
-        }
-      }).catch((error: any) => {
-        console.error('Error connecting to Spotify player', error);
-      });
-    };
-
-    this.loadSpotifySDK();
   }
 
-  loadSpotifySDK() {
-    const script = document.createElement('script');
-    script.src = 'https://sdk.scdn.co/spotify-player.js';
-    script.async = true;
-    document.body.appendChild(script);
+  ngOnDestroy() {
+    // Aseguramos que la suscripción se desuscriba cuando el componente se destruya
+    if (this.trackSubscription) {
+      this.trackSubscription.unsubscribe();
+    }
   }
 
   playTrack(track: any) {
-    if (this.currentTrack === track) {
-      if (this.player) {
-        this.player.togglePlay().then(() => {
-          console.log(`${track.name} ${this.player.paused ? 'paused' : 'playing'}`);
-        }).catch((error: any) => {
-          console.error('Error al alternar la canción', error);
-        });
-      }
-    } else {
-      this.currentTrack = track;
-
-      if (this.player) {
-        this.player._options.getOAuthToken((token: string) => {
-          this.player._options.play({
-            spotify_uri: track.uri,
-            playerInstance: this.player,
-            token: token
-          }).then(() => {
-            console.log('Reproduciendo: ' + track.name);
-          }).catch((error: any) => {
-            console.error('Error al reproducir el track:', error);
-          });
-        });
-      }
-    }
+    console.log('Reproduciendo: ' + track.name);
+    this.currentTrack = track;
+    this.isPlaying = true;
+    // Aquí agregarías la lógica de reproducción, usando la API de Spotify Web Playback SDK u otro sistema
   }
 
   stopTrack() {
-    if (this.player) {
-      this.player.pause().then(() => {
-        console.log('Reproducción detenida');
-      }).catch((error: any) => {
-        console.error('Error al detener la canción', error);
-      });
-    }
+    this.isPlaying = false;
     this.currentTrack = null;
+    // Aquí agregarías la lógica para detener la reproducción
   }
 
-  togglePlay() {
-    if (this.player) {
-      this.player.togglePlay().then(() => {
-        this.isPlaying = !this.isPlaying;  // Alternar el estado de la canción
-        console.log(this.isPlaying ? 'Reproduciendo' : 'Pausado');
-      }).catch((error: any) => {
-        console.error('Error al alternar la canción', error);
+  toggleFavorite() {
+    this.isFavorite = !this.isFavorite; // Cambiar entre favorito y no favorito
+  }
+
+  updateProgress() {
+    const audioElement = this.audioElementRef.nativeElement;
+    if (audioElement) {
+      audioElement.addEventListener('timeupdate', () => {
+        this.currentTime = audioElement.currentTime;
+        this.duration = audioElement.duration || 1;
+        const progressPercent = (this.currentTime / this.duration) * 100;
+        // Actualiza el valor de la variable --progress en CSS
+        document.documentElement.style.setProperty('--progress', `${progressPercent}%`);
       });
     }
   }
-  
 
   changeVolume() {
     if (this.player) {
       this.player.setVolume(this.volume / 100);
     }
   }
+
 
   prevTrack() {
     if (this.player) {
@@ -137,5 +100,35 @@ export class MusicPlayerComponent implements OnInit {
       this.player.nextTrack();
     }
   }
+
+  // Aquí se agrega el método onTimeUpdate() que maneja el evento timeupdate del audio
+  onTimeUpdate() {
+    const audioElement = this.audioElementRef.nativeElement;
+    if (audioElement) {
+      this.currentTime = audioElement.currentTime;
+      this.duration = audioElement.duration;
+    }
+  }
+
+  togglePlay() {
+    if (this.player) {
+      this.player.togglePlay().then(() => {
+        this.isPlaying = !this.isPlaying;  // Alternar el estado de la canción
+        console.log(this.isPlaying ? 'Reproduciendo' : 'Pausado');
+      }).catch((error: any) => {
+        console.error('Error al alternar la canción', error);
+      });
+    }
+  }
+
+  seekTrack(event: any) {
+    const newTime = event.target.value;
+    if (this.audioElementRef && this.audioElementRef.nativeElement) {
+      this.audioElementRef.nativeElement.currentTime = newTime;
+      this.currentTime = newTime;
+    }
+  }
+
+  
 
 }

@@ -6,10 +6,10 @@ import { RegistroArtistaComponent } from './components/registro-artista/registro
 import { OlvidoContrasena1Component } from './components/olvido-contrasena1/olvido-contrasena1.component';
 import { OlvidoContrasena2Component } from './components/olvido-contrasena2/olvido-contrasena2.component';
 import { OlvidoContrasena3Component } from './components/olvido-contrasena3/olvido-contrasena3.component';
-import { MusicPlayerComponent } from './components/music-player/music-player.component';
-import { CallbackComponent } from './components/callback/callback.component';  
-import { BuscadorComponent } from './components/buscador/buscador.component';
 import { AlbumComponent } from './components/album/album.component';
+import { MarcoComponent } from './components/marco/marco.component';
+import { HomeComponent } from './components/home/home.component';
+import { ResultadosComponent } from './components/resultados/resultados.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -20,5 +20,14 @@ export const routes: Routes = [
   { path: 'olvidoContrasena1', component: OlvidoContrasena1Component},
   { path: 'olvidoContrasena2', component: OlvidoContrasena2Component},
   { path: 'olvidoContrasena3', component: OlvidoContrasena3Component},
-  { path: 'album/:id', component: AlbumComponent},
+  { path: 'home', component: MarcoComponent,
+    children: [
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'album/:id', component: AlbumComponent},
+      { path: 'home', component: HomeComponent},
+      { path: 'resultados', component: ResultadosComponent}
+
+
+    ]
+  }
 ];

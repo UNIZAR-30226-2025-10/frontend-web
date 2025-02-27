@@ -67,152 +67,47 @@ button {
 }
 
 @media (max-width: 768px) {
-    .menu {
-        flex-direction: row;
-        height: auto;
-        padding: 10px;
+    .logo {
+        width: 20px;
     }
-
-    .search-box {
-        flex: 0 1 200px; /* Reduce el tamaño en tablets */
+    
+    .noizz {
+        width: 16px;
     }
-
-    .search-box input {
-        max-width: 200px;
+    
+    .home-btn i{
         font-size: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .menu {
-        flex-direction: column;
-        align-items: center;
+        margin-bottom: 4px;
     }
 
-    .search-box {
+    .home-btn {
+        margin-bottom: 4px;
+    }
+
+    .buscador {
         width: 100%;
-        justify-content: center;
-        margin-top: 5px;
-    }
-
-    .search-box input {
-        max-width: 180px; /* Más pequeño en móviles */
+        height: 25px;
         font-size: 13px;
     }
 
-    .sidebar {
-        width: 150px; /* Más pequeño en pantallas pequeñas */
+    .notis-btn i {
+        font-size: 14px;
+        margin-bottom: 4px;
     }
+    .profile-btn i {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+
 }
 
-/* 📂 Sidebar */
-.sidebar {
-    position: fixed;
-    top: 60px; /* Justo debajo del menú */
-    left: -180px; /* Oculto por defecto */
-    width: 160px; /* 🔹 Sidebar más ancho */
-    height: calc(100vh - 115px); /* Ajuste de altura */
-    background: #dddcdc;
-    color: white;
-    padding: 15px;
-    transition: left 0.3s ease-in-out;
-    z-index: 999; /* Debajo del menú */
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    margin-left: 10px;
-}
+@media (max-width: 480px) {
+   
 
-.sidebar.active {
-    left: 0; /* 🔹 Aparece cuando está activo */
-}
-
-a {
-    color: #000e3b;
-    font-size: 10px;
-    text-decoration: underline;
-    text-align: right;
-    margin: 0px 0px 0px 0px;
-}
-
-.user-icons {
-    flex-grow: 1; /* Permite que ocupe el espacio disponible */
-    overflow-y: auto; /* Permite scroll */
-    max-height: calc(100vh - 250px); /* Ajustar altura */
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-    padding: 10px 0px 0px 0px;
-}
-
-/* Ocultar scrollbar en navegadores modernos */
-.user-icons::-webkit-scrollbar {
-    display: none;
-}
-
-/* 🔹 Icono de usuario */
-.user-icons img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-/* 🔴 Indicador de estado */
-.status-indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    position: relative;
-    top: -64px;
-    left: 0px;
-}
-
-/* 🏆 "YO" SIEMPRE VISIBLE */
-.user-me_icon {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Más espacio entre usuarios */
-    margin-top: 20px;
-    align-items: center;
-}
-
-.divider {
-    width: 100%;
-    height: 1.5px;
-    background: black;
-    margin: 10px 0;
-}
-
-/* Estilos del icono "YO" */
-.user-me {
-    font-weight: bold;
-    text-align: center;
-    font-size: 14px;
-    color: black;
-    background: #b0c4a5;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 
-.user-icons img:hover {
-    transform: scale(1.1);
-}
-
-.main-content {
-    transition: margin-left 0.3s ease-in-out;
-}
-
-.main-content.sidebar-open {
-    margin-left: 150px; /* Ajusta según el ancho del sidebar */
-}
 
 
 

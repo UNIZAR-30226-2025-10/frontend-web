@@ -3,8 +3,9 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SpotifyService } from '../../services/spotify.service';
-import { SidebarService } from '../../services/sidebar.service';
 import { RouterModule } from '@angular/router';
+import { SidebarService } from '../../services/sidebar.service';
+import { ResultadosService } from '../../services/resultados.service';
 
 @Component({
   selector: 'app-buscador',
@@ -16,29 +17,31 @@ import { RouterModule } from '@angular/router';
 export class BuscadorComponent {
   searchQuery: string = '';
   sidebarOpen = false;
-
-  users = [
-    { name: 'Usuario 1', img: 'https://randomuser.me/api/portraits/men/16.jpg', status: 'status-red' },
-    { name: 'Usuario 2', img: 'https://randomuser.me/api/portraits/women/2.jpg', status: 'status-red' },
-    { name: 'Usuario 3', img: 'https://randomuser.me/api/portraits/men/3.jpg', status: 'status-red' },
-    { name: 'Usuario 4', img: 'https://randomuser.me/api/portraits/men/4.jpg', status: 'status-red' },
-    { name: 'Usuario 5', img: 'https://randomuser.me/api/portraits/men/5.jpg', status: 'status-red' },
-    { name: 'Usuario 6', img: 'https://randomuser.me/api/portraits/women/92.jpg', status: 'status-red' },
-    { name: 'Usuario 7', img: 'https://randomuser.me/api/portraits/men/6.jpg', status: 'status-red' },
-    { name: 'Usuario 8', img: 'https://randomuser.me/api/portraits/women/4.jpg', status: 'status-red' },
-    { name: 'Usuario 9', img: 'https://randomuser.me/api/portraits/men/8.jpg', status: 'status-red' },
-    { name: 'Usuario 10', img: 'https://randomuser.me/api/portraits/men/23.jpg', status: 'status-red' }
-  ];
+  previousUrl: string = '';
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
-  constructor(private spotifyService: SpotifyService, private router: Router,private sidebarService: SidebarService) {}
+  constructor(private spotifyService: SpotifyService, private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService) {}
+
+  ngOnInit() {
+    // Guardar la URL actual antes de la búsqueda
+    this.previousUrl = this.router.url;
+  }
 
   getAll() {
+    if (this.searchQuery.trim() === '') {
+      this.router.navigateByUrl(this.previousUrl);
+    }
     if (this.searchQuery.trim() !== '') {
       this.spotifyService.getAll(this.searchQuery).subscribe({
         next: (data) => {
-          this.searchResults.emit(data); 
+          this.searchResults.emit(data); // Emitimos los resultados al componente padre
+
+          // Guardamos los resultados en el servicio antes de navegar
+          this.resultadosService.setResultados(data);
+
+          // Si hay resultados, navegamos a la nueva ruta
+          this.router.navigate(['/home/resultados'], { queryParams: { search: this.searchQuery } });
         },
         error: (error) => {
           console.error('Error al obtener los datos', error);
@@ -46,6 +49,7 @@ export class BuscadorComponent {
       });
     }
   }
+  
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;

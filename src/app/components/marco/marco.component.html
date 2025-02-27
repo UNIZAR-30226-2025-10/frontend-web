@@ -1,0 +1,19 @@
+<div class="main-container">
+    <!-- Componente de buscador solo se muestra cuando no estamos en la página de autenticación -->
+    <div class="buscador">
+        <app-buscador></app-buscador>
+    </div>
+
+    <!-- Contenedor central que incluye el sidebar y los resultados -->
+    <div class="contenedor-central"> 
+        <app-sidebar [class.active]="sidebarOpen"></app-sidebar>
+        <div class="ruta">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+    
+    <!-- Componente del reproductor de música solo se muestra cuando no estamos en la página de autenticación -->
+    <div class="reproductor">
+        <app-music-player ></app-music-player>
+    </div>
+</div>

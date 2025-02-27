@@ -1,0 +1,64 @@
+/* Contenedor principal */
+.main-container {
+    display: flex; /* Esto permite que los elementos hijos se distribuyan en una fila */
+    flex-direction: column; /* Los elementos se apilan verticalmente */
+    min-height: 100vh; /* La altura mínima será siempre igual a la altura de la ventana */
+    overflow: hidden; /* Evita el desplazamiento global */
+  }
+
+  /* Buscador y Reproductor de Música */
+.buscador {
+  width: 100%; /* Ambos ocupan todo el ancho disponible */
+  box-sizing: border-box;
+  flex-shrink: 0;
+  height: 45px;
+}
+
+.reproductor {
+  width: 100%; /* Ambos ocupan todo el ancho disponible */
+  box-sizing: border-box;
+  flex-shrink: 0;
+  height: 70px;
+}
+
+/* Contenedor central (sidebar y resultados) */
+.contenedor-central {
+  display: flex; /* Los hijos (sidebar y resultados) estarán en una fila */
+  flex-grow: 1; /* Hace que este contenedor ocupe todo el espacio restante */
+  overflow: hidden;
+}
+
+/* Sidebar */
+app-sidebar {
+  flex: 0 0 0%; /* El sidebar se esconde*/
+  transition: width 0.3s ease;
+  margin: 0% 0% 0% 0%;
+  overflow: hidden;
+}
+
+app-sidebar.active {
+  flex: 0 0 12%; /* El sidebar ocupa el 15% del ancho */
+  background-color: #dddcdc;
+  color: white;
+  border-radius: 12px;
+  margin: 0.7% 0% 0% 0.7%;
+  overflow: hidden;
+}
+
+/* Ruta pantalla*/
+.ruta {
+  flex: 1; /* El contenido de resultados ocupará el resto del espacio disponible */
+  background-color: #dddcdc;
+  border-radius: 12px;
+  margin: 0.7% 0.7% 0% 0.7%;
+}
+
+
+@media (max-width: 480px) {
+  app-sidebar {
+    display: none; /* Oculta el componente cuando la pantalla es menor o igual a 480px */
+  }
+}
+
+
+

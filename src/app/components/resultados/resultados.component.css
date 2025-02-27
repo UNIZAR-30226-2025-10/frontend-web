@@ -1,53 +1,45 @@
-body {
-    font-family: 'Poppins', sans-serif;
-}
-
-
 .scroll-wrapper {
     display: flex;
-    overflow-x: auto;
+    flex-wrap: nowrap; /* 🔥 Mantiene todo en una fila */
+    overflow-x: auto;  /* 🔥 Activa el scroll horizontal */
     scroll-behavior: smooth;
     gap: 10px;
     padding-bottom: 10px;
     scrollbar-width: none;
-    white-space: nowrap;
+    white-space: nowrap; /* 🔥 Evita saltos de línea */
+    max-width: 100%; /* 🔥 Se ajusta al tamaño de la pantalla */
 }
 
 .scroll-wrapper::-webkit-scrollbar {
     display: none;
 }
 
-.results-container {
-    font-family: 'Poppins', sans-serif;
-    transition: margin-left 0.3s ease-in-out;
-    margin-left: 0;
-    width: 100%;
-}
-
-.sidebar-open .results-container {
-    margin-left: 150px; /* O el ancho del sidebar */
-    width: calc(100% - 150px);
-}
-
 
 .content {
-    margin-top: 2%;
     font-family: 'Poppins', sans-serif;
-    padding: 20px;
-    background-color: #e0e0e0;
+    background-color: #dddcdc;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-left: 5%;
-    margin-right: 5%;
+    flex: 1; /* Ocupa el 85% del espacio restante */
+    padding: 20px;
+    overflow-y: auto;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+
+.content::-webkit-scrollbar {
+    display: none;
 }
 
 /* 🔹 Contenedores de artistas, canciones, álbumes y playlists */
-.artists-container, .tracks-container, .albums-container, .playlists-container {
-    padding: 15px;
-    border-radius: 10px;
-    width: 100%;
-    overflow: hidden;
-    position: relative;
+.tracks-container, 
+.artists-container, 
+.albums-container, 
+.playlists-container {
+    display: flex;
+    flex-wrap: nowrap; /* 🔥 Evita que los elementos pasen a otra línea */
+    overflow-x: auto; /* 🔥 Permite el scroll horizontal */
+    white-space: nowrap;
+    max-width: 100%; /* 🔥 Se ajusta al ancho del contenedor */
 }
 
 
@@ -57,20 +49,22 @@ h2 {
     margin-bottom: 0px; /* 🔥 Menos espacio entre título y tarjetas */
 }
 
-/* 🔹 Tarjetas mejor ajustadas */
 .artist-card, .track-card, .album-card, .playlist-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: black;
-    padding: 12px; /* 🔥 Reduce el padding interno */
+    padding: 12px;
     border-radius: 12px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 160px; /* 🔥 Tamaño ligeramente más compacto */
-    height: 200px; /* 🔥 Reduce la altura */
+    width: 160px; /* 🔥 Tamaño base */
+    height: 200px;
+    min-width: 140px; /* 🔥 Evita que desaparezca en pantallas pequeñas */
+    flex: 0 0 auto; /* 🔥 Permite ajuste flexible */
+    max-width: 100%; /* 🔥 Evita que se salga del contenedor */
 }
 
 .artist-card strong, .track-card strong, .album-card strong, .playlist-card strong {
@@ -97,13 +91,11 @@ h2 {
     margin-bottom: 5px; /* 🔥 Menos espacio debajo de la imagen */
 }
 
-/* 🔳 Imágenes cuadradas (canciones, álbumes, playlists) */
-.track-card img, .album-card img, .playlist-card img {
-    width: 120px; /* 🔥 Mismo tamaño que las imágenes circulares */
-    height: 120px;
+.artist-card img, .track-card img, .album-card img, .playlist-card img {
+    width: 100px;
+    height: 100px;
     object-fit: cover;
     border-radius: 8px;
-    margin-bottom: 5px; /* 🔥 Menos espacio debajo de la imagen */
 }
 
 /* 🔹 Asegurar alineación del texto */
@@ -117,4 +109,29 @@ h2 {
 .artist-card:hover, .track-card:hover, .album-card:hover, .playlist-card:hover {
     background: rgb(230, 230, 230);
     transform: scale(1.03); /* 🔥 Efecto más sutil */
+}
+
+/* 🔥 RESPONSIVE */
+@media (max-width: 768px) {
+    .artist-card, .track-card, .album-card, .playlist-card {
+        width: 130px; /* 🔥 Se reducen un poco en móviles */
+        height: 180px;
+    }
+
+    .track-card img, .album-card img, .playlist-card img, .artist-card img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .artist-card, .track-card, .album-card, .playlist-card {
+        width: 110px; /* 🔥 Aún más pequeño en pantallas pequeñas */
+        height: 160px;
+    }
+
+    .track-card img, .album-card img, .playlist-card img, .artist-card img {
+        width: 70px;
+        height: 70px;
+    }
 }
