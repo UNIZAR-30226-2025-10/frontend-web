@@ -11,6 +11,7 @@ import { MarcoComponent } from './components/marco/marco.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResultadosComponent } from './components/resultados/resultados.component';
 import { PerfilOyenteComponent } from './components/perfil-oyente/perfil-oyente.component';
+import { MiPerfilArtistaComponent } from './components/mi-perfil-artista/mi-perfil-artista.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -21,14 +22,15 @@ export const routes: Routes = [
   { path: 'olvidoContrasena1', component: OlvidoContrasena1Component},
   { path: 'olvidoContrasena2', component: OlvidoContrasena2Component},
   { path: 'olvidoContrasena3', component: OlvidoContrasena3Component},
-  { path: 'perfilOyente', component: PerfilOyenteComponent},
+  { path: 'miPerfilArtista', component: MiPerfilArtistaComponent},
   { path: 'home', component: MarcoComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'album/:id', component: AlbumComponent},
       { path: 'home', component: HomeComponent},
       { path: 'resultados', component: ResultadosComponent},
-      { path: 'perfilOyente', component: PerfilOyenteComponent}
+      { path: 'perfilOyente', component: PerfilOyenteComponent},
+      { path: 'miPerfilArtista', component: MiPerfilArtistaComponent},
 
 
     ]
