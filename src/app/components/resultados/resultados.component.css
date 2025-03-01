@@ -1,11 +1,58 @@
+.filtros {
+    display: flex; /* Activa Flexbox */
+    gap: 12px; 
+    padding: 16px;
+    overflow-x: auto;
+    background-color: #dddcdc;
+    position: sticky;
+    flex-shrink: 0;
+    top: 0; /* Los fija en la parte superior */
+    z-index: 1;
+}
+
+
+.filtros::-webkit-scrollbar {
+    display: none;
+}
+
+
+.boton-filtro {
+    padding: 1px 8px;
+    height: 25px;
+    border-radius: 15px;
+    border: 1.7px solid #000e3b;
+}
+
+h3 {
+    font-size: 12px;
+    color: #000e3b;
+    margin: 0px;
+}
+
+.boton-filtro.activo {
+    background-color: #000e3b;
+
+}
+
+.boton-filtro.activo h3 {
+    color:white;
+}
+
+.boton-filtro:hover {
+    background-color: #afb6d0;
+}
+
+.boton-filtro.activo:hover {
+    background-color: #000e3b;
+}
+
 .boton-atras {
     display: flex;
     align-items: center;
     background: transparent;
     border: none ; /* Puedes ajustar el color */
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 16px;
+    transition: all 0.3s ease; 
 }
 
 .flecha {
@@ -22,6 +69,14 @@
 .boton-atras:hover .flecha {
     border-left: 3px solid #66686f; /* Flecha hacia la izquierda */
     border-bottom: 3px solid #66686f; 
+}
+
+.contenido {
+    overflow-y: scroll;
+}
+
+.contenido::-webkit-scrollbar {
+    display: none;
 }
 
 h2 {
@@ -62,7 +117,7 @@ h2 {
     cursor: pointer;
     transition: all 0.3s ease;
     width: 150px; /* 🔥 Tamaño base */
-    height: 171px;
+    height: 100%;
     min-width: 140px; /* 🔥 Evita que desaparezca en pantallas pequeñas */
     flex: 0 0 auto; /* 🔥 Permite ajuste flexible */
     max-width: 100%; /* 🔥 Evita que se salga del contenedor */
@@ -87,8 +142,8 @@ h2 {
 }
 
 .artist-card img {
-    width: 120px; /* 🔥 Reduce el tamaño para compactar */
-    height: 120px;
+    width: 105px; /* 🔥 Reduce el tamaño para compactar */
+    height: 105px;
     object-fit: cover;
     border-radius: 50%;
     margin-bottom: 5px; /* 🔥 Menos espacio debajo de la imagen */
@@ -116,4 +171,31 @@ h2 {
     text-align: center;
     padding: 8px;
     max-width: 100%;
+}
+
+
+@media (max-width: 480px) {
+    .filtros {
+        display: flex; /* Activa Flexbox */
+        gap: 10px; 
+        padding: 16px;
+        overflow-x: auto;
+    }
+
+    h3 {
+        font-size: 10px;
+        color: #000e3b;
+        margin: 0px;
+    }
+
+    .boton-atras {
+        padding: 1px 0px 1px 6px;
+    }
+
+    .flecha {
+        width: 10px;
+        height: 10px;
+        margin-right: 0px;
+    }
+
 }

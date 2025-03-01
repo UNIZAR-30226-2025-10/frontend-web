@@ -80,7 +80,9 @@ body {
 .track-info {
     display: flex;
     align-items: center;
-    flex-grow: 1;
+    flex-grow: 0;
+    overflow: hidden;
+    width: 340px;
 }
 
 .album-cover {
@@ -104,6 +106,7 @@ body {
     white-space: nowrap;
     overflow: hidden;
     font-size: 13px;
+    max-width: 200px; /* Ajusta esto al tamaño deseado */
 }
 
 .favorite-btn {
@@ -218,13 +221,17 @@ body {
     margin-right: 10px;
 }
 
-/* Responsividad: Ajustes para pantallas pequeñas */
 @media (max-width: 768px) {
 
     .album-cover {
         height: 35px;
         width: 35px;
     }
+
+    .track-info {
+        width: 100%;
+    }
+
     .track-info h3,
     .track-info h4 {
         font-size: 10px;
@@ -268,32 +275,39 @@ body {
 }
 
 
-@media (max-width: 480px) {
-    @media (max-width: 480px) {
-        .music-player {
-            justify-content: flex-start; /* Asegura que los elementos no se distribuyan */
-            display: block;
-        }
-    
-        .track-info {
-            display: grid; /* Usamos grid para control total */
-            grid-template-columns: repeat(3, 1fr); /* Tres columnas de igual tamaño */
-            gap: 1px; /* Espacio entre los elementos */
-            justify-items: start; /* Alineación a la izquierda (opcional) */
-            align-items: center; /* Alineación vertical al centro */
-        }
 
-        .parte_central {
-            width: 1px;
-            display: none;
-        }
+@media (max-width: 480px) {
+    .music-player {
+        justify-content: flex-start; /* Asegura que los elementos no se distribuyan */
+        display: block;
+    }
+
+    .track-info {
+        display: grid; /* Usamos grid para control total */
+        grid-template-columns: 1fr 1fr 1fr 5fr;
+        /* Tres columnas de igual tamaño */
+        gap: 0px; /* Espacio entre los elementos */
+        justify-items: start; /* Alineación a la izquierda (opcional) */
+        align-items: center; /* Alineación vertical al centro */
+        width: auto; /* O usa 100% si quieres que se expanda */
+        max-width: 100%;
+    }
+
     
-        /* Ocultar todo lo demás */
-        .parte_central,
-        .controls,
-        .progress-container,
-        .volume-control {
-            display: none !important;
-        }
+    .mobile-controls{
+        justify-self: end;
+    }
+
+    .parte_central {
+        width: 1px;
+        display: none;
+    }
+
+    /* Ocultar todo lo demás */
+    .parte_central,
+    .controls,
+    .progress-container,
+    .volume-control {
+        display: none !important;
     }
 }

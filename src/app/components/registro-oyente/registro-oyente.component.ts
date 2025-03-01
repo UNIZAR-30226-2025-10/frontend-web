@@ -3,9 +3,12 @@ import { CommonModule } from '@angular/common'; // Importante para que funcione 
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-registro-oyente',
+  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './registro-oyente.component.html',
   styleUrl: './registro-oyente.component.css'
@@ -23,7 +26,9 @@ export class RegistroOyenteComponent implements OnInit {
   isLengthValid: boolean = false;
   isFormValid: boolean = false;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private router: Router) {}
+
+  private http = inject(HttpClient);
 
   togglePassword(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
@@ -63,6 +68,23 @@ export class RegistroOyenteComponent implements OnInit {
     console.log(`Es Oyente: ${this.esOyente}`);
 
     //AQUI HABRIA Q MANDARALO A LA API Y GESTIONAR LA RESPUESTA
+    this.http.post('http://localhost:5000/register-oyente', { correo: this.email, nombreUsuario: this.nombreUsuario, contrasenya: this.password })
+    .subscribe({
+      //response es lo que devuelve la api (objeto, array...)
+      next: (response) => {
+        //AQUI HABRIA Q HACER CON ESA RESPUESTA LO QUE SE QUIERA, EN ESTE CASO SOLO LA MUESTRA EN LA CONSOLA POR HACER ALGO
+        console.log('Respuesta de la API:', response);
+        this.router.navigate(['/home/home']);
+      },
+      error: (error) => {
+        //SI ALGO FALLA, ERROR TIENE LA INFORMACION SOBRE EL ERROR
+        console.error('Error al autenticar:', error);
+      },
+      complete: () => {
+        //SE EJECUTA CAUNDO LA PETICION A TERMINADO YA SEA CON EXITO O NO. PARA HACER TAREAS COMO LIMPIAR RECURSOS O ESCRIBIR MENSAJES FINALES
+        console.log('Petición completada');
+      }
+    });
 
     //CAMBIAR DE PANTALLA
   }

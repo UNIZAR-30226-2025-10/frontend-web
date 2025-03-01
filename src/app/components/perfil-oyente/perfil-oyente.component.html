@@ -1,0 +1,62 @@
+
+    <!-- Primer div: fijo en la parte superior -->
+    <div class="top-div">
+        <div class="column1">
+            <!-- AQUI IRIA LA FOTO DE PERFIL SACADA DE LA API -->
+            <img src="no_cancion.png" alt="Logo" class="logo">
+        </div>
+        <div class="column2">
+            <!-- AQUI IRIA EL NOMBRE DE USUARIO SACADO DE LA API -->
+            <h3>Martarata2004</h3>
+            <div class="seguidores">
+                <a [routerLink]="['/seguidores']">
+                    <h4>10 seguidores</h4>
+                </a>
+                <a [routerLink]="['/seguidos']">
+                    <h4>32 seguidos</h4>
+                </a>
+            </div>
+        </div>
+        <div class="column_vacia"></div>
+        <div class="column3">
+            <a [routerLink]="['/editarPerfilOyente']" style="margin-top: 10%;">
+                <h5>Editar perfil</h5>
+            </a>
+            <a [routerLink]="['/cambiarContrasenaOyente']">
+                <h5>Cambiar contraseña</h5>
+            </a>
+            <button class="boton-crear">
+                <h4>Crear Playlist</h4>
+            </button>
+        </div>
+      </div>
+  
+    <!-- Segundo div: el que tiene scroll -->
+    <div class="bottom-div">
+        <div *ngIf="artistas != null">
+            <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Top artistas recientes</strong></h2>
+            <div class="container">       
+                <div *ngFor="let artist of artistas; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                    <img [src]="artist.img" [alt]="artist.name">
+                    <strong>{{ artist.name }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="artistas != null">
+            <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Últimas 50 escuchadas</strong></h2>
+            <div class="container">       
+                <div *ngFor="let artist of artistas; let i = index" class="track-card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                    <div class="dentro-track-card">
+                        <img [src]="artist.img" [alt]="artist.name"> 
+                        <strong>{{ artist.name }}</strong>
+                        <p>{{ artist.name }}</p> 
+                    </div>          
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+ 
+  

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Importante para que funcione ngIf, ngFor, etc.
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para trabajar con ngModel
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router'; 
 import { RouterModule } from '@angular/router';
@@ -34,7 +34,7 @@ export class LoginComponent {
 
     //AQUI LO Q SE SUPONE Q HAY Q HACER, MANDAR LOS VALORES A LA API Y MANEJAR LA RESPUESTA
     // Aquí estás enviando los valores del formulario a la API
-    this.http.post('https://mi_api/login', { email: this.email, password: this.password })
+    this.http.post('http://localhost:5000/login', { correo: this.email, contrasenya: this.password })
     .subscribe({
       //response es lo que devuelve la api (objeto, array...)
       next: (response) => {
