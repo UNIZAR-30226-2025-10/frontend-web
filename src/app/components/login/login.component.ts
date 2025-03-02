@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Importante para que funcione ngIf, ngFor, etc.
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para trabajar con ngModel
-import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
 import { Router } from '@angular/router'; 
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-login',
@@ -14,32 +14,28 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
+  credentials = {correo: '', contrasenya:''};
   isPasswordVisible: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router) {}
 
-  private http = inject(HttpClient);
 
   togglePassword(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   onSubmit(): void {
-
-    //AQUI SOLO MUESTRA LOS VALORES EN LA CONSOLA, PARA AHORA QUE NO HAY API TODAVIA
-    console.log('Email:', this.email);
-    console.log('Password:', this.password);
-
     //AQUI LO Q SE SUPONE Q HAY Q HACER, MANDAR LOS VALORES A LA API Y MANEJAR LA RESPUESTA
+    
     // Aquí estás enviando los valores del formulario a la API
-    this.http.post('http://localhost:5000/login', { correo: this.email, contrasenya: this.password })
+    this.authService.login(this.credentials)
     .subscribe({
       //response es lo que devuelve la api (objeto, array...)
       next: (response) => {
         //AQUI HABRIA Q HACER CON ESA RESPUESTA LO QUE SE QUIERA, EN ESTE CASO SOLO LA MUESTRA EN LA CONSOLA POR HACER ALGO
         console.log('Respuesta de la API:', response);
+        this.tokenService.setToken(response.token);
+        console.log('Token guardado: ', this.tokenService.getToken());
         this.router.navigate(['/homeApp']);
       },
       error: (error) => {
