@@ -10,32 +10,12 @@ import { AlbumComponent } from './components/album/album.component';
 import { MarcoComponent } from './components/marco/marco.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResultadosComponent } from './components/resultados/resultados.component';
-<<<<<<< Updated upstream
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-=======
 import { PerfilOyenteComponent } from './components/perfil-oyente/perfil-oyente.component';
 import { MiPerfilArtistaComponent } from './components/mi-perfil-artista/mi-perfil-artista.component';
 import { SeguidoresComponent } from './seguidores/seguidores.component';
 import { SeguidosComponent } from './seguidos/seguidos.component';
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -52,35 +32,12 @@ export const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'album/:id', component: AlbumComponent},
       { path: 'home', component: HomeComponent},
-<<<<<<< Updated upstream
       { path: 'resultados', component: ResultadosComponent}
-=======
       { path: 'resultados', component: ResultadosComponent},
       { path: 'perfilOyente', component: PerfilOyenteComponent},
       { path: 'miPerfilArtista', component: MiPerfilArtistaComponent},
       { path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
       { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-
 
     ]
   }
