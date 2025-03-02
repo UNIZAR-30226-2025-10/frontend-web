@@ -18,6 +18,9 @@ import { MiPerfilArtistaComponent } from './components/mi-perfil-artista/mi-perf
 import { SeguidoresComponent } from './seguidores/seguidores.component';
 import { SeguidosComponent } from './seguidos/seguidos.component';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -47,6 +50,9 @@ export const routes: Routes = [
       { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
