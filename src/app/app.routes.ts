@@ -17,6 +17,9 @@ import { PerfilOyenteComponent } from './components/perfil-oyente/perfil-oyente.
 import { MiPerfilArtistaComponent } from './components/mi-perfil-artista/mi-perfil-artista.component';
 import { SeguidoresComponent } from './seguidores/seguidores.component';
 import { SeguidosComponent } from './seguidos/seguidos.component';
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 export const routes: Routes = [
@@ -43,6 +46,9 @@ export const routes: Routes = [
       { path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
       { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 
