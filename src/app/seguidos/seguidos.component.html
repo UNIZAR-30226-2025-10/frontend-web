@@ -1,0 +1,28 @@
+<div class="top-div">
+    <div class="column2">
+      <div class="header-content">
+        <button id="backButton" (click)="goBack()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <h3>Seguidos</h3>
+      </div>
+      <div class="filters">
+        <span class="filter" [ngClass]="{'active': isActive('all')}" data-filter="all" (click)="filterFollows('all')">Todos</span>
+        <span class="filter" [ngClass]="{'active': isActive('artists')}" data-filter="artists" (click)="filterFollows('artists')">Solo artistas</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bottom-div">
+    <div *ngIf="filteredSeguidos != null">
+      <div class="seguidos">
+        <a *ngFor="let seguidor of filteredSeguidos" [routerLink]="[seguidor.tipo === 'artista' ? '/perfilArtista/' + seguidor.Seguido_correo : '/perfilOyente/' + seguidor.Seguido_correo]">
+          <img class="img" [src]="seguidor.img" alt="{{ seguidor.nombre }}">
+        </a>
+      </div>
+    </div>
+    <div *ngIf="filteredSeguidos.length === 0">
+      <p>No tienes seguidores.</p>
+    </div>
+  </div>
+  

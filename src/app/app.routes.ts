@@ -13,9 +13,18 @@ import { ResultadosComponent } from './components/resultados/resultados.componen
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { PerfilOyenteComponent } from './components/perfil-oyente/perfil-oyente.component';
 import { MiPerfilArtistaComponent } from './components/mi-perfil-artista/mi-perfil-artista.component';
+<<<<<<< Updated upstream
 import { SeguidoresComponent } from './components/seguidores/seguidores.component';
 import { SeguidosComponent } from './components/seguidos/seguidos.component';
 
+=======
+import { IntroducirCodigoComponent } from './components/introducir-codigo/introducir-codigo.component';
+import { PendienteComponent } from './components/pendiente/pendiente.component';
+import { PedirContrasenyaComponent } from './components/pedir-contrasenya/pedir-contrasenya.component';
+import { AdminComponent } from './components/admin/admin.component';
+import { SeguidosComponent } from './seguidos/seguidos.component';
+import { SeguidoresComponent } from './seguidores/seguidores.component';
+>>>>>>> Stashed changes
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -36,8 +45,14 @@ export const routes: Routes = [
       { path: 'resultados', component: ResultadosComponent},
       { path: 'perfilOyente', component: PerfilOyenteComponent},
       { path: 'miPerfilArtista', component: MiPerfilArtistaComponent},
+<<<<<<< Updated upstream
       { path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
       { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
+=======
+      {path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
+      {path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
+
+>>>>>>> Stashed changes
 
     ]
   }
