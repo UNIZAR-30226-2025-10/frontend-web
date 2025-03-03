@@ -1,5 +1,7 @@
 body {
-    background-color: #8ca4ff;
+    background: linear-gradient(270deg, #c7d2f7, #9db1fa, #8ca4ff, rgb(104, 134, 243), #5771cf);
+    background-size: 400% 400%;
+    animation: animacionFondo 10s ease infinite; 
     color: white;
     font-family: 'Inter', sans-serif;
     display: flex;
@@ -8,6 +10,24 @@ body {
     min-height: 100vh;
     flex-direction: column;
 }
+
+@keyframes animacionFondo {
+    0% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 80% 20%;
+    }
+    50% {
+      background-position: 20% 80%;
+    }
+    75% {
+      background-position: 100% 40%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 .steps {
     display: flex;
     justify-content: center;
@@ -103,20 +123,17 @@ input {
     color: #8ca4ff;
 }
 
-
-
-
-
-
-
-
-
-
-
+h1{
+    font-size: 25px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: left;
+}
 
 @media (max-width: 576px) {
     body {
-        background-color: #000e3b;
+        background: #000e3b !important;
+        animation: none !important; 
     }
     .step {
         width: 35px;

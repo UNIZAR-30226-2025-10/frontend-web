@@ -7,6 +7,7 @@ export class TokenService {
 
   private tokenKey = 'accessToken'; // Clave para el localStorage
   private userKey = 'userData';
+  private tipoKey = 'tipoData';
 
   constructor() { }
 
@@ -29,12 +30,23 @@ export class TokenService {
     return userData ? JSON.parse(userData) : null;
   }
 
+  setTipo(tipo: any): void {
+    localStorage.setItem(this.tipoKey, JSON.stringify(tipo));
+  }
+
+  getTipo(): any {
+    const tipoData = localStorage.getItem(this.tipoKey);
+    return tipoData ? JSON.parse(tipoData) : null;
+  }
+
 
   // Eliminar token (Logout)
   clearStorage(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
+    localStorage.removeItem(this.tipoKey);
   }
+
 
   clearTemporalToken(): void {
     localStorage.removeItem(this.tokenKey);

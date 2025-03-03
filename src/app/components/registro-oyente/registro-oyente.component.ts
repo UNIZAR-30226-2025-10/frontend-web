@@ -60,6 +60,7 @@ export class RegistroOyenteComponent {
       next: (response) => {
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.oyente);
+        this.tokenService.setTipo(response.tipo);
         this.router.navigate(['/home/home']);
       },
       error: (error) => {

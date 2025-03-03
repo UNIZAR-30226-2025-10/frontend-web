@@ -64,6 +64,7 @@ export class RegistroArtistaComponent {
       next: (response) => {
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.pendiente);
+        this.tokenService.setTipo(response.tipo);
         this.router.navigate(['/pendiente']);
       },
       error: (error) => {

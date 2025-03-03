@@ -40,11 +40,12 @@ export class LoginComponent {
       next: (response) => {
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.usuario);
-        if (response.usuario.tipo === "pendiente") {
+        this.tokenService.setTipo(response.tipo);
+        if (response.tipo === "pendiente") {
           this.router.navigate(['/pendiente']);
-        } else if (response.usuario.tipo === "valido") {
+        } else if (response.tipo === "valido") {
           this.router.navigate(['/introducirCodigo']);
-        } else if (response.usuario.tipo === "admin") {
+        } else if (response.tipo === "admin") {
           this.router.navigate(['/admin']);
         } else {
           this.router.navigate(['/home/home']);

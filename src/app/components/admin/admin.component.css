@@ -19,25 +19,40 @@ body {
 }
 
 .container {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 solicitudes por fila */
+    gap: 20px; /* Espacio entre solicitudes */
     justify-content: center;
     align-items: center;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    width: 100%;
+    max-width: 1200px; 
+}
+
+h1{
+    font-size: 30px;
+    color: #000e3b;
+    text-align: center;
+    font-weight: bold;
 }
 
 .solicitud {
+    display: flex;
+    flex-direction: column; /* Acomoda el contenido en columna */
+    justify-content: space-between; /* Distribuye el contenido */
     border-radius: 12px;
     border: 2px solid #000e3b;
     padding: 20px;
     background-color: #000e3b;
-    width: 40%;
+    width: 100%; 
+    height: 200px; /* Mantiene una altura fija */
 }
 
 h2 {
     font-size: 25px;
     color: white;
     text-align: center;
+    font-weight: bold;
 }
 
 .botones {
@@ -45,8 +60,15 @@ h2 {
     gap: 30px;
 }
 
+.indice {
+    font-size: 18px;
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
 .btn {
-    background-color: #8ca4ff;
+    background-color: #bac7f7;
     color: #000e3b;
     padding: 8px;
     border: none;
@@ -61,4 +83,13 @@ h2 {
 }
 .btn:hover {
     background-color: #2e4074;
+}
+
+
+
+
+@media (max-width: 576px) { /* Móviles */
+    .container {
+        grid-template-columns: repeat(1, 1fr); /* 1 solicitud por fila */
+    }
 }

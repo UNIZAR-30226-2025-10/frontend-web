@@ -33,8 +33,6 @@ export class PendienteComponent {
         console.log('Petición completada');
       }
     });
-
-
   }
 
 }

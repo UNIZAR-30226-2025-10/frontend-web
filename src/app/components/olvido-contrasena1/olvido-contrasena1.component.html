@@ -6,6 +6,7 @@
     </div>
 
     <section class="container">
+        <h1>Recuperación de contraseña</h1>
         <form (ngSubmit)="onSubmit()">
             <label for="email">Se enviará un código al correo electrónico proporcionado. Deberás introducir dicho código en la siguiente pantalla.</label>
             <input type="text" id="correo" [(ngModel)]="credentials.correo" name="correo" placeholder="Introduce tu correo electrónico" required>
