@@ -81,10 +81,17 @@ a:hover strong {
   color: #8ca4ff;
   text-decoration: underline;
 }
+
+.error-message {
+  color: red;
+  font-size: 10px;
+  text-align: left;
+  margin-top: 5px;
+}
+
 @media (max-width: 576px) {
   body {
       background-color: #000e3b;
-      margin: 0px 25px
   }
   .container {
       padding: 20px;

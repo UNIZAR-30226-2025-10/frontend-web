@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Importante para que funcione ngIf, ngFor, etc.
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para trabajar con ngModel
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject } from '@angular/core';
 import { Router } from '@angular/router'; 
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-login',
@@ -14,37 +14,61 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
+  correoOusuario: string = '';
+  credentials: { correo?: string; nombreUsuario?: string; contrasenya: string } = { contrasenya: '' };
   isPasswordVisible: boolean = false;
 
-  constructor(private router: Router) {}
+  errorMessage: string = '';
+  errorType: string = '';
 
-  private http = inject(HttpClient);
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router) {}
+
 
   togglePassword(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   onSubmit(): void {
-
-    //AQUI SOLO MUESTRA LOS VALORES EN LA CONSOLA, PARA AHORA QUE NO HAY API TODAVIA
-    console.log('Email:', this.email);
-    console.log('Password:', this.password);
-
-    //AQUI LO Q SE SUPONE Q HAY Q HACER, MANDAR LOS VALORES A LA API Y MANEJAR LA RESPUESTA
-    // Aquí estás enviando los valores del formulario a la API
-    this.http.post('https://mi_api/login', { email: this.email, password: this.password })
+    if (this.correoOusuario.includes('@')) {
+      this.credentials = { correo: this.correoOusuario, contrasenya: this.credentials.contrasenya };
+    } else {
+      this.credentials = { nombreUsuario: this.correoOusuario, contrasenya: this.credentials.contrasenya };
+    }
+    
+    this.authService.login(this.credentials)
     .subscribe({
-      //response es lo que devuelve la api (objeto, array...)
       next: (response) => {
-        //AQUI HABRIA Q HACER CON ESA RESPUESTA LO QUE SE QUIERA, EN ESTE CASO SOLO LA MUESTRA EN LA CONSOLA POR HACER ALGO
-        console.log('Respuesta de la API:', response);
-        this.router.navigate(['/homeApp']);
+        this.tokenService.setToken(response.token);
+        this.tokenService.setUser(response.usuario);
+        if (response.usuario.tipo === "pendiente") {
+          this.router.navigate(['/pendiente']);
+        } else if (response.usuario.tipo === "valido") {
+          this.router.navigate(['/introducirCodigo']);
+        } else if (response.usuario.tipo === "admin") {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/home/home']);
+        }
       },
       error: (error) => {
         //SI ALGO FALLA, ERROR TIENE LA INFORMACION SOBRE EL ERROR
         console.error('Error al autenticar:', error);
+
+        if (error.status === 401) {
+          if (error.error.error.includes('incorrecta')) {
+            this.errorMessage = 'Contraseña incorrecta.';  // Error de contraseña
+            this.errorType = 'password';
+          } else if (error.error.error.includes('correo') || error.error.error.includes('correo')) {
+            this.errorMessage = 'Nombre de usuario o correo no válido.';  // Error de usuario/correo
+            this.errorType = 'user';
+          }
+        } else {
+          // En caso de otros errores
+          this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
+          this.errorType = 'general';
+        }
+
+
       },
       complete: () => {
         //SE EJECUTA CAUNDO LA PETICION A TERMINADO YA SEA CON EXITO O NO. PARA HACER TAREAS COMO LIMPIAR RECURSOS O ESCRIBIR MENSAJES FINALES

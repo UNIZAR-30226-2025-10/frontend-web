@@ -6,19 +6,27 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    flex-direction: column;
 }
 .container {
     background-color: #000e3b;
     padding: 50px;
     border-radius: 20px;
     text-align: center;
-    width: 100%;
+    width: auto;
     max-width: 550px;
 }
-.logo {
-    width: 80px;
-    margin-bottom: 10px;
+
+h1 {
+    font-size: 16px;
+    text-align: left;
 }
+
+.botones {
+    display: flex;
+    gap: 35px;
+}
+
 .btn {
     background-color: #8ca4ff;
     color: #000e3b;
@@ -41,10 +49,10 @@ body {
     .container {
         padding: 20px;
     }
-    .logo {
-        width: 60px;
+    .botones {
+        display: block;
     }
-    input, .btn {
+    .btn {
         font-size: 0.9rem;
     }
 }

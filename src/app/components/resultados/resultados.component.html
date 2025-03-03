@@ -1,53 +1,82 @@
-<button class="boton-atras" (click)="volverAtras()">
-    <span class="flecha"></span>
-</button>
-
-
-<div *ngIf="tracks.length > 0">
-    <h2><strong>Canciones</strong></h2>
-    <div class="tracks-container">       
-        <div *ngFor="let track of tracks; let i = index" class="track-card" (click)="onTrackClick(track)" [ngClass]="{ 'primer-elemento': i === 0 }">
-            <div class="dentro-track-card">
-                <img [src]="track.album.images?.length ? track.album.images[0]?.url : 'no_cancion.png'" alt="{{ track.name }}"> 
-                <strong>{{ track.name }}</strong>
-                <p>{{ track.artists[0]?.name }}</p> 
-            </div>          
-        </div>
-    </div>
+<div class="filtros">
+    <button class="boton-atras" (click)="volverAtras()">
+        <span class="flecha"></span>
+    </button>
+    <button class="boton-filtro" (click)="cambiarFiltro('todo')"  [ngClass]="{ 'activo': filtroActivo === 'todo' }">
+        <h3>Todo</h3>
+    </button>
+    <button class="boton-filtro" (click)="cambiarFiltro('canciones')"  [ngClass]="{ 'activo': filtroActivo === 'canciones' }">
+        <h3>Canciones</h3>
+    </button>
+    <button class="boton-filtro" (click)="cambiarFiltro('artistas')"  [ngClass]="{ 'activo': filtroActivo === 'artistas' }">
+        <h3>Artistas</h3>
+    </button>
+    <button class="boton-filtro" (click)="cambiarFiltro('albumes')"  [ngClass]="{ 'activo': filtroActivo === 'albumes' }">
+        <h3>Álbumes</h3>
+    </button>
+    <button class="boton-filtro" (click)="cambiarFiltro('playlists')"  [ngClass]="{ 'activo': filtroActivo === 'playlists' }">
+        <h3>Playlists</h3>
+    </button>
+    <button class="boton-filtro" (click)="cambiarFiltro('perfiles')"  [ngClass]="{ 'activo': filtroActivo === 'perfiles' }">
+        <h3>Perfiles</h3>
+    </button>
 </div>
 
-<div *ngIf="artists.length > 0">
-    <h2><strong>Artistas</strong></h2>
-    <div class="artists-container">       
-        <div *ngFor="let artist of artists; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-            <img *ngIf="artist.images?.length" [src]="artist.images[0]?.url" alt="{{ artist.name }}">
-            <strong>{{ artist.name }}</strong>
-        </div>
-    </div>
-</div>
 
-<div *ngIf="albums.length > 0">
-    <h2><strong>Álbumes</strong></h2>
-    <div class="albums-container">       
-        <div *ngFor="let album of albums; let i = index" class="album-card" [ngClass]="{ 'primer-elemento': i === 0 }">     
-            <div class="dentro-track-card">    
-                <img *ngIf="album.images?.length" [src]="album.images[0]?.url" alt="{{ album.name }}">
-                <strong>{{ album.name }}</strong>
-                <p>Álbum de {{ album.artists[0]?.name }}</p>
-            </div> 
+<!--
+<div class="contenido">
+    <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'canciones'">
+        <div *ngIf="tracks.length > 0">
+            <h2><strong>Canciones</strong></h2>
+            <div class="tracks-container">       
+                <div *ngFor="let track of tracks; let i = index" class="track-card" (click)="onTrackClick(track)" [ngClass]="{ 'primer-elemento': i === 0 }">
+                    <div class="dentro-track-card">
+                        <img [src]="track.album.images?.length ? track.album.images[0]?.url : 'no_cancion.png'" alt="{{ track.name }}"> 
+                        <strong>{{ track.name }}</strong>
+                        <p>{{ track.artists[0]?.name }}</p> 
+                    </div>          
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<!--<div *ngIf="artists.length > 0">
-    <h2><strong>Playlists</strong></h2>
-    <div class="artists-container">       
-        <div *ngFor="let playlist of playlists; let i = index" class="playlist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-            <img *ngIf="playlist.images?.length" [src]="playlist.images[0]?.url" alt="{{ playlist.name }}">
-            <strong>{{ playlist.name }}</strong>
+    <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'artistas'">
+        <div *ngIf="artists.length > 0">
+            <h2 style="margin-bottom: 10px;"><strong>Artistas</strong></h2>
+            <div class="artists-container">       
+                <div *ngFor="let artist of artists; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                    <img *ngIf="artist.images?.length" [src]="artist.images[0]?.url" alt="{{ artist.name }}">
+                    <strong>{{ artist.name }}</strong>
+                </div>
+            </div>
         </div>
     </div>
-</div>-->
+
+    <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'albumes'">
+        <div *ngIf="albums.length > 0">
+            <h2><strong>Álbumes</strong></h2>
+            <div class="albums-container">       
+                <div *ngFor="let album of albums; let i = index" class="album-card" [ngClass]="{ 'primer-elemento': i === 0 }">     
+                    <div class="dentro-track-card">    
+                        <img *ngIf="album.images?.length" [src]="album.images[0]?.url" alt="{{ album.name }}">
+                        <strong>{{ album.name }}</strong>
+                        <p>Álbum de {{ album.artists[0]?.name }}</p>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="artists.length > 0">
+        <h2><strong>Playlists</strong></h2>
+        <div class="artists-container">       
+            <div *ngFor="let playlist of playlists; let i = index" class="playlist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                <img *ngIf="playlist.images?.length" [src]="playlist.images[0]?.url" alt="{{ playlist.name }}">
+                <strong>{{ playlist.name }}</strong>
+            </div>
+        </div>
+    </div>
+</div> -->
 
 
     

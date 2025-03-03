@@ -20,12 +20,14 @@ export class ResultadosComponent implements OnInit {
   tracks: any[] = [];
   albums: any[] = [];
   playlists: any[] = [];
+  filtroActivo: string = 'todo';
 
   @Output() trackClicked = new EventEmitter<any>();
 
   constructor(private route: ActivatedRoute, private resultadosService: ResultadosService, private playerService: PlayerService,  private LimpiarBuscadorService: LimpiarBuscadorService, private location: Location, private router: Router) {}
 
   ngOnInit() {
+
     // Obtener el parámetro de búsqueda de la URL
     this.route.queryParams.subscribe(params => {
       this.searchQuery = params['search'] || '';
@@ -73,5 +75,10 @@ export class ResultadosComponent implements OnInit {
       this.location.back();
     }
   }
+
+  cambiarFiltro(filtro: string) {
+    this.filtroActivo = filtro;
+  }
+
 }
 

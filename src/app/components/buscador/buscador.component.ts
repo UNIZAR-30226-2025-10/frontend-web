@@ -2,7 +2,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SpotifyService } from '../../services/spotify.service';
+//importar servicio de la api
+import { ApiService } from '../../services/api.service';
 import { RouterModule } from '@angular/router';
 import { SidebarService } from '../../services/sidebar.service';
 import { ResultadosService } from '../../services/resultados.service';
@@ -24,7 +25,7 @@ export class BuscadorComponent {
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
-  constructor(private spotifyService: SpotifyService, private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService) {}
+  constructor(private apiService: ApiService, private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService) {}
 
   ngOnInit() {
     // Guardar la URL actual antes de la búsqueda
@@ -47,12 +48,13 @@ export class BuscadorComponent {
     }
   }
 
+  //ESTO AHORA NO VA
   getAll() {
     if (this.searchQuery.trim() === '') {
       this.router.navigateByUrl(this.previousUrl);
     }
     if (this.searchQuery.trim() !== '') {
-      this.spotifyService.getAll(this.searchQuery).subscribe({
+      this.apiService.getAll(this.searchQuery).subscribe({
         next: (data) => {
           this.searchResults.emit(data); // Emitimos los resultados al componente padre
 

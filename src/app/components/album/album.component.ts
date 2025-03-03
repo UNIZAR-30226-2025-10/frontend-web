@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { SpotifyService } from '../../services/spotify.service';
+import { ApiService } from '../../services/api.service';
 import { PlayerService } from '../../services/player.service';
 import { SidebarService } from '../../services/sidebar.service';
 
@@ -20,7 +20,7 @@ export class AlbumComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private spotifyService: SpotifyService,
+    private apiService: ApiService,
     private playerService: PlayerService,
     private sidebarService: SidebarService
   ) {}
@@ -36,7 +36,7 @@ export class AlbumComponent implements OnInit {
   }
 
   getAlbum(albumId: string) {
-    this.spotifyService.getAlbum(albumId).subscribe((data: any) => {
+    this.apiService.getAlbum(albumId).subscribe((data: any) => {
       this.album = data;
       this.artistNames = this.album.artists.map((a: any) => a.name).join(', ');
     });

@@ -1,0 +1,10 @@
+<body>
+    <section class="container">
+        <h1>Al realizar esta acción tu solicitud y tu cuenta serán eliminadas.  </h1>
+        <form (ngSubmit)="onSubmit()">
+            <input type="text" id="contrasenya" [(ngModel)]="credentials.contrasenya" name="contrasenya" placeholder="Introduce tu contraseña" required>
+            
+            <button type="submit" class="btn">Eliminar Cuenta</button>
+        </form>
+    </section>
+</body>

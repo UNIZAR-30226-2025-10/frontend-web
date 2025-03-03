@@ -1,0 +1,64 @@
+body {
+    background-color: #8ca5ffb9;
+    padding: 20px;
+    margin: 0px;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    text-align: right;
+}
+
+.btn-cerrar {
+    width: 160px;
+    border: none;
+    background-color: transparent;
+    color: #000e3b;
+}
+
+.btn-cerrar:hover {
+    text-decoration: underline;
+}
+
+.container {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.solicitud {
+    border-radius: 12px;
+    border: 2px solid #000e3b;
+    padding: 20px;
+    background-color: #000e3b;
+    width: 40%;
+}
+
+h2 {
+    font-size: 25px;
+    color: white;
+    text-align: center;
+}
+
+.botones {
+    display: flex;
+    gap: 30px;
+}
+
+.btn {
+    background-color: #8ca4ff;
+    color: #000e3b;
+    padding: 8px;
+    border: none;
+    border-radius: 70px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: normal;
+}
+.btn:hover {
+    background-color: #2e4074;
+}

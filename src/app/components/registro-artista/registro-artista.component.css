@@ -101,10 +101,14 @@ a:hover strong {
 .invalid {
     color: #8ca4ff;
 }
+.error {
+    color: red;
+    font-size: 10px;
+    text-align: left;
+}
 @media (max-width: 576px) {
     body {
         background-color: #000e3b;
-        margin: 0px 25px
     }
     .container {
         padding: 20px;

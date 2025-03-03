@@ -10,27 +10,14 @@ import { Router } from '@angular/router';
 })
 export class OpcionesRegistroComponent {
   
-  esOyente: boolean = true;
 
   constructor(private router: Router) {} 
 
   onSubmit(tipo: string): void {
     if (tipo == 'artista') {
-      this.esOyente = false;
-
-      //ESTO ES SOLO PARA VER EN LA CONSOLA SI ESTA FUNCIONANDO
-      console.log(`Es Oyente: ${this.esOyente}`);
-
-      this.router.navigate(['/registroArtista'], {
-        state: { esOyente: this.esOyente} 
-      });
+      this.router.navigate(['/registroArtista']);
     } else {
-        //ESTO ES SOLO PARA VER EN LA CONSOLA SI ESTA FUNCIONANDO
-        console.log(`Es Oyente: ${this.esOyente}`);
-
-        this.router.navigate(['/registroOyente'], {
-          state: { esOyente: this.esOyente} 
-        });
+      this.router.navigate(['/registroOyente']);
     }
   }
 }

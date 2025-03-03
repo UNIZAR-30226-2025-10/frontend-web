@@ -6,6 +6,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    flex-direction: column;
 }
 .container {
     background-color: #000e3b;
@@ -15,9 +16,21 @@ body {
     width: 100%;
     max-width: 550px;
 }
-.logo {
-    width: 80px;
-    margin-bottom: 10px;
+
+h1 {
+    font-size: 16px;
+    text-align: left;
+}
+
+input {
+    background-color: #000e3b;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0px;
+    border-radius: 5px;
+    border: 1.5px solid white;
+    padding-right: 50px; /* Deja espacio para el ícono */
 }
 .btn {
     background-color: #8ca4ff;
@@ -40,9 +53,6 @@ body {
     }
     .container {
         padding: 20px;
-    }
-    .logo {
-        width: 60px;
     }
     input, .btn {
         font-size: 0.9rem;

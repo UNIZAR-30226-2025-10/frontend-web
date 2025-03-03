@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlayerService } from '../../services/player.service';
@@ -31,6 +31,12 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   volume: number = 50;
   player: any;  
   isFavorite = false;
+  screenWidth: number = window.innerWidth;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.screenWidth = (event.target as Window).innerWidth; 
+  }
 
   constructor(private playerService: PlayerService) {}
 

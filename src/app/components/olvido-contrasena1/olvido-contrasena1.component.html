@@ -8,8 +8,10 @@
     <section class="container">
         <form (ngSubmit)="onSubmit()">
             <label for="email">Se enviará un código al correo electrónico proporcionado. Deberás introducir dicho código en la siguiente pantalla.</label>
-            <input type="text" id="email" [(ngModel)]="email" name="email" placeholder="Introduce tu correo electrónico" required>
-            
+            <input type="text" id="correo" [(ngModel)]="credentials.correo" name="correo" placeholder="Introduce tu correo electrónico" required>
+            <div *ngIf="errorMessage" class="error-message">
+                <p>{{ errorMessage }}</p>
+            </div>
             <button type="submit" class="btn">Siguiente</button>
         </form>
     </section>

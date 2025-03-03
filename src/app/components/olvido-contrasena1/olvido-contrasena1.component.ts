@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Importante para que funcione ngIf, ngFor, etc.
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para trabajar con ngModel
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject } from '@angular/core';
 import { Router } from '@angular/router'; 
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-olvido-contrasena1',
@@ -13,35 +12,27 @@ import { RouterModule } from '@angular/router';
   styleUrl: './olvido-contrasena1.component.css'
 })
 export class OlvidoContrasena1Component {
-  email: string = '';
+  credentials = {correo:''};
+  errorMessage = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
-  private http = inject(HttpClient);
+
 
   onSubmit(): void {
-
-    //AQUI SOLO MUESTRA LOS VALORES EN LA CONSOLA, PARA AHORA QUE NO HAY API TODAVIA
-    console.log('Email:', this.email);
-    //PARA PODER PASAR AHORA DE PAGINA, PERO HAY Q QUITARLO
-    this.router.navigate(['/olvidoContrasena2']);
-
-    //AQUI LO Q SE SUPONE Q HAY Q HACER, MANDAR LOS VALORES A LA API Y MANEJAR LA RESPUESTA
-    // Aquí estás enviando los valores del formulario a la API
-    this.http.post('https://mi_api/login', { email: this.email})
+  
+    this.authService.enviarCorreo(this.credentials)
     .subscribe({
-      //response es lo que devuelve la api (objeto, array...)
-      next: (response) => {
-        //AQUI HABRIA Q HACER CON ESA RESPUESTA LO QUE SE QUIERA, EN ESTE CASO SOLO LA MUESTRA EN LA CONSOLA POR HACER ALGO
-        console.log('Respuesta de la API:', response);
-        this.router.navigate(['/olvidoContrasena2']);
+      next: () => {
+        this.router.navigate(['/olvidoContrasena2', this.credentials.correo]);
       },
       error: (error) => {
-        //SI ALGO FALLA, ERROR TIENE LA INFORMACION SOBRE EL ERROR
-        console.error('Error al autenticar:', error);
+        console.error('Error al verificar el correo:', error);
+        if (error.status === 400) {
+          this.errorMessage = 'Correo electrónico no válido.';
+        } 
       },
       complete: () => {
-        //SE EJECUTA CAUNDO LA PETICION A TERMINADO YA SEA CON EXITO O NO. PARA HACER TAREAS COMO LIMPIAR RECURSOS O ESCRIBIR MENSAJES FINALES
         console.log('Petición completada');
       }
     });
