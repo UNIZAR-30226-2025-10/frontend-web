@@ -4,8 +4,8 @@
     <h2><strong>Inicia sesión en Noizz</strong></h2>
 
     <form (ngSubmit)="onSubmit()">
-        <label for="email">Correo electrónico</label>
-        <input type="email" id="email" [(ngModel)]="credentials.correo" name="email" placeholder="Correo electrónico" required>
+        <label for="email">Correo electrónico o nombre de usuario</label>
+        <input type="email" id="email" [(ngModel)]="correoOusuario" name="email" placeholder="Correo electrónico o nombre de usuario" required>
 
         <label for="password">Contraseña</label>
         <div class="password-container">
@@ -13,8 +13,13 @@
           <i [ngClass]="isPasswordVisible ? 'fas fa-eye' : 'fas fa-eye-slash'" (click)="togglePassword()" class="toggle-password"></i>
         </div>
 
+        <div *ngIf="errorMessage" class="error-message">
+          <p [ngClass]="{'error-email': errorType === 'user', 'error-password': errorType === 'password'}">{{ errorMessage }}</p>
+        </div>
+
       <button type="submit" class="btn">Iniciar Sesión</button>
     </form>
+
 
     <a [routerLink]="['/olvidoContrasena1']"><strong>¿Has olvidado tu contraseña?</strong></a>
     <a [routerLink]="['/opcionesRegistro']">¿No tienes una cuenta? <strong>Regístrate aquí</strong></a>

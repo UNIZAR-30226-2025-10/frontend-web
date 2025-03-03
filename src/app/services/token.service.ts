@@ -29,10 +29,15 @@ export class TokenService {
     return userData ? JSON.parse(userData) : null;
   }
 
+
   // Eliminar token (Logout)
   clearStorage(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
+  }
+
+  clearTemporalToken(): void {
+    localStorage.removeItem(this.tokenKey);
   }
 
   // Verificar si el usuario está autenticado

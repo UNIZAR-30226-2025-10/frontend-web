@@ -7,9 +7,26 @@
 
     <section class="container">
         <form (ngSubmit)="onSubmit()">
-            <input type="text" id="newpassword" [(ngModel)]="newpassword" name="newpassword" placeholder="Introduce la nueva contraseña" required>
+            <div class="password-container">
+                <input [type]="isPasswordVisible ? 'text' : 'password'" id="password" [(ngModel)]="credentials.nueva_contrasenya" name="password" placeholder="Introduce la nueva contraseña" required (input)="onPasswordChange()" />
+                <i [ngClass]="isPasswordVisible ? 'fas fa-eye' : 'fas fa-eye-slash'" (click)="togglePassword()" class="toggle-password"></i>
+            </div>
+            <div class="password-requirements">               
+                <div>
+                    <i class="fas" [ngClass]="isLetterValid ? 'fa-check' : 'fa-times'"></i>
+                    Debe contener letras
+                </div>
+                <div>
+                    <i class="fas" [ngClass]="isNumberValid ? 'fa-check' : 'fa-times'"></i>
+                    Debe contener un número o carácter especial
+                </div>
+                <div>
+                    <i class="fas" [ngClass]="isLengthValid ? 'fa-check' : 'fa-times'"></i>
+                    Mínimo 10 caracteres
+                </div>
+            </div>
+            <button type="submit" class="btn" [disabled]="!isFormValid">Establecer Contraseña</button>
             
-            <button type="submit" class="btn">Establecer Contraseña</button>
         </form>
     </section>
 </body>

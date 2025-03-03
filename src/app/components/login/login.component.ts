@@ -14,8 +14,12 @@ import { TokenService } from '../../services/token.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  credentials = {correo: '', contrasenya:''};
+  correoOusuario: string = '';
+  credentials: { correo?: string; nombreUsuario?: string; contrasenya: string } = { contrasenya: '' };
   isPasswordVisible: boolean = false;
+
+  errorMessage: string = '';
+  errorType: string = '';
 
   constructor(private authService: AuthService, private tokenService: TokenService, private router: Router) {}
 
@@ -25,22 +29,46 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
-    //AQUI LO Q SE SUPONE Q HAY Q HACER, MANDAR LOS VALORES A LA API Y MANEJAR LA RESPUESTA
+    if (this.correoOusuario.includes('@')) {
+      this.credentials = { correo: this.correoOusuario, contrasenya: this.credentials.contrasenya };
+    } else {
+      this.credentials = { nombreUsuario: this.correoOusuario, contrasenya: this.credentials.contrasenya };
+    }
     
-    // Aquí estás enviando los valores del formulario a la API
     this.authService.login(this.credentials)
     .subscribe({
-      //response es lo que devuelve la api (objeto, array...)
       next: (response) => {
-        //AQUI HABRIA Q HACER CON ESA RESPUESTA LO QUE SE QUIERA, EN ESTE CASO SOLO LA MUESTRA EN LA CONSOLA POR HACER ALGO
-        console.log('Respuesta de la API:', response);
         this.tokenService.setToken(response.token);
-        console.log('Token guardado: ', this.tokenService.getToken());
-        this.router.navigate(['/homeApp']);
+        this.tokenService.setUser(response.usuario);
+        if (response.usuario.tipo === "pendiente") {
+          this.router.navigate(['/pendiente']);
+        } else if (response.usuario.tipo === "valido") {
+          this.router.navigate(['/introducirCodigo']);
+        } else if (response.usuario.tipo === "admin") {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/home/home']);
+        }
       },
       error: (error) => {
         //SI ALGO FALLA, ERROR TIENE LA INFORMACION SOBRE EL ERROR
         console.error('Error al autenticar:', error);
+
+        if (error.status === 401) {
+          if (error.error.error.includes('incorrecta')) {
+            this.errorMessage = 'Contraseña incorrecta.';  // Error de contraseña
+            this.errorType = 'password';
+          } else if (error.error.error.includes('correo') || error.error.error.includes('correo')) {
+            this.errorMessage = 'Nombre de usuario o correo no válido.';  // Error de usuario/correo
+            this.errorType = 'user';
+          }
+        } else {
+          // En caso de otros errores
+          this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
+          this.errorType = 'general';
+        }
+
+
       },
       complete: () => {
         //SE EJECUTA CAUNDO LA PETICION A TERMINADO YA SEA CON EXITO O NO. PARA HACER TAREAS COMO LIMPIAR RECURSOS O ESCRIBIR MENSAJES FINALES

@@ -64,10 +64,28 @@ input {
 .btn:hover {
     background-color: #2e4074;
 }
+.password-container {
+    position: relative;
+    width: 100%;
+}
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: white;
+    font-size: 1.2rem;
+}
+.error-message {
+    color: red;
+    font-size: 10px;
+    text-align: left;
+    margin-top: 5px;
+}
 @media (max-width: 576px) {
     body {
         background-color: #000e3b;
-        margin: 0px 25px
     }
     .step {
         width: 35px;

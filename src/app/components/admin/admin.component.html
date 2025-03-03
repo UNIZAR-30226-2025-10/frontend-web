@@ -1,0 +1,12 @@
+<body>
+    <button type="submit" class="btn-cerrar" (click)="aceptarSolicitud()">Cerrar Sesión</button>
+    <div class="container">
+        <div *ngFor="let solicitud of solicitudes; let i = index" class="solicitud">
+            <h2>{{solicitud.name}}</h2>
+            <div class="botones">
+                <button type="submit" class="btn" (click)="aceptarSolicitud()">Aceptar Solicitud</button>
+                <button type="submit" class="btn" (click)="rechazarSolicitud()">Rechazar Solicitud</button>
+            </div>
+        </div>
+    </div>
+</body>

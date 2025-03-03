@@ -23,6 +23,12 @@ export class RegistroOyenteComponent {
   isNumberValid: boolean = false;
   isLengthValid: boolean = false;
   isFormValid: boolean = false;
+  nombreUserCorrecto: boolean = false;
+  correoCorrecto: boolean = false;
+
+  errorMessage: string = '';
+  correoError: string = '';
+  nombreError: string = '';
 
   constructor(private router: Router, private authService: AuthService, private tokenService: TokenService) {}
 
@@ -32,11 +38,15 @@ export class RegistroOyenteComponent {
 
   validatePassword(): void {
     const value = this.credentials.contrasenya;
+    const value2 = this.credentials.nombreUsuario;
+    const value3 = this.credentials.correo;
     this.isLetterValid = /[A-Za-z]/.test(value);
     this.isNumberValid = /[0-9#?!&]/.test(value);
     this.isLengthValid = value.length >= 10;
+    this.nombreUserCorrecto = !value2.includes("@") && value2 != "";
+    this.correoCorrecto = value3.includes("@") &&  value3 !="";
 
-    this.isFormValid = this.isLetterValid && this.isNumberValid && this.isLengthValid;
+    this.isFormValid = this.correoCorrecto && this.nombreUserCorrecto && this.isLetterValid && this.isNumberValid && this.isLengthValid;
   }
 
   onPasswordChange(): void {
@@ -45,29 +55,47 @@ export class RegistroOyenteComponent {
 
   onSubmit(): void {
 
-    //AQUI HABRIA Q MANDARALO A LA API Y GESTIONAR LA RESPUESTA
     this.authService.registerOyente(this.credentials)
     .subscribe({
-      //response es lo que devuelve la api (objeto, array...)
       next: (response) => {
-        //AQUI HABRIA Q HACER CON ESA RESPUESTA LO QUE SE QUIERA, EN ESTE CASO SOLO LA MUESTRA EN LA CONSOLA POR HACER ALGO
-        console.log('Respuesta de la API:', response);
         this.tokenService.setToken(response.token);
-        this.tokenService.setUser(response.usuario);
-        console.log('Token guardado: ', this.tokenService.getToken());
-        console.log('User guardado: ', this.tokenService.getUser());
+        this.tokenService.setUser(response.oyente);
         this.router.navigate(['/home/home']);
       },
       error: (error) => {
-        //SI ALGO FALLA, ERROR TIENE LA INFORMACION SOBRE EL ERROR
         console.error('Error al autenticar:', error);
+
+        if (error.status === 409) {
+          const errorResponse = error.error;  // Asumiendo que el mensaje de error está dentro de `error.error`
+
+          // Si el error contiene un mensaje específico de correo ya en uso
+          if (errorResponse.error.includes('correo')) {
+            this.correoError = errorResponse.error; // Muestra el mensaje específico de correo
+            this.errorMessage = ''; // Limpiar el mensaje genérico
+          } else {
+            this.correoError = ''; // Limpiar el mensaje de correo
+          }
+
+          // Si el error contiene un mensaje específico de nombre de usuario ya en uso
+          if (errorResponse.error.includes('nombre')) {
+            this.nombreError = errorResponse.error; // Muestra el mensaje específico de nombre de usuario
+            this.errorMessage = ''; // Limpiar el mensaje genérico
+          } else {
+            this.nombreError = ''; // Limpiar el mensaje de nombre de usuario
+          }
+
+        } else {
+          this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
+          this.correoError = '';  // Limpiar error de correo
+          this.nombreError = '';  // Limpiar error de nombre
+        }
+
+
       },
       complete: () => {
         //SE EJECUTA CAUNDO LA PETICION A TERMINADO YA SEA CON EXITO O NO. PARA HACER TAREAS COMO LIMPIAR RECURSOS O ESCRIBIR MENSAJES FINALES
         console.log('Petición completada');
       }
     });
-
-    //CAMBIAR DE PANTALLA
   }
 }
