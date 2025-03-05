@@ -32,6 +32,7 @@ export class IntroducirCodigoComponent {
         console.log('Respuesta de la API:', response);
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.artista_valido);
+        this.tokenService.setTipo(response.tipo);
         this.router.navigate(['/home/home']);
       },
       error: (error) => {

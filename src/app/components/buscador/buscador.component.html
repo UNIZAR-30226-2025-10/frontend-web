@@ -3,13 +3,13 @@
         <img src="logo.png" alt="logo" class="logo">
         <button class="home-btn" (click)="goHome()"><i class="fas fa-home"></i></button>
       <div class="search-box">
-          <input type="text" [(ngModel)]="searchQuery" (input)="getAll()" placeholder="Buscar..." class="buscador">
+        <input type="text" [(ngModel)]="searchQuery" (input)="onSearchInputChange()" placeholder="Buscar..." class="buscador">
       </div>
       <button (click)="toggleSidebar()"><img src="noizz.png" alt="noizz" class="noizz"></button>
   </div>
     <div class="right-icons">
       <button class="notis-btn"><i class="fa fa-bell"></i></button>
-        <button class="profile-btn"><i class="fas fa-user"></i></button>
+        <button class="profile-btn" (click)="goPerfil()"><i class="fas fa-user"></i></button>
     </div>
 </div>
 

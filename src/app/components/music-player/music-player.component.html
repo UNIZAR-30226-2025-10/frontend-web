@@ -2,7 +2,7 @@
   <!-- Información de la canción -->
   <div class="track-info">
     <ng-container *ngIf="currentTrack; else noTrack">
-      <img *ngIf="currentTrack.album?.images?.length" [src]="currentTrack.album.images[0]?.url" alt="Portada" class="album-cover" />
+      <img *ngIf="currentTrack.fotoPortada" [src]="currentTrack.fotoPortada" alt="Portada" class="album-cover" />
       <div class="track-details">
           <h3><strong>{{ currentTrack.name }}</strong></h3>
           <h4>{{ currentTrack.artists[0]?.name }}</h4>

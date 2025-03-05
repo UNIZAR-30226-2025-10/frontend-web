@@ -65,7 +65,7 @@ export class AuthService {
   }
 
   enviarNuevaContrasenya(credentials: any): Observable<any> {
-    const token = this.tokenService.getToken();
+    const token = this.tokenService.getTempToken();
 
     if (!token) {
       console.error('No se encontró el token temporal');
@@ -83,7 +83,7 @@ export class AuthService {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No se encontró el token temporal');
+      console.error('No se encontró el token');
       return of({ error: 'No autorizado' });;
     }
 
@@ -99,7 +99,7 @@ export class AuthService {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No se encontró el token temporal');
+      console.error('No se encontró el token');
       return of({ error: 'No autorizado' });;
     }
 
@@ -115,7 +115,7 @@ export class AuthService {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No se encontró el token temporal');
+      console.error('No se encontró el token');
       return of({ error: 'No autorizado' });;
     }
 
@@ -126,4 +126,122 @@ export class AuthService {
 
     return this.http.post(`${this.apiUrl}/verify-artista`, credentials, { headers: headers } );
   }
+
+  pedirCancion(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-cancion?name=Espresso&artist=sabrina.carpenter@example.com`, { headers: headers } );
+  }
+
+  /*getAll():Observable<any> {
+    return;
+  }*/
+
+  pedirMisDatos(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-mis-datos`, { headers: headers } );
+  }
+
+  pedirTopArtistas(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-artistas-recientes`, { headers: headers } );
+  }
+
+  pedirHistorialCanciones(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-historial-canciones`, { headers: headers } );
+  }
+
+  pedirMisPlaylists(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-mis-playlists`, { headers: headers } );
+  }
+
+  pedirMisSeguidos(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-seguidos`, { headers: headers } );
+  }
+
+  buscador(query:string): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/search?termino=${query}`, { headers: headers });
+  }
+
+
 }

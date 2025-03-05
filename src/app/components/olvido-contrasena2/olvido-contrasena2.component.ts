@@ -12,19 +12,23 @@ import {TokenService} from '../../services/token.service';
   templateUrl: './olvido-contrasena2.component.html',
   styleUrl: './olvido-contrasena2.component.css'
 })
-export class OlvidoContrasena2Component implements OnInit {
-  credentials = {correo:'', codigo:''};
+export class OlvidoContrasena2Component {
+  credentials = { correo: '', codigo: '' }; 
   errorMessage = '';
 
   isPasswordVisible: boolean = false;
 
-  constructor(private router: Router, private authService: AuthService, private route: ActivatedRoute, private tokenService: TokenService) {}
+  constructor(private router: Router, private authService: AuthService, private route: ActivatedRoute, private tokenService: TokenService) {
+    const navigation = this.router.getCurrentNavigation();
+    const correo = (navigation?.extras.state as { correo: string })?.correo;
 
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.credentials.correo = params['correo'];
-    });
+
+    if (correo) {
+      this.credentials.correo = correo;  // Asigna el correo a la propiedad credentials
+    }
   }
+
+  
 
   togglePassword(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
@@ -36,8 +40,8 @@ export class OlvidoContrasena2Component implements OnInit {
     .subscribe({
       next: (response) => {
         console.log('Respuesta de la API:', response);
-        this.tokenService.setToken(response.token_temporal);
-        this.router.navigate(['/olvidoContrasena3', this.credentials.correo]);
+        this.tokenService.setTempToken(response.token_temporal);
+        this.router.navigate(['/olvidoContrasena3'], {state: { correo: this.credentials.correo }} );
       },
       error: (error) => {
         console.error('Error al autenticar el código:', error);

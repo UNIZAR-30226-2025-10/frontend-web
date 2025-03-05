@@ -66,7 +66,7 @@ export class RegistroOyenteComponent {
       error: (error) => {
         console.error('Error al autenticar:', error);
 
-        if (error.status === 409) {
+        if (error.status === 400) {
           const errorResponse = error.error;  // Asumiendo que el mensaje de error está dentro de `error.error`
 
           // Si el error contiene un mensaje específico de correo ya en uso

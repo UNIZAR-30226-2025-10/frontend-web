@@ -41,6 +41,7 @@ export class LoginComponent {
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.usuario);
         this.tokenService.setTipo(response.tipo);
+        console.error('DATOS:', response);
         if (response.tipo === "pendiente") {
           this.router.navigate(['/pendiente']);
         } else if (response.tipo === "valido") {

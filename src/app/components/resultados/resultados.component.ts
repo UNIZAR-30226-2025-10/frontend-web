@@ -20,6 +20,7 @@ export class ResultadosComponent implements OnInit {
   tracks: any[] = [];
   albums: any[] = [];
   playlists: any[] = [];
+  perfiles: any[] = [];
   filtroActivo: string = 'todo';
 
   @Output() trackClicked = new EventEmitter<any>();
@@ -34,15 +35,24 @@ export class ResultadosComponent implements OnInit {
     });
 
     // Suscribirse al servicio para obtener los resultados
-    this.resultadosService.resultados$.subscribe(data => {
-      if (data) {
+    this.resultadosService.resultados$
+    .subscribe({
+      next: (data) => {
+        console.log('datos en results:', data);
         // Guardar los valores en las variables correspondientes
-        this.artists = data.artists ?? [];
-        this.tracks = data.tracks ?? [];
-        this.albums = data.albums ?? [];
+        this.artists = data.artistas ?? [];
+        this.tracks = data.canciones ?? [];
+        this.albums = data.albumes ?? [];
         this.playlists = data.playlists ?? [];
-      } else {
-        console.warn('No hay resultados disponibles.');
+        this.perfiles = data.perfiles ?? [];
+
+        console.log('despues:', this.artists);
+      },
+      error: (error) => {
+        console.error('Error al autenticar:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
       }
     });
   }

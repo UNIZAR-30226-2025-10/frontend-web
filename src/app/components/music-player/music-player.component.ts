@@ -61,6 +61,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   playTrack(track: any) {
     console.log('Reproduciendo: ' + track.name);
     this.currentTrack = track;
+    console.log('track pasado', this.currentTrack);
     this.isPlaying = true;
     // Aquí agregarías la lógica de reproducción, usando la API de Spotify Web Playback SDK u otro sistema
   }
