@@ -45,22 +45,23 @@
     </div>
 
     <div class="progress-container">
-        <span class="time-left">{{ currentTime | date:'mm:ss' }}</span>
+        <span class="time-left">{{ formatTime(currentTime) }}</span>
         <!-- Barra de progreso con color dinámico -->
-        <input type="range" class="progress-bar" [value]="currentTime" [max]="duration" (input)="seekTrack($event)" [ngClass]="{'disabled-btn': !currentTrack}"/>
-        <span class="time-right">{{ duration | date:'mm:ss' }}</span>
-      </div>
+        <input type="range" class="progress-bar" [value]="currentTime" [max]="duration || 1" (input)="seekTrack($event)" [ngClass]="{'disabled-btn': !currentTrack}"/>
+        <span class="time-right">{{ formatTime(duration) }}</span>
+    </div>
 </div>
 
 
   <!-- Control de volumen -->
   <div class="volume-control">
-      <i class="ri-volume-up-fill" [ngClass]="{'disabled-btn': !currentTrack}"></i>
-      <input type="range" min="0" max="100" [(ngModel)]="volume" (input)="changeVolume()" [ngClass]="{'disabled-btn': !currentTrack}" />
+      <i class="ri-volume-up-fill" [ngClass]="{'ri-volume-mute-fill': volume === 0, 'ri-volume-up-fill': volume > 0,'disabled-btn': !currentTrack}"></i>
+      <input type="range" class="barra_volumen" min="0" max="100" [(ngModel)]="volume" (input)="changeVolume()" [ngClass]="{'disabled-btn': !currentTrack}" />
   </div>
 </div>
 
 <audio #audioElement (timeupdate)="onTimeUpdate()" (loadedmetadata)="updateProgress()" hidden>
     <source [src]="currentTrack?.preview_url" type="audio/mpeg">
 </audio>
+
 

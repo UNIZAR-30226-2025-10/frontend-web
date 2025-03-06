@@ -126,4 +126,125 @@ export class AuthService {
 
     return this.http.post(`${this.apiUrl}/verify-artista`, credentials, { headers: headers } );
   }
+<<<<<<< Updated upstream
+=======
+
+  pedirCancion(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-cancion?name=Radioactive&artist=imagine.dragons@gmail.com`, { headers: headers });
+  }
+
+  /*getAll():Observable<any> {
+    return;
+  }*/
+
+  pedirMisDatosOyente(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-mis-datos-oyente`, { headers: headers } );
+  }
+
+  pedirTopArtistas(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-artistas-recientes`, { headers: headers } );
+  }
+
+  pedirHistorialCanciones(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-historial-canciones`, { headers: headers } );
+  }
+
+  pedirMisPlaylists(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-mis-playlists`, { headers: headers } );
+  }
+
+  pedirMisSeguidos(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-seguidos`, { headers: headers } );
+  }
+
+  buscador(query:string): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/search?termino=${query}`, { headers: headers });
+  }
+
+
+>>>>>>> Stashed changes
 }

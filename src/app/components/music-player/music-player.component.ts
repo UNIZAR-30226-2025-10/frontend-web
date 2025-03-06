@@ -3,14 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlayerService } from '../../services/player.service';
 import { Subscription } from 'rxjs';
-
-declare global {
-  interface Window {
-    onSpotifyWebPlaybackSDKReady: () => void;
-    Spotify: any;
-  }
-}
-
+import { AuthService } from '../../services/auth.service';
+import { TokenService } from '../../services/token.service';
 
 
 @Component({
@@ -20,37 +14,67 @@ declare global {
   standalone: true,
   imports: [CommonModule, FormsModule]
 })
+
+
 export class MusicPlayerComponent implements OnInit, OnDestroy {
 
   @ViewChild('audioElement') audioElementRef!: ElementRef<HTMLAudioElement>; 
   currentTrack: any = null;
+
   isPlaying: boolean = false;
   private trackSubscription!: Subscription;
+
   currentTime: number = 0; // Tiempo actual de la canción
   duration: number = 0;
-  volume: number = 50;
-  player: any;  
+
+  volume: number = 50; //COGER VOLUMEN QUE ME DEN AL INICIAR SESION
+   
   isFavorite = false;
   screenWidth: number = window.innerWidth;
+
+  constructor(private playerService: PlayerService, private authService:AuthService, private tokenService : TokenService){}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
     this.screenWidth = (event.target as Window).innerWidth; 
   }
 
-  constructor(private playerService: PlayerService) {}
-
+  //SUSCRIPCION A UN EVENTO PARA ACTUALIZAR LA BARRA CUANDO SE CAMBIA DE CANCIÓN
   ngOnInit() {
     // Nos suscribimos al observable para recibir el track actualizado
     this.trackSubscription = this.playerService.currentTrack$.subscribe(track => {
       if (track) {
+<<<<<<< Updated upstream
         this.playTrack(track);
       } else {
         this.stopTrack();
+=======
+        this.currentTrack = track;  // Actualiza el track actual
+        this.playTrack();  // Reproduce el track actual
+>>>>>>> Stashed changes
       }
     });
+
+    this.setInitialVolumeProgress();
+
+    setInterval(() => {
+      this.updateDuration();
+    }, 500);
   }
 
+  updateDuration() {
+    const audio = this.audioElementRef.nativeElement;
+  
+    // Verificamos si la duración es válida
+    if (audio && !isNaN(audio.duration) && audio.duration > 0) {
+      this.duration = audio.duration;
+    }
+  }
+<<<<<<< Updated upstream
+
+=======
+  
+>>>>>>> Stashed changes
   ngOnDestroy() {
     // Aseguramos que la suscripción se desuscriba cuando el componente se destruya
     if (this.trackSubscription) {
@@ -58,6 +82,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     }
   }
 
+<<<<<<< Updated upstream
   playTrack(track: any) {
     console.log('Reproduciendo: ' + track.name);
     this.currentTrack = track;
@@ -74,67 +99,131 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   toggleFavorite() {
     this.isFavorite = !this.isFavorite; // Cambiar entre favorito y no favorito
   }
+=======
+  //PETICION PARA COGER EL AUDIO DE LA NUEVA CANCION CUANDO SE PULSA EN ELLA
+  playTrack() {
+    //MANDARLE AL BACKEND LA NUEVA CANCION ACTUAL
+    //pasarle this.currentTrack.id y esto me devuelve el audio
+    this.authService.pedirCancion()
+    .subscribe({
+      next: (response) => {
+        if (response && response.audio) {
+        this.audioElementRef.nativeElement.src = response.audio;
+        this.audioElementRef.nativeElement.play();
+        this.isPlaying = true;
+        console.log('Reproduciendo:', this.currentTrack.nombre);
+      } else {
+        console.error('No se pudo obtener el audio de la canción');
+      }
+      },
+      error: (error) => {
+        console.error('Error en la petición:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
+  }
 
+  //Para boton de PLAY/PAUSE
+  togglePlay() {
+    const audio = this.audioElementRef.nativeElement;
+    if (audio.paused) {
+      audio.play();
+      this.isPlaying = true;
+    } else {
+      audio.pause();
+      this.isPlaying = false;
+    }
+    //MANDAR AL BACKEND CUANDO HAGO PAUSA
+  }
+
+  prevTrack(){
+
+  }
+
+  nextTrack(){
+    
+  }
+
+  //PARA PONER BIEN EL VOLUMEN ANTES DE TOCAR LA BARRA
+  setInitialVolumeProgress() {
+    const volumeControl = document.querySelector('.barra_volumen') as HTMLInputElement;
+    if (volumeControl) {
+      const progressPercent = (this.volume / 100) * 100;
+      volumeControl.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000E3B ${progressPercent}%)`;
+    }
+  }
+>>>>>>> Stashed changes
+
+  //PARA PROGRESO DE LA BARRA Y EL TIEMPO
   updateProgress() {
     const audioElement = this.audioElementRef.nativeElement;
-    if (audioElement) {
-      audioElement.addEventListener('timeupdate', () => {
-        this.currentTime = audioElement.currentTime;
-        this.duration = audioElement.duration || 1;
-        const progressPercent = (this.currentTime / this.duration) * 100;
-        // Actualiza el valor de la variable --progress en CSS
-        document.documentElement.style.setProperty('--progress', `${progressPercent}%`);
-      });
-    }
+  if (audioElement) {
+    audioElement.addEventListener('loadedmetadata', () => {
+      this.duration = audioElement.duration; // Se actualiza cuando el audio carga
+    });
+
+    audioElement.addEventListener('timeupdate', () => {
+      this.currentTime = audioElement.currentTime;
+      this.duration = audioElement.duration; // Asegurar que siempre tenga valor
+
+      const progressPercent = (this.currentTime / this.duration) * 100;
+
+      const progressBar = document.querySelector('.progress-bar') as HTMLElement;
+      if (progressBar) {
+        progressBar.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000e3b ${progressPercent}%)`;
+      }
+
+    });
+  }
   }
 
-  changeVolume() {
-    if (this.player) {
-      this.player.setVolume(this.volume / 100);
-    }
-  }
-
-
-  prevTrack() {
-    if (this.player) {
-      this.player.previousTrack();
-    }
-  }
-
-  nextTrack() {
-    if (this.player) {
-      this.player.nextTrack();
-    }
-  }
-
-  // Aquí se agrega el método onTimeUpdate() que maneja el evento timeupdate del audio
+  //PARA PROGRESO DE LA BARRA Y EL TIEMPO
   onTimeUpdate() {
     const audioElement = this.audioElementRef.nativeElement;
-    if (audioElement) {
-      this.currentTime = audioElement.currentTime;
-      this.duration = audioElement.duration;
-    }
+  if (audioElement) {
+    this.currentTime = audioElement.currentTime;
+    //this.duration = audioElement.duration;
+  }
   }
 
-  togglePlay() {
-    if (this.player) {
-      this.player.togglePlay().then(() => {
-        this.isPlaying = !this.isPlaying;  // Alternar el estado de la canción
-        console.log(this.isPlaying ? 'Reproduciendo' : 'Pausado');
-      }).catch((error: any) => {
-        console.error('Error al alternar la canción', error);
-      });
-    }
-  }
-
+  //PARA CUANDO DE MUEVE EL TIEMPO DE LA CACNION MANUALMENTE
   seekTrack(event: any) {
     const newTime = event.target.value;
     if (this.audioElementRef && this.audioElementRef.nativeElement) {
       this.audioElementRef.nativeElement.currentTime = newTime;
       this.currentTime = newTime;
     }
+  } 
+
+  //PASAR TIEMPO A FORMATO MINUTO:SEGUNDO
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60); // Obtener minutos
+    const remainingSeconds = Math.floor(seconds % 60); // Obtener segundos restantes
+    return `${minutes}:${remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}`;
   }
 
-  
+
+  changeVolume() {
+    const audio = this.audioElementRef.nativeElement;
+    if (audio) {
+      audio.volume = this.volume / 100;
+
+      const volumeControl = document.querySelector('.barra_volumen') as HTMLInputElement;
+      if (volumeControl) {
+        const progressPercent = (this.volume / 100) * 100;
+        volumeControl.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000E3B ${progressPercent}%)`;
+      }
+
+      //MANDAR AL BACKEND EL NUEVO VOLUMEN
+    }
+  }
+
+  toggleFavorite() {
+    this.isFavorite = !this.isFavorite; // Cambiar entre favorito y no favorito
+    //MNADAR AL BACKEND
+  }
+
 
 }

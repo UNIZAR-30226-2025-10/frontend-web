@@ -34,15 +34,31 @@ export class ResultadosComponent implements OnInit {
     });
 
     // Suscribirse al servicio para obtener los resultados
+<<<<<<< Updated upstream
     this.resultadosService.resultados$.subscribe(data => {
       if (data) {
+=======
+    this.resultadosService.resultados$
+    .subscribe({
+      next: (data) => {
+>>>>>>> Stashed changes
         // Guardar los valores en las variables correspondientes
         this.artists = data.artists ?? [];
         this.tracks = data.tracks ?? [];
         this.albums = data.albums ?? [];
         this.playlists = data.playlists ?? [];
+<<<<<<< Updated upstream
       } else {
         console.warn('No hay resultados disponibles.');
+=======
+        this.perfiles = data.perfiles ?? [];
+      },
+      error: (error) => {
+        console.error('Error al autenticar:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+>>>>>>> Stashed changes
       }
     });
   }

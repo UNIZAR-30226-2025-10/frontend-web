@@ -37,6 +37,34 @@ export class BuscadorComponent {
         this.searchQuery = '';  // Limpiar el input de búsqueda
       }
     });
+<<<<<<< Updated upstream
+=======
+
+
+    this.searchQuerySubject.pipe(
+      debounceTime(500),  
+      switchMap(query => {
+        return this.authService.buscador(query);
+      }),
+      catchError(error => {
+        console.error('Error al obtener los datos', error);
+        return [];
+      })
+    ).subscribe({
+      next: (data) => {
+        this.searchResults.emit(data); // Emitimos los resultados al componente padre
+
+        // Guardamos los resultados en el servicio antes de navegar
+        this.resultadosService.setResultados(data);
+
+        // Si hay resultados, navegamos a la nueva ruta
+        this.router.navigate(['/home/resultados'], { queryParams: { search: this.searchQuery } });
+      },
+      error: (error) => {
+        console.error('Error al obtener los datos', error);
+      }
+    });
+>>>>>>> Stashed changes
   }
 
 
@@ -80,5 +108,17 @@ export class BuscadorComponent {
   goHome() {
     this.router.navigate(['/home']);
   }
+<<<<<<< Updated upstream
+=======
+
+  goPerfil() {
+    this.router.navigate(['/home/miPerfilOyente']);
+  }
+
+  onSearchInputChange() {
+    // Emitimos el valor de búsqueda cuando cambia el input
+    this.searchQuerySubject.next(this.searchQuery);
+  }
+>>>>>>> Stashed changes
 }
 

@@ -1,0 +1,139 @@
+<div *ngIf="isAuthenticated">
+
+    <div *ngIf="isModalOpen" class="modal-overlay">
+        <div class="modal-content">
+            <div class="cabecera" style="display: flex;justify-content: space-between;">
+                <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Editar Perfil</p>
+                <button (click)="cerrarModal()" class="btn-cerrar"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div class="atributos" style="display: flex;justify-content: space-between;">
+                <div class="image-upload-container">
+                    <!-- Imagen -->
+                    <img src="logo_noizz.png" alt="Logo" class="logo" style="border-radius: 50%; width: 110px; height: 110px;">
+                    <label for="file-input" class="upload-icon">
+                      <i class="fa fa-upload" aria-hidden="true"></i> Subir nueva foto
+                    </label>
+                    <input id="file-input" type="file" style="display: none;" (change)="onFileSelected($event)">
+                  </div>
+                <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center;">
+                    <input type="text" id="nombre" [(ngModel)]="oyente.nombre" placeholder="Escribe un nuevo nombre de usuario">
+                    <button class="btn-guardar" (click)="guardarCambios()">Guardar Cambios</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Primer div: fijo en la parte superior -->
+    <div class="top-div">
+        <div class="column1">
+            <!-- AQUI IRIA LA FOTO DE PERFIL SACADA DE LA API -->
+            <!--<img [src]="oyente.fotoPerfil && oyente.fotoPerfil !== 'DEFAULT' ? oyente.fotoPerfil : 'nouser.png'" alt="Foto de perfil" class="logo">-->
+            <img src="logo_noizz.png" alt="Logo">
+        </div>
+        <div class="column2">
+            <!-- AQUI IRIA EL NOMBRE DE USUARIO SACADO DE LA API -->
+            <h3>{{ oyente.nombre }}</h3>
+            <div class="seguidores">
+                <a [routerLink]="['/home/seguidores',oyente.nombre]">
+                    <h4>{{ oyente.nSeguidores }} seguidores</h4>
+                </a>
+                <a [routerLink]="['/home/seguidos',oyente.nombre]">
+                    <h4>{{ oyente.nSeguidos }} seguidos</h4>
+                </a>
+            </div>
+        </div>
+        <div class="column_vacia"></div>
+        <div class="column3">
+            <button (click)="abrirModal()" class="botones_opciones" style="margin-top: 10px;">
+                <h5>Editar perfil</h5>
+            </button>
+            <a [routerLink]="['/cambiarContrasenaOyente']">
+                <h5>Cambiar contraseña</h5>
+            </a>
+            <button class="boton-crear">
+                <h4>Crear Playlist</h4>
+            </button>
+        </div>
+    </div>
+
+<!--
+    <div class="bottom-div">
+        -TOP ARTISTAS RECEINTES-
+        <div *ngIf="artistas != null">
+            <div class="titulo">
+                <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Top artistas recientes</strong></h2>
+                <a [routerLink]="['/topArtistas']">
+                    <h4 style="margin-top: 18px; font-size: 13px; margin-right: 15px;">Mostrar todos</h4>
+                </a>
+            </div>
+            
+            <div class="container">       
+                <div *ngFor="let artist of ultimosArtistas; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                    <img [src]="artist.fotoPerfil" [alt]="artist.nombre">
+                    <strong>{{ artist.nombre }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <--ULTIMAS 5O ESCUCHADAS--
+        <div *ngIf="artistas != null">
+            <div class="titulo">
+                <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Últimas canciones escuchadas</strong></h2>
+                <a [routerLink]="['/historialCanciones']">
+                    <h4 style="margin-top: 18px; font-size: 13px; margin-right: 15px;">Mostrar todas</h4>
+                </a>
+            </div>
+
+            <div class="container">       
+                <div *ngFor="let cancion of ultimasCanciones; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                    <div class="dentro-card">
+                        <img [src]="cancion.fotoPortada" [alt]="cancion.nombre"> 
+                        <strong>{{ cancion.nombre }}</strong>
+                        <p>{{ cancion.nombre }}</p> 
+                    </div>          
+                </div>
+            </div>
+        </div>
+
+        <--MIS PLAYLISTS--
+        <div *ngIf="artistas != null">
+            <div class="titulo">
+                <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Mis playlists</strong></h2>
+                <a [routerLink]="['/misPlaylists']">
+                    <h4 style="margin-top: 18px; font-size: 13px; margin-right: 15px;">Mostrar todas</h4>
+                </a>
+            </div>
+
+            <div class="container">       
+                <div *ngFor="let playlist of miPlaylists; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                    <div class="dentro-card">
+                        <img [src]="playlist.fotoPortada" [alt]="playlist.nombre"> 
+                        <strong>{{ playlist.nombre }}</strong>
+                    </div>          
+                </div>
+            </div>
+        </div>
+
+        <--MIS SEGUIDOS--
+        <div *ngIf="artistas != null">
+            <div class="titulo">
+                <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Mis seguidos</strong></h2>
+                <a [routerLink]="['/misSeguidos']">
+                    <h4 style="margin-top: 18px; font-size: 13px; margin-right: 15px;">Mostrar todos</h4>
+                </a>
+            </div>
+
+            <div class="container">       
+                <div *ngFor="let seguido of seguidos; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                    <img [src]="seguido.fotoPerfil" [alt]="seguido.nombre">
+                    <strong>{{ seguido.nombre }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+ 
+  
