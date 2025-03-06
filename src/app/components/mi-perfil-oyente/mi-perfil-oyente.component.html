@@ -29,7 +29,7 @@
     <div class="top-div">
         <div class="column1">
             <!-- AQUI IRIA LA FOTO DE PERFIL SACADA DE LA API -->
-            <img [src]="oyente.fotoPerfil" alt="Foto de perfil" class="logo">
+            <img [src]="oyente.fotoPerfil && oyente.fotoPerfil !== 'DEFAULT' ? oyente.fotoPerfil : 'nouser.png'" alt="Foto de perfil" class="logo">
         </div>
         <div class="column2">
             <!-- AQUI IRIA EL NOMBRE DE USUARIO SACADO DE LA API -->

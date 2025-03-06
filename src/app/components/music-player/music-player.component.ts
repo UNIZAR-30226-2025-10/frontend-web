@@ -44,12 +44,14 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     // Nos suscribimos al observable para recibir el track actualizado
     this.trackSubscription = this.playerService.currentTrack$.subscribe(track => {
       if (track) {
-        this.playTrack(track);
+        this.currentTrack = track;  // Actualiza el track actual
+        this.playTrack();  // Reproduce el track actual
       } else {
-        this.stopTrack();
+        this.stopTrack();  // Detén la reproducción si no hay track
       }
     });
   }
+  
 
   ngOnDestroy() {
     // Aseguramos que la suscripción se desuscriba cuando el componente se destruya
@@ -58,13 +60,23 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     }
   }
 
-  playTrack(track: any) {
-    console.log('Reproduciendo: ' + track.name);
-    this.currentTrack = track;
-    console.log('track pasado', this.currentTrack);
-    this.isPlaying = true;
-    // Aquí agregarías la lógica de reproducción, usando la API de Spotify Web Playback SDK u otro sistema
+  playTrack() {
+    if (this.currentTrack && this.currentTrack.audio) {
+      const audio = new Audio(this.currentTrack.audio); // Crea un nuevo objeto Audio con la URL del track
+      audio.play()
+        .then(() => {
+          this.isPlaying = true; // Cambia el estado de reproducción a 'true'
+          console.log('Reproduciendo:', this.currentTrack.nombre); // Puedes loguear el nombre de la canción si lo deseas
+        })
+        .catch((error: any) => {
+          console.error('Error al reproducir la canción', error);
+        });
+    } else {
+      console.error('No se encontró la URL del track o track no válido:', this.currentTrack);
+    }
   }
+  
+
 
   stopTrack() {
     this.isPlaying = false;

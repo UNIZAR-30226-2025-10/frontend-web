@@ -6,11 +6,12 @@ import { PlayerService } from '../../services/player.service';
 import { LimpiarBuscadorService } from '../../services/limpiar-buscador.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-resultados',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './resultados.component.html',
   styleUrls: ['./resultados.component.css']
 })
@@ -89,6 +90,20 @@ export class ResultadosComponent implements OnInit {
   cambiarFiltro(filtro: string) {
     this.filtroActivo = filtro;
   }
+
+  onScroll(event: Event): void {
+    const scrollTop = (event.target as HTMLElement).scrollTop; // Obtiene la cantidad de scroll vertical
+    const filtros = document.querySelector('.filtros'); // Selecciona el div con la clase .user-me_icon
+    
+    if (filtros) {
+        if (scrollTop > 10) {
+            filtros.classList.add('scrolled'); // Agrega la clase si el scroll es mayor a 10px
+            console.log('aqui');
+        } else {
+            filtros.classList.remove('scrolled'); // Quita la clase si el scroll es menor o igual a 10px
+        }
+    }
+}
 
 }
 

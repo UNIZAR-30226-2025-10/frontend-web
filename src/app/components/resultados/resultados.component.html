@@ -22,7 +22,7 @@
     </button>
 </div>
 
-<div class="contenido">
+<div class="contenido" (scroll)="onScroll($event)">
     <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'canciones'">
         <div *ngIf="tracks.length > 0">
             <h2><strong>Canciones</strong></h2>
@@ -43,7 +43,7 @@
             <h2 style="margin-bottom: 10px;"><strong>Artistas</strong></h2>
             <div class="artists-container">       
                 <div *ngFor="let artist of artists; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                    <img *ngIf="artist.fotoPerfil" [src]="artist.fotoPerfil" alt="{{ artist.nombreArtistico }}">
+                    <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil : 'nouser.png'" alt="{{ artist.nombreArtistico }}">
                     <strong>{{ artist.nombreArtistico }}</strong>
                 </div>
             </div>
@@ -53,12 +53,13 @@
     <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'albumes'">
         <div *ngIf="albums.length > 0">
             <h2><strong>Álbumes</strong></h2>
-            <div class="albums-container">       
-                <div *ngFor="let album of albums; let i = index" class="album-card" [ngClass]="{ 'primer-elemento': i === 0 }">     
-                    <div class="dentro-track-card">    
-                        <img *ngIf="album.fotoPortada" [src]="album.fotoPortada" alt="{{ album.nombre }}">
+            <div class="albums-container">   
+                <div *ngFor="let album of albums; let i = index" class="album-card" [ngClass]="{ 'primer-elemento': i === 0 }">       
+                    <div class="dentro-track-card"><a [routerLink]="['/home/album',album.nombre]"> 
+                        <img [src]="album.fotoPortada  ? album.fotoPortada : 'no_cancion.png'" alt="foto">
                         <strong>{{ album.nombre }}</strong>
                         <p>Álbum de {{ album.nombreArtisticoArtista }}</p>
+                    </a> 
                     </div> 
                 </div>
             </div>
@@ -68,8 +69,8 @@
     <div *ngIf="playlists.length > 0">
         <h2><strong>Playlists</strong></h2>
         <div class="artists-container">       
-            <div *ngFor="let playlist of playlists; let i = index" class="playlist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                <img *ngIf="playlist.fotoPortada" [src]="playlist.fotoPortada" alt="{{ playlist.nombre }}">
+            <div *ngFor="let playlist of playlists; let i = index" class="playlist-card" [ngClass]="{ 'primer-elemento': i === 0 }">  
+                <img [src]="playlist.fotoPortada  ? playlist.fotoPortada : 'no_cancion.png'" alt="{{ playlist.nombre }}">        
                 <strong>{{ playlist.nombre }}</strong>
                 <p>{{ playlist.nombreUsuarioCreador }}</p>
             </div>

@@ -1,34 +1,51 @@
-<!--<div [class.sidebar-open]="sidebarOpen">
-<div *ngIf="album" class="album-container">
-    <div class="album-header">
-      <img [src]="album.images[0]?.url" [alt]="album.name" class="album-image">
-      <div class="album-info">
-        <h1 class="album-title">{{ album.name }}</h1>
-        <p class="album-meta">{{ artistNames }} · {{ album.release_date }}</p>
-        <p class="album-meta">{{ album.total_duration }} - {{ album.tracks.items.length }} canciones</p>
-        <button class="play-button">▶</button>
-      </div>
-    </div>
-  
-    <div class="tracklist-controls">
-      <button class="control-button">▶</button>
-      <button class="control-button">🔀</button>
-    </div>
-    
-    <ul class="tracklist">
-      <li *ngFor="let track of album.tracks.items" class="track-item" (click)="playTrack(track)">
-        <span class="track-number">{{ track.track_number }}</span>
-        <img [src]="album.images[0]?.url" class="track-image">
-        <div class="track-info">
-          <p class="track-name">{{ track.name }}</p>
-          <p class="track-artist">{{ artistNames }}</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Álbum de Música</title>
+</head>
+<body>
+    <div class="container">
+        <div class="album-info">
+            <div class="album-cover">
+              <img [src]="'no_cancion.png'" alt="foto album">
+            </div>
+            <div class="album-text">
+                <h2>{{album}}</h2>
+                <p>Artista • Diciembre 2021</p> <!--artista y fechaPublicacion-->
+                <p>30 minutos 12 segundos</p> <!--duracion y cantidadCanciones-->
+                <p>{{canciones.length}} canciones</p>
+            </div>
         </div>
-        <span class="track-plays">10,261,175 reproducciones</span>
-        <span class="track-duration">3:13</span>
-        <button class="track-button">❤</button>
-        <button class="track-button">▶</button>
-      </li>
-    </ul>
-  </div>
-</div>-->
-  
+        <div class="icons-container">
+          <div class="play-song">
+            <i class="fas fa-play"></i>
+          </div>
+          <i class="ph-shuffle"></i> 
+        </div>
+      
+
+      
+      
+        <div class="playlist">
+          <div *ngFor="let cancion of canciones" class="song">
+            <img [src]="cancion.foto ? cancion.foto : 'no_cancion.png'" alt="{{ cancion.nombre }}">
+              <span>{{ cancion.nombre }}</span>
+              <div class="controls">
+                <span>{{ cancion.duracion }}</span>
+                <i class="far fa-heart"></i>
+                  <div class="circle-plus">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="play-song">
+                  <i class="fas fa-play"></i>
+                </div>
+                  
+              </div>
+          </div>
+      </div>
+      
+    </div>
+</body>
+</html>

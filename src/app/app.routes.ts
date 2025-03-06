@@ -6,7 +6,7 @@ import { RegistroArtistaComponent } from './components/registro-artista/registro
 import { OlvidoContrasena1Component } from './components/olvido-contrasena1/olvido-contrasena1.component';
 import { OlvidoContrasena2Component } from './components/olvido-contrasena2/olvido-contrasena2.component';
 import { OlvidoContrasena3Component } from './components/olvido-contrasena3/olvido-contrasena3.component';
-//import { AlbumComponent } from './components/album/album.component';
+import { AlbumComponent } from './components/album/album.component';
 import { MarcoComponent } from './components/marco/marco.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResultadosComponent } from './components/resultados/resultados.component';
@@ -36,7 +36,7 @@ export const routes: Routes = [
   { path: 'home', component: MarcoComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      /*{ path: 'album/:id', component: AlbumComponent},*/
+      { path: 'album/:id', component: AlbumComponent},
       { path: 'home', component: HomeComponent},
       { path: 'resultados', component: ResultadosComponent},
       { path: 'resultados', component: ResultadosComponent},
