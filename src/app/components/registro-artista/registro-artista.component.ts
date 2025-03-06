@@ -58,7 +58,6 @@ export class RegistroArtistaComponent {
 
 
   onSubmit(): void {
-
     this.authService.registerArtista(this.credentials)
     .subscribe({
       next: (response) => {
@@ -70,29 +69,29 @@ export class RegistroArtistaComponent {
       error: (error) => {
         console.error('Error al autenticar:', error);
 
-        if (error.status === 409) {
+        if (error.status === 400) {
           const errorResponse = error.error;  // Asumiendo que el mensaje de error está dentro de `error.error`
 
-          // Si el error contiene un mensaje específico de correo ya en uso
+
           if (errorResponse.error.includes('correo')) {
-            this.correoError = errorResponse.error; // Muestra el mensaje específico de correo
-            this.errorMessage = ''; // Limpiar el mensaje genérico
+            this.correoError = errorResponse.error; 
+            this.errorMessage = ''; 
           } else {
-            this.correoError = ''; // Limpiar el mensaje de correo
+            this.correoError = ''; 
           }
 
-          // Si el error contiene un mensaje específico de nombre de usuario ya en uso
+
           if (errorResponse.error.includes('nombre')) {
-            this.nombreError = errorResponse.error; // Muestra el mensaje específico de nombre de usuario
-            this.errorMessage = ''; // Limpiar el mensaje genérico
+            this.nombreError = errorResponse.error;
+            this.errorMessage = '';
           } else {
-            this.nombreError = ''; // Limpiar el mensaje de nombre de usuario
+            this.nombreError = ''; 
           }
 
         } else {
           this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
-          this.correoError = '';  // Limpiar error de correo
-          this.nombreError = '';  // Limpiar error de nombre
+          this.correoError = ''; 
+          this.nombreError = '';  
         }
 
 

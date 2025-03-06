@@ -1,15 +1,17 @@
 <div class="dentro-sidebar">
-    <div class="user-me_icon">
-        <div class="user-me">YO</div>
+    <!-- Sección fija (sin scroll) -->
+    <div class="fixed-section">
+        <div class="user-me_icon">
+            <div class="user-me">YO</div>
+        </div>
     </div>
-    <div class="user-icons">
-        <div *ngFor="let user of users">
-            <img [src]="user.img" [alt]="user.name">
+
+    <!-- Sección con scroll -->
+    <div class="scrollable-section" (scroll)="onScroll($event)">
+        <div class="user-icons">
+            <div *ngFor="let user of users">
+                <img [src]="user.img" [alt]="user.name">
+            </div>
         </div>
     </div>
 </div>
-
-
-
-
-

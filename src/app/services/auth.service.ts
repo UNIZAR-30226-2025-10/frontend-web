@@ -65,7 +65,7 @@ export class AuthService {
   }
 
   enviarNuevaContrasenya(credentials: any): Observable<any> {
-    const token = this.tokenService.getToken();
+    const token = this.tokenService.getTempToken();
 
     if (!token) {
       console.error('No se encontró el token temporal');
@@ -83,7 +83,7 @@ export class AuthService {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No se encontró el token temporal');
+      console.error('No se encontró el token');
       return of({ error: 'No autorizado' });;
     }
 
@@ -99,7 +99,7 @@ export class AuthService {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No se encontró el token temporal');
+      console.error('No se encontró el token');
       return of({ error: 'No autorizado' });;
     }
 
@@ -115,7 +115,7 @@ export class AuthService {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No se encontró el token temporal');
+      console.error('No se encontró el token');
       return of({ error: 'No autorizado' });;
     }
 
@@ -126,8 +126,7 @@ export class AuthService {
 
     return this.http.post(`${this.apiUrl}/verify-artista`, credentials, { headers: headers } );
   }
-<<<<<<< Updated upstream
-=======
+
 
   pedirCancion(): Observable<any> {
     const token = this.tokenService.getToken();
@@ -245,6 +244,4 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/search?termino=${query}`, { headers: headers });
   }
 
-
->>>>>>> Stashed changes
 }

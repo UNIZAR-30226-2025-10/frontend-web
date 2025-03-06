@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../services/api.service';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs'; 
+import { AuthService } from '../../services/auth.service';
+import { TokenService } from '../../services/token.service';
+import { Router } from '@angular/router'; 
 
 @Component({
   selector: 'app-home',
@@ -10,18 +11,36 @@ import { Observable } from 'rxjs';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  usuarios: any[] = [];
+  @ViewChild('audioElement') audioElementRef!: ElementRef<HTMLAudioElement>;
+  songUrl: string = '';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private authService:AuthService, private tokenService : TokenService, private router: Router) {}
 
-  ngOnInit() {
-    this.apiService.getAllUsers().subscribe({
+  ngOnInit(): void {
+      if(!this.tokenService.isAuthenticatedAndOyente() && !this.tokenService.isAuthenticatedAndArtista()) {
+        this.router.navigate(['/login']);
+      }
+  }
+
+  playAudio() {
+    this.authService.pedirCancion()
+    .subscribe({
       next: (response) => {
-        this.usuarios = response.usuarios;
-        console.log(this.usuarios);
+        if (response && response.audio) {
+        this.songUrl = response.audio;
+        this.audioElementRef.nativeElement.src = this.songUrl;
+        this.audioElementRef.nativeElement.play();
+      } else {
+        console.error('No se pudo obtener la canción');
+      }
       },
       error: (error) => {
-        console.error('Error al obtener usuarios:', error);
+        console.error('Error al autenticar:', error);
+
+
+      },
+      complete: () => {
+        console.log('Petición completada');
       }
     });
   }

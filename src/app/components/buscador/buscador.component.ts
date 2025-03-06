@@ -1,14 +1,15 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-//importar servicio de la api
-import { ApiService } from '../../services/api.service';
 import { RouterModule } from '@angular/router';
 import { SidebarService } from '../../services/sidebar.service';
 import { ResultadosService } from '../../services/resultados.service';
 import { LimpiarBuscadorService } from '../../services/limpiar-buscador.service';  // Ajusta la ruta según corresponda
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { Subject } from 'rxjs';
+import { debounceTime, switchMap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-buscador',
@@ -17,18 +18,21 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule]
 })
-export class BuscadorComponent {
+export class BuscadorComponent implements OnInit, OnDestroy{
   searchQuery: string = '';
   sidebarOpen = false;
   previousUrl: string = '';
+
+  private searchQuerySubject: Subject<string> = new Subject(); 
   private subscription!: Subscription;
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
-  constructor(private apiService: ApiService, private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService) {}
+  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService) {}
 
   ngOnInit() {
     // Guardar la URL actual antes de la búsqueda
+    
     this.previousUrl = this.router.url;
 
     this.subscription = this.limpiarBuscadorService.limpiarBuscador$.subscribe(data => {
@@ -37,9 +41,6 @@ export class BuscadorComponent {
         this.searchQuery = '';  // Limpiar el input de búsqueda
       }
     });
-<<<<<<< Updated upstream
-=======
-
 
     this.searchQuerySubject.pipe(
       debounceTime(500),  
@@ -52,6 +53,7 @@ export class BuscadorComponent {
       })
     ).subscribe({
       next: (data) => {
+
         this.searchResults.emit(data); // Emitimos los resultados al componente padre
 
         // Guardamos los resultados en el servicio antes de navegar
@@ -64,7 +66,6 @@ export class BuscadorComponent {
         console.error('Error al obtener los datos', error);
       }
     });
->>>>>>> Stashed changes
   }
 
 
@@ -74,31 +75,8 @@ export class BuscadorComponent {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-  }
-
-  //ESTO AHORA NO VA
-  getAll() {
-    if (this.searchQuery.trim() === '') {
-      this.router.navigateByUrl(this.previousUrl);
-    }
-    if (this.searchQuery.trim() !== '') {
-      this.apiService.getAll(this.searchQuery).subscribe({
-        next: (data) => {
-          this.searchResults.emit(data); // Emitimos los resultados al componente padre
-
-          // Guardamos los resultados en el servicio antes de navegar
-          this.resultadosService.setResultados(data);
-
-          // Si hay resultados, navegamos a la nueva ruta
-          this.router.navigate(['/home/resultados'], { queryParams: { search: this.searchQuery } });
-        },
-        error: (error) => {
-          console.error('Error al obtener los datos', error);
-        }
-      });
-    }
-  }
-  
+    this.searchQuerySubject.unsubscribe();
+  } 
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
@@ -108,8 +86,8 @@ export class BuscadorComponent {
   goHome() {
     this.router.navigate(['/home']);
   }
-<<<<<<< Updated upstream
-=======
+
+
 
   goPerfil() {
     this.router.navigate(['/home/miPerfilOyente']);
@@ -119,6 +97,5 @@ export class BuscadorComponent {
     // Emitimos el valor de búsqueda cuando cambia el input
     this.searchQuerySubject.next(this.searchQuery);
   }
->>>>>>> Stashed changes
 }
 

@@ -15,7 +15,26 @@ a {
     margin: 0px 0px 0px 0px;
 }
 
-.user-icons {
+/* Sección fija (sin scroll) */
+.fixed-section {
+    position: sticky;
+    width: 100%;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    transition: box-shadow 0.2s ease;
+}
+
+.fixed-section.scrolled {
+    box-shadow: 0px 6px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Sección con scroll */
+.scrollable-section {
     flex-grow: 1; /* Permite que ocupe el espacio disponible */
     overflow-y: auto; /* Permite scroll */
     display: flex;
@@ -26,12 +45,12 @@ a {
 }
 
 /* Ocultar scrollbar en navegadores modernos */
-.user-icons::-webkit-scrollbar {
+.scrollable-section::-webkit-scrollbar {
     display: none;
 }
 
 /* 🔹 Icono de usuario */
-.user-icons img {
+.scrollable-section img {
     width: 80px;
     height: 80px;
     border-radius: 50%;
@@ -40,7 +59,6 @@ a {
     margin-top: 5px;
     margin-bottom: 10px;
 }
-
 
 /* Estilos del icono "YO" */
 .user-me {
@@ -55,19 +73,13 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 10px;
 }
 
-/* 🏆 "YO" SIEMPRE VISIBLE */
-.user-me_icon {
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
-    align-items: center;
-    margin-bottom: 5px;
-    margin-top: 10px;
-}
 
-.user-icons img:hover {
+
+
+.scrollable-section img:hover {
     transform: scale(1.05);
 }
 
@@ -80,7 +92,7 @@ a {
 }
 
 @media (max-width: 768px) {
-    .user-icons img {
+    .scrollable-section img {
         width: 60px;
         height: 60px;
     }
@@ -91,18 +103,6 @@ a {
     }
 }
 
-@media (max-width: 600px) {
-    .user-icons img {
-        width: 50px;
-        height: 50px;
-    }
 
-    .user-me {
-        width: 50px;
-        height: 50px;
-    }
-}
 
-@media (max-width: 480px) {  
-    /* Estilos específicos para móviles pequeños */
-}
+

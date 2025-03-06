@@ -44,15 +44,9 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     // Nos suscribimos al observable para recibir el track actualizado
     this.trackSubscription = this.playerService.currentTrack$.subscribe(track => {
       if (track) {
-<<<<<<< Updated upstream
-        this.playTrack(track);
-      } else {
-        this.stopTrack();
-=======
         this.currentTrack = track;  // Actualiza el track actual
         this.playTrack();  // Reproduce el track actual
->>>>>>> Stashed changes
-      }
+      } 
     });
 
     this.setInitialVolumeProgress();
@@ -61,6 +55,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       this.updateDuration();
     }, 500);
   }
+  
 
   updateDuration() {
     const audio = this.audioElementRef.nativeElement;
@@ -70,25 +65,14 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       this.duration = audio.duration;
     }
   }
-<<<<<<< Updated upstream
 
-=======
-  
->>>>>>> Stashed changes
   ngOnDestroy() {
     // Aseguramos que la suscripción se desuscriba cuando el componente se destruya
     if (this.trackSubscription) {
       this.trackSubscription.unsubscribe();
     }
   }
-
-<<<<<<< Updated upstream
-  playTrack(track: any) {
-    console.log('Reproduciendo: ' + track.name);
-    this.currentTrack = track;
-    this.isPlaying = true;
-    // Aquí agregarías la lógica de reproducción, usando la API de Spotify Web Playback SDK u otro sistema
-  }
+  
 
   stopTrack() {
     this.isPlaying = false;
@@ -96,10 +80,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     // Aquí agregarías la lógica para detener la reproducción
   }
 
-  toggleFavorite() {
-    this.isFavorite = !this.isFavorite; // Cambiar entre favorito y no favorito
-  }
-=======
+
   //PETICION PARA COGER EL AUDIO DE LA NUEVA CANCION CUANDO SE PULSA EN ELLA
   playTrack() {
     //MANDARLE AL BACKEND LA NUEVA CANCION ACTUAL
@@ -154,7 +135,6 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       volumeControl.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000E3B ${progressPercent}%)`;
     }
   }
->>>>>>> Stashed changes
 
   //PARA PROGRESO DE LA BARRA Y EL TIEMPO
   updateProgress() {

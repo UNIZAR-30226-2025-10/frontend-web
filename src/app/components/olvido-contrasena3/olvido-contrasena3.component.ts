@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router'; 
@@ -22,13 +22,22 @@ export class OlvidoContrasena3Component implements OnInit{
   isLengthValid: boolean = false;
   isFormValid: boolean = false;
 
-  constructor(private router: Router, private authService: AuthService, private route: ActivatedRoute, private tokenService: TokenService) {}
+  constructor(private router: Router, private authService: AuthService, private route: ActivatedRoute, private tokenService: TokenService) {
+    const navigation = this.router.getCurrentNavigation();
+    const correo = (navigation?.extras.state as { correo: string })?.correo;
+
+
+    if (correo) {
+      this.credentials.correo = correo;  // Asigna el correo a la propiedad credentials
+    }
+  }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.credentials.correo = params['correo'];
-    });
+      if(!this.tokenService.hasTempToken()) {
+        this.router.navigate(['/login']);
+      }
   }
+  
 
   togglePassword(): void {
     this.isPasswordVisible = !this.isPasswordVisible;

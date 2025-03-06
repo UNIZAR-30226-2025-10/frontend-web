@@ -41,6 +41,7 @@ export class AdminComponent implements OnInit{
 
 
   aceptarSolicitud(correo:string):void{
+    this.solicitudes = this.solicitudes.filter(solicitud => solicitud.correo !== correo);
     this.credentials.valido=true;
     this.credentials.correo=correo;
     this.authService.validarSolicitudes(this.credentials).subscribe({
@@ -56,6 +57,7 @@ export class AdminComponent implements OnInit{
     });
   }
   rechazarSolicitud(correo:string):void{
+    this.solicitudes = this.solicitudes.filter(solicitud => solicitud.correo !== correo);
     this.credentials.valido=false;
     this.credentials.correo=correo;
     this.authService.validarSolicitudes(this.credentials).subscribe({

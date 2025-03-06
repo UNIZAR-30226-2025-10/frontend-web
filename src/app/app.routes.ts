@@ -11,7 +11,7 @@ import { MarcoComponent } from './components/marco/marco.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResultadosComponent } from './components/resultados/resultados.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { PerfilOyenteComponent } from './components/perfil-oyente/perfil-oyente.component';
+import { MiPerfilOyenteComponent } from './components/mi-perfil-oyente/mi-perfil-oyente.component';
 import { MiPerfilArtistaComponent } from './components/mi-perfil-artista/mi-perfil-artista.component';
 import { IntroducirCodigoComponent } from './components/introducir-codigo/introducir-codigo.component';
 import { PendienteComponent } from './components/pendiente/pendiente.component';
@@ -27,8 +27,8 @@ export const routes: Routes = [
   { path: 'registroOyente', component: RegistroOyenteComponent},
   { path: 'registroArtista', component: RegistroArtistaComponent},
   { path: 'olvidoContrasena1', component: OlvidoContrasena1Component},
-  { path: 'olvidoContrasena2/:correo', component: OlvidoContrasena2Component},
-  { path: 'olvidoContrasena3/:correo', component: OlvidoContrasena3Component},
+  { path: 'olvidoContrasena2', component: OlvidoContrasena2Component},
+  { path: 'olvidoContrasena3', component: OlvidoContrasena3Component},
   { path: 'introducirCodigo', component: IntroducirCodigoComponent},
   { path: 'pendiente', component: PendienteComponent},
   { path: 'pedirContrasenya', component: PedirContrasenyaComponent},
@@ -40,7 +40,7 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent},
       { path: 'resultados', component: ResultadosComponent},
       { path: 'resultados', component: ResultadosComponent},
-      { path: 'perfilOyente', component: PerfilOyenteComponent},
+      { path: 'miPerfilOyente', component: MiPerfilOyenteComponent},
       { path: 'miPerfilArtista', component: MiPerfilArtistaComponent},
       {path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
       {path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},

@@ -8,6 +8,7 @@ export class TokenService {
   private tokenKey = 'accessToken'; // Clave para el localStorage
   private userKey = 'userData';
   private tipoKey = 'tipoData';
+  private tokenTempKey = 'tempToken';
 
   constructor() { }
 
@@ -19,6 +20,14 @@ export class TokenService {
   // Obtener token
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
+  }
+
+  setTempToken(tempToken: string): void {
+    localStorage.setItem(this.tokenTempKey, tempToken);
+  }
+
+  getTempToken(): string | null {
+    return localStorage.getItem(this.tokenTempKey);
   }
 
   setUser(user: any): void {
@@ -49,12 +58,28 @@ export class TokenService {
 
 
   clearTemporalToken(): void {
-    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.tokenTempKey);
   }
 
   // Verificar si el usuario está autenticado
-  isAuthenticated(): boolean {
-    return !!this.getToken();
+  isAuthenticatedAndOyente(): boolean {
+    return !!this.getToken() && this.getTipo()=="oyente";
+  }
+
+  isAuthenticatedAndArtista(): boolean {
+    return !!this.getToken() && this.getTipo()=="artista";
+  }
+
+  isAuthenticatedAndPendiente(): boolean {
+    return !!this.getToken() && this.getTipo()=="pendiente";
+  }
+
+  isAuthenticatedAndValido(): boolean {
+    return !!this.getToken() && this.getTipo()=="valido";
+  }
+
+  hasTempToken(): boolean {
+    return !!this.getTempToken();
   }
 
 }
