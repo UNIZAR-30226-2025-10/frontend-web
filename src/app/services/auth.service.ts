@@ -128,7 +128,7 @@ export class AuthService {
   }
 
 
-  pedirCancion(): Observable<any> {
+  pedirCancion(id: string): Observable<any> {
     const token = this.tokenService.getToken();
 
     if (!token) {
@@ -141,7 +141,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.get(`${this.apiUrl}/get-cancion?name=Radioactive&artist=imagine.dragons@gmail.com`, { headers: headers });
+    return this.http.get(`${this.apiUrl}/get-cancion?id=${id}`, { headers: headers });
   }
 
   /*getAll():Observable<any> {

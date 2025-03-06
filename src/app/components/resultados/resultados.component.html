@@ -55,8 +55,8 @@
             <h2><strong>Álbumes</strong></h2>
             <div class="albums-container">   
                 <div *ngFor="let album of albums; let i = index" class="album-card" [ngClass]="{ 'primer-elemento': i === 0 }">       
-                    <div class="dentro-track-card"><a [routerLink]="['/home/album',album.nombre]"> 
-                        <img [src]="album.fotoPortada  ? album.fotoPortada : 'no_cancion.png'" alt="foto">
+                    <div class="dentro-track-card"><a [routerLink]="['/home/album',album.id]"> 
+                        <img [src]="album.fotoPortada  && album.fotoPortada !== 'DEFAULT' ? album.fotoPortada : 'no_cancion.png'" alt="foto">
                         <strong>{{ album.nombre }}</strong>
                         <p>Álbum de {{ album.nombreArtisticoArtista }}</p>
                     </a> 
@@ -70,9 +70,11 @@
         <h2><strong>Playlists</strong></h2>
         <div class="artists-container">       
             <div *ngFor="let playlist of playlists; let i = index" class="playlist-card" [ngClass]="{ 'primer-elemento': i === 0 }">  
-                <img [src]="playlist.fotoPortada  ? playlist.fotoPortada : 'no_cancion.png'" alt="{{ playlist.nombre }}">        
+                <div class="dentro-playlist-card"><a [routerLink]="['/home/playlist']"> 
+                <img [src]="playlist.fotoPortada  && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" alt="{{ playlist.nombre }}">        
                 <strong>{{ playlist.nombre }}</strong>
                 <p>{{ playlist.nombreUsuarioCreador }}</p>
+                </a>
             </div>
         </div>
     </div>

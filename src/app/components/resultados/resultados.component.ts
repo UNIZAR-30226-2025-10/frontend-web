@@ -88,15 +88,15 @@ export class ResultadosComponent implements OnInit {
   }
 
   onScroll(event: Event): void {
-    const scrollTop = (event.target as HTMLElement).scrollTop; // Obtiene la cantidad de scroll vertical
-    const filtros = document.querySelector('.filtros'); // Selecciona el div con la clase .user-me_icon
+    const scrollTop = (event.target as HTMLElement).scrollTop; 
+    const filtros = document.querySelector('.filtros'); 
     
     if (filtros) {
         if (scrollTop > 10) {
-            filtros.classList.add('scrolled'); // Agrega la clase si el scroll es mayor a 10px
+            filtros.classList.add('scrolled'); 
             console.log('aqui');
         } else {
-            filtros.classList.remove('scrolled'); // Quita la clase si el scroll es menor o igual a 10px
+            filtros.classList.remove('scrolled'); 
         }
     }
 }

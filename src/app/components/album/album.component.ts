@@ -38,6 +38,12 @@ export class AlbumComponent /*implements OnInit*/ {
     { nombre: "Canción 2", duracion: "4:05",foto:"" },
     { nombre: "Canción 3", duracion: "2:45", foto:"" },
     { nombre: "Canción 5", duracion: "2:45", foto:"" },
+    { nombre: "Canción 6", duracion: "2:45", foto:""},
+    { nombre: "Canción 6", duracion: "2:45", foto:""},
+    { nombre: "Canción 6", duracion: "2:45", foto:""},
+    { nombre: "Canción 6", duracion: "2:45", foto:""},
+    { nombre: "Canción 6", duracion: "2:45", foto:""},
+    { nombre: "Canción 6", duracion: "2:45", foto:""},
     { nombre: "Canción 6", duracion: "2:45", foto:""}
 ];
 
@@ -52,4 +58,6 @@ export class AlbumComponent /*implements OnInit*/ {
   playTrack(track: any) {
     this.playerService.setTrack(track);
   }*/
+
+    
 }

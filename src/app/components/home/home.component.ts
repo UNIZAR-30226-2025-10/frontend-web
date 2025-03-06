@@ -22,28 +22,7 @@ export class HomeComponent implements OnInit {
       }
   }
 
-  playAudio() {
-    this.authService.pedirCancion()
-    .subscribe({
-      next: (response) => {
-        if (response && response.audio) {
-        this.songUrl = response.audio;
-        this.audioElementRef.nativeElement.src = this.songUrl;
-        this.audioElementRef.nativeElement.play();
-      } else {
-        console.error('No se pudo obtener la canción');
-      }
-      },
-      error: (error) => {
-        console.error('Error al autenticar:', error);
-
-
-      },
-      complete: () => {
-        console.log('Petición completada');
-      }
-    });
-  }
+  
 }
 
 

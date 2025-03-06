@@ -85,7 +85,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   playTrack() {
     //MANDARLE AL BACKEND LA NUEVA CANCION ACTUAL
     //pasarle this.currentTrack.id y esto me devuelve el audio
-    this.authService.pedirCancion()
+    this.authService.pedirCancion(this.currentTrack.id)
     .subscribe({
       next: (response) => {
         if (response && response.audio) {
