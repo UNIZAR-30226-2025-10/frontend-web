@@ -9,6 +9,7 @@ export class PlayerService {
   currentTrack$ = this.currentTrackSource.asObservable();
 
   setTrack(track: any) {
+    console.log('le llega: ', track)
     this.currentTrackSource.next(track);
   }
 }

@@ -63,6 +63,8 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     // Verificamos si la duración es válida
     if (audio && !isNaN(audio.duration) && audio.duration > 0) {
       this.duration = audio.duration;
+    }else {
+      this.duration = 0; // O cualquier otro valor por defecto
     }
   }
 
@@ -84,7 +86,8 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   //PETICION PARA COGER EL AUDIO DE LA NUEVA CANCION CUANDO SE PULSA EN ELLA
   playTrack() {
     //MANDARLE AL BACKEND LA NUEVA CANCION ACTUAL
-    //pasarle this.currentTrack.id y esto me devuelve el audio
+
+    console.log('id:', this.currentTrack.id);
     this.authService.pedirCancion(this.currentTrack.id)
     .subscribe({
       next: (response) => {
@@ -141,12 +144,12 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     const audioElement = this.audioElementRef.nativeElement;
   if (audioElement) {
     audioElement.addEventListener('loadedmetadata', () => {
-      this.duration = audioElement.duration; // Se actualiza cuando el audio carga
+      this.duration = !isNaN(audioElement.duration) ? audioElement.duration : 0;  // Se actualiza cuando el audio carga
     });
 
     audioElement.addEventListener('timeupdate', () => {
       this.currentTime = audioElement.currentTime;
-      this.duration = audioElement.duration; // Asegurar que siempre tenga valor
+      this.duration = !isNaN(audioElement.duration) ? audioElement.duration : 0; // Asegurar que siempre tenga valor
 
       const progressPercent = (this.currentTime / this.duration) * 100;
 
@@ -179,6 +182,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
 
   //PASAR TIEMPO A FORMATO MINUTO:SEGUNDO
   formatTime(seconds: number): string {
+    if (isNaN(seconds) || seconds <= 0) return "0:00";
     const minutes = Math.floor(seconds / 60); // Obtener minutos
     const remainingSeconds = Math.floor(seconds % 60); // Obtener segundos restantes
     return `${minutes}:${remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}`;

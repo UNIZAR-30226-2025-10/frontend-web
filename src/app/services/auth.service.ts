@@ -144,10 +144,6 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-cancion?id=${id}`, { headers: headers });
   }
 
-  /*getAll():Observable<any> {
-    return;
-  }*/
-
   pedirMisDatosOyente(): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -177,7 +173,23 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.get(`${this.apiUrl}/get-artistas-recientes`, { headers: headers } );
+    return this.http.get(`${this.apiUrl}/get-historial-artistas`, { headers: headers } );
+  }
+
+  pedirColeccionesRecientes(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-historial-colecciones`, { headers: headers } );
   }
 
   pedirHistorialCanciones(): Observable<any> {
@@ -212,6 +224,22 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-mis-playlists`, { headers: headers } );
   }
 
+  pedirRecomendaciones(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-recomendaciones`, { headers: headers } );
+  }
+
   pedirMisSeguidos(): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -243,5 +271,6 @@ export class AuthService {
 
     return this.http.get(`${this.apiUrl}/search?termino=${query}`, { headers: headers });
   }
+
 
 }

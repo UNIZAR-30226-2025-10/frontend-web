@@ -29,8 +29,7 @@
     <div class="top-div">
         <div class="column1">
             <!-- AQUI IRIA LA FOTO DE PERFIL SACADA DE LA API -->
-            <!--<img [src]="oyente.fotoPerfil && oyente.fotoPerfil !== 'DEFAULT' ? oyente.fotoPerfil : 'nouser.png'" alt="Foto de perfil" class="logo">-->
-            <img src="logo_noizz.png" alt="Logo">
+            <img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="logo">
         </div>
         <div class="column2">
             <!-- AQUI IRIA EL NOMBRE DE USUARIO SACADO DE LA API -->
@@ -58,10 +57,9 @@
         </div>
     </div>
 
-<!--
+     <!--TOP ARTISTAS-->
     <div class="bottom-div">
-        -TOP ARTISTAS RECEINTES-
-        <div *ngIf="artistas != null">
+        <div *ngIf="ultimosArtistas.length > 0">
             <div class="titulo">
                 <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Top artistas recientes</strong></h2>
                 <a [routerLink]="['/topArtistas']">
@@ -71,23 +69,23 @@
             
             <div class="container">       
                 <div *ngFor="let artist of ultimosArtistas; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                    <img [src]="artist.fotoPerfil" [alt]="artist.nombre">
-                    <strong>{{ artist.nombre }}</strong>
+                    <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil  : 'nouser.png'" [alt]="artist.nombreArtista">
+                    <strong>{{ artist.nombreNombreArtista }}</strong>
                 </div>
             </div>
         </div>
 
-        <--ULTIMAS 5O ESCUCHADAS--
-        <div *ngIf="artistas != null">
+        <!--ULTIMAS 5O ESCUCHADAS-->
+        <div *ngIf="ultimasCanciones.length > 0">
             <div class="titulo">
-                <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Últimas canciones escuchadas</strong></h2>
+                <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Historial de canciones</strong></h2>
                 <a [routerLink]="['/historialCanciones']">
                     <h4 style="margin-top: 18px; font-size: 13px; margin-right: 15px;">Mostrar todas</h4>
                 </a>
             </div>
 
             <div class="container">       
-                <div *ngFor="let cancion of ultimasCanciones; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                <div *ngFor="let cancion of ultimasCanciones; let i = index" class="card" (click)="onTrackClick(cancion)" [ngClass]="{ 'primer-elemento': i === 0 }">
                     <div class="dentro-card">
                         <img [src]="cancion.fotoPortada" [alt]="cancion.nombre"> 
                         <strong>{{ cancion.nombre }}</strong>
@@ -97,8 +95,8 @@
             </div>
         </div>
 
-        <--MIS PLAYLISTS--
-        <div *ngIf="artistas != null">
+        <!--MIS PLAYLISTS-->
+        <div *ngIf="misPlaylists.length > 0">
             <div class="titulo">
                 <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Mis playlists</strong></h2>
                 <a [routerLink]="['/misPlaylists']">
@@ -107,17 +105,17 @@
             </div>
 
             <div class="container">       
-                <div *ngFor="let playlist of miPlaylists; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                <div *ngFor="let playlist of misPlaylists; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
                     <div class="dentro-card">
-                        <img [src]="playlist.fotoPortada" [alt]="playlist.nombre"> 
+                        <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
                         <strong>{{ playlist.nombre }}</strong>
                     </div>          
                 </div>
             </div>
         </div>
 
-        <--MIS SEGUIDOS--
-        <div *ngIf="artistas != null">
+        <!--MIS SEGUIDOS-->
+        <div *ngIf="seguidos.length > 0">
             <div class="titulo">
                 <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Mis seguidos</strong></h2>
                 <a [routerLink]="['/misSeguidos']">
@@ -127,13 +125,13 @@
 
             <div class="container">       
                 <div *ngFor="let seguido of seguidos; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                    <img [src]="seguido.fotoPerfil" [alt]="seguido.nombre">
+                    <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombre">
                     <strong>{{ seguido.nombre }}</strong>
                 </div>
             </div>
         </div>
     </div>
-</div>-->
+</div>
 
  
   

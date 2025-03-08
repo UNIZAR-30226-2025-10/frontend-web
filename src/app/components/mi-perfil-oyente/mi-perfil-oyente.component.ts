@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { PlayerService } from '../../services/player.service';
 
 interface misDatos {
   nombre: string;
@@ -24,14 +26,17 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   nombreActual: string = "martaRata2004"; // ESTO ES OYENTE.NOMBRE
 
-  oyente! : misDatos;
+  foto: string ='';
+  oyente: misDatos = { nombre: '', nSeguidores: 0, nSeguidos: 0 };
   ultimosArtistas: any[] = [];
-  miPlaylists: any[] = [];
+  misPlaylists: any[] = [];
   ultimasCanciones: any[] = [];
   seguidos: any[] = [];
   isAuthenticated: boolean = false;
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router){}
+  @Output() trackClicked = new EventEmitter<any>();
+
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService){}
 
   ngOnInit(): void {
 
@@ -41,94 +46,33 @@ export class MiPerfilOyenteComponent implements OnInit {
     }
 
     this.isAuthenticated = true;
-    
-    this.authService.pedirMisDatosOyente()
-    .subscribe({
+    this.foto = this.tokenService.getUser().fotoPerfil;
+
+    forkJoin({
+      oyente: this.authService.pedirMisDatosOyente(),
+      ultimosArtistas: this.authService.pedirTopArtistas(),
+      misPlaylists: this.authService.pedirMisPlaylists(),
+      ultimasCanciones: this.authService.pedirHistorialCanciones(),
+      seguidos: this.authService.pedirMisSeguidos()
+    }).subscribe({
       next: (response) => {
-        console.log('UQE RECIBO: ', response);
-        this.oyente.nombre = response.oyente.nombreUsuario;
-        this.oyente.nSeguidores= response.oyente.seguidores;
-        this.oyente.nSeguidos = response.oyente.seguidos;       
+        this.oyente.nombre = response.oyente.nombre;
+        this.oyente.nSeguidores= response.oyente.seguidores_count;
+        this.oyente.nSeguidos = response.oyente.seguidos_count;    
+        this.ultimosArtistas = Object.values(response.ultimosArtistas.historial_artistas);
+        this.ultimasCanciones = Object.values(response.ultimasCanciones.historial_canciones);
+        this.misPlaylists = Object.values(response.misPlaylists.playlists);
+        this.seguidos = Object.values(response.seguidos.seguidos);
+
       },
       error: (error) => {
-        console.error('Error al pedir los datos:', error);
-
+        console.error('Error en alguna de las peticiones:', error);
       },
       complete: () => {
-        console.log('Petición completada');
-      }
-    });
-
-    this.authService.pedirTopArtistas()
-    .subscribe({
-      next: (response) => {
-        this.ultimosArtistas = response.artistas;
-      },
-      error: (error) => {
-        console.error('Error al pedir los datos:', error);
-
-      },
-      complete: () => {
-        console.log('Petición completada');
-      }
-    });
-
-    this.authService.pedirHistorialCanciones()
-    .subscribe({
-      next: (response) => {
-        this.ultimasCanciones = response.canciones;
-      },
-      error: (error) => {
-        console.error('Error al pedir los datos:', error);
-
-      },
-      complete: () => {
-        console.log('Petición completada');
-      }
-    });
-
-    this.authService.pedirMisPlaylists()
-    .subscribe({
-      next: (response) => {
-        this.miPlaylists = response.playlists;
-      },
-      error: (error) => {
-        console.error('Error al pedir los datos:', error);
-
-      },
-      complete: () => {
-        console.log('Petición completada');
-      }
-    });
-
-    //PREGUNTAR POR MIRAR LO Q DEVUELVE
-    this.authService.pedirMisSeguidos()
-    .subscribe({
-      next: (response) => {
-        this.seguidos = response.seguidos;
-      },
-      error: (error) => {
-        console.error('Error al pedir los datos:', error);
-
-      },
-      complete: () => {
-        console.log('Petición completada');
+        console.log('Todas las peticiones completadas');
       }
     });
   }
-
-  artistas = [
-    { name: 'Usuario 1', img: 'https://randomuser.me/api/portraits/men/16.jpg', status: 'status-red' },
-    { name: 'Usuario 2', img: 'https://randomuser.me/api/portraits/women/2.jpg', status: 'status-red' },
-    { name: 'Usuario 3', img: 'https://randomuser.me/api/portraits/men/3.jpg', status: 'status-red' },
-    { name: 'Usuario 4', img: 'https://randomuser.me/api/portraits/men/4.jpg', status: 'status-red' },
-    { name: 'Usuario 5', img: 'https://randomuser.me/api/portraits/men/5.jpg', status: 'status-red' },
-    { name: 'Usuario 6', img: 'https://randomuser.me/api/portraits/women/92.jpg', status: 'status-red' },
-    { name: 'Usuario 7', img: 'https://randomuser.me/api/portraits/men/6.jpg', status: 'status-red' },
-    { name: 'Usuario 8', img: 'https://randomuser.me/api/portraits/women/4.jpg', status: 'status-red' },
-    { name: 'Usuario 9', img: 'https://randomuser.me/api/portraits/men/8.jpg', status: 'status-red' },
-    { name: 'Usuario 10', img: 'https://randomuser.me/api/portraits/men/23.jpg', status: 'status-red' }
-  ];
 
   abrirModal() {
     this.isModalOpen = true;
@@ -149,6 +93,11 @@ export class MiPerfilOyenteComponent implements OnInit {
       console.log("Archivo seleccionado:", file);
       // Aquí puedes procesar el archivo o cargarlo a un servidor
     }
+  }
+
+  onTrackClick(track: any) {
+    // En lugar de emitir el evento, llamamos al servicio para actualizar el track
+    this.playerService.setTrack(track);
   }
   
 
