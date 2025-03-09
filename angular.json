@@ -29,7 +29,7 @@
               {
                 "glob": "_redirects",
                 "input": "src/assets",
-                "output": "./"
+                "output": "browser/"
               }
             ],
 
@@ -96,7 +96,7 @@
             {
               "glob": "_redirects",
               "input": "src/assets",
-              "output": "./"
+              "output": "browser/"
             }
           ],
 
