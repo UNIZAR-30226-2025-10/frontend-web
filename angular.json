@@ -32,13 +32,11 @@
                 "output": "browser/"
               }
             ],
-
             "styles": [
               "src/styles.css"
             ],
             "scripts": [],
             "baseHref": "/"
-
           },
           "configurations": {
             "production": {
@@ -88,18 +86,17 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-            {
-              "glob": "**/*",
-              "input": "public"
-            },
-            "src/assets",
-            {
-              "glob": "_redirects",
-              "input": "src/assets",
-              "output": "browser/"
-            }
-          ],
-
+              {
+                "glob": "**/*",
+                "input": "public"
+              },
+              "src/assets",
+              {
+                "glob": "_redirects",
+                "input": "src/assets",
+                "output": "browser/"
+              }
+            ],
             "styles": [
               "src/styles.css"
             ],
