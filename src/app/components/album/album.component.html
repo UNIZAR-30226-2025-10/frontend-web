@@ -27,11 +27,21 @@
         </div>
       </div>
     
+      
       <div class="playlist">
-        <div *ngFor="let cancion of album?.canciones; let i = index" class="song" (click)="onTrackClick(cancion)">
+        <div *ngFor="let cancion of album?.canciones; let i = index" 
+             class="song" 
+             [ngClass]="{
+              'playing': isPlaying && cancion.id === currentTrack?.id,
+              'current-track': cancion.id === currentTrack?.id
+            }" 
+             (click)="onTrackClick(cancion)">
+             
           <div class="info">
             <div class="song-number">{{ i + 1 }}</div>
-            <img [src]="cancion.fotoPortada || 'no_cancion.png'" alt="{{ cancion.nombre }}">
+            <div class="song-image-wrapper">
+              <img [src]="cancion.fotoPortada || 'no_cancion.png'" alt="{{ cancion.nombre }}">
+            </div>
             <div class="song-details">
               <span style="font-weight: bold;">{{ cancion.nombre }}</span>
               <span>{{ album?.artista }}</span>
@@ -39,17 +49,15 @@
           </div>
           <div class="repros">reproducciones</div>
           <div class="controls">
-              <span>{{ cancion.duracion | duration }}</span>
-              <i class="far fa-heart"></i>
-              <div class="circle-plus">
-                <i class="fas fa-plus"></i>
-              </div>
-              <div class="play-song">
-                <i class="fas fa-play"></i>
-              </div>                           
-            </div>
+            <span>{{ cancion.duracion | duration }}</span>
+            <i class="far fa-heart"></i>
+            <div class="circle-plus">
+              <i class="fas fa-plus"></i>
+            </div>                        
+          </div>
         </div>
       </div>
+
   </div>
 </body>
 </html>

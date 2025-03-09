@@ -8,6 +8,9 @@ export class PlayerService {
   private currentTrackSource = new BehaviorSubject<any>(null);
   currentTrack$ = this.currentTrackSource.asObservable();
 
+  public isPlayingSubject = new BehaviorSubject<boolean>(false);
+  isPlaying$ = this.isPlayingSubject.asObservable();
+
   private isShuffle = false;
   private currentIndex = 0;
   private songList: any[] = [];
@@ -30,6 +33,7 @@ export class PlayerService {
     this.playedSongs = [];
     this.playedSongs.push(track);
     this.currentTrackSource.next(this.songList[this.currentIndex]); // Emitir la canción actual
+    this.isPlayingSubject.next(true);
   }
 
   //Cuando se reproducen desde el play general del album
@@ -76,6 +80,20 @@ export class PlayerService {
       console.log('No hay canciones anteriores para reproducir, repitiendo la canción actual');
     }
 }
+
+togglePlay(): void {
+  const audioElement = document.querySelector('audio'); 
+  if (audioElement) {
+    if (audioElement.paused) {
+      audioElement.play();
+      this.isPlayingSubject.next(true);
+    } else {
+      audioElement.pause();
+      this.isPlayingSubject.next(false);
+    }
+  }
+}
+
 
 
 playRandomSong(): void {

@@ -5,6 +5,7 @@ import { PlayerService } from '../../services/player.service';
 import { SidebarService } from '../../services/sidebar.service';
 import { AuthService } from '../../services/auth.service';
 import { DurationPipe } from '../../pipes/duration.pipe';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-album',
@@ -20,6 +21,7 @@ export class AlbumComponent /*implements OnInit*/ {
   currentIndex: number = 0;
   isShuffle: boolean = false;
   isPlaying: boolean = false;
+  currentTrack: any;
 
 
   constructor(
@@ -38,6 +40,16 @@ export class AlbumComponent /*implements OnInit*/ {
     this.sidebarService.sidebarOpen$.subscribe(open => {
       this.sidebarOpen = open;
     });
+
+    this.playerService.isPlaying$.subscribe(isPlaying => {
+      this.isPlaying = isPlaying; 
+    });
+
+    this.playerService.currentTrack$.subscribe(track => {
+      this.isPlaying = !!track; // Si hay una canción, isPlaying será true
+      this.currentTrack = track;
+    });
+    
   }
 
   getAlbum(albumId: string): void {
@@ -56,15 +68,29 @@ export class AlbumComponent /*implements OnInit*/ {
   }
 
   onAlbumClick(album: any) {
-    // Llamamos al servicio y le pasamos el álbum seleccionado
-    this.playerService.setAlbum(album);
-    this.isPlaying = this.isPlaying;
+    this.playerService.currentTrack$.pipe(take(1)).subscribe(currentTrack => {
+      // Verifica si el álbum actual es diferente al álbum que seleccionaste
+      if (currentTrack) {
+        // Si ya hay una canción en reproducción
+        if (currentTrack.albumId !== album.id) {
+          // Si el álbum actual es diferente, pausa la reproducción y establece el nuevo álbum (de momento no va en las canciones no tenemos el album al que pertenecen)
+          this.playerService.togglePlay(); // Pausa si ya está sonando algo
+          this.playerService.setAlbum(album); // Establece el nuevo álbum
+        } else {
+          // Si el álbum es el mismo, alterna play/pause
+          this.playerService.togglePlay();
+        }
+      } else {
+        // Si no hay ninguna canción en reproducción, establece el álbum y comienza a reproducir
+        this.playerService.setAlbum(album);
+      }
+    });
   }
+  
   
   onTrackClick(track: any) {
     // Llamamos al servicio para establecer la canción seleccionada y el álbum con la lista de canciones
     this.playerService.setTrack(track, this.album?.canciones); // Pasamos la lista de canciones del álbum
-    this.isPlaying = true;
   }
 
   getFormattedDuration(seconds: number): string {

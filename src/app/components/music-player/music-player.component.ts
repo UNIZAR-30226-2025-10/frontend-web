@@ -124,9 +124,11 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     if (audio.paused) {
       audio.play();
       this.isPlaying = true;
+      this.playerService.isPlayingSubject.next(true);
     } else {
       audio.pause();
       this.isPlaying = false;
+      this.playerService.isPlayingSubject.next(false);
     }
     //MANDAR AL BACKEND CUANDO HAGO PAUSA
   }
