@@ -54,6 +54,15 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     setInterval(() => {
       this.updateDuration();
     }, 500);
+
+  }
+
+  ngAfterViewInit() {
+    if (this.audioElementRef && this.audioElementRef.nativeElement) {
+      this.audioElementRef.nativeElement.addEventListener('ended', () => {
+        this.onSongEnd();
+      });
+    }
   }
   
 
@@ -122,12 +131,12 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     //MANDAR AL BACKEND CUANDO HAGO PAUSA
   }
 
-  prevTrack(){
-
+  prevTrack(): void {
+    this.playerService.prevSong();  
   }
 
-  nextTrack(){
-    
+  nextTrack(): void {
+    this.playerService.nextSong();  
   }
 
   //PARA PONER BIEN EL VOLUMEN ANTES DE TOCAR LA BARRA
@@ -209,5 +218,9 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     //MNADAR AL BACKEND
   }
 
-
+  onSongEnd(): void {
+    console.log("Canción terminada, pasando a la siguiente...");
+    this.playerService.nextSong();
+  }
+  
 }

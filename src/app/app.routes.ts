@@ -39,7 +39,6 @@ export const routes: Routes = [
       { path: 'album/:id', component: AlbumComponent},
       { path: 'home', component: HomeComponent},
       { path: 'resultados', component: ResultadosComponent},
-      { path: 'resultados', component: ResultadosComponent},
       { path: 'miPerfilOyente', component: MiPerfilOyenteComponent},
       { path: 'miPerfilArtista', component: MiPerfilArtistaComponent},
       {path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
