@@ -43,11 +43,11 @@ export class HomeComponent implements OnInit {
     }).subscribe({
       next: (data) => {
         // Asignar los resultados de las peticiones
-        this.artistas = Object.values(data.artistas.historial_artistas);
-        this.recientes = Object.values(data.recientes.historial_colecciones);
-        this.ultimasCanciones = Object.values(data.canciones.historial_canciones);
-        this.misPlaylists = Object.values(data.playlists.playlists);
-        this.recomendados = Object.values(data.recomendados.canciones_recomendadas);
+        this.artistas = data.artistas.historial_artistas;
+        this.recientes = data.recientes.historial_colecciones;
+        this.ultimasCanciones = data.canciones.historial_canciones;
+        this.misPlaylists = data.playlists.playlists;
+        this.recomendados = data.recomendados.canciones_recomendadas;
 
         // Una vez que todos los datos han sido recibidos, intenta mezclar
         this.intentarMezclar();

@@ -7,6 +7,7 @@ import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
+import { ProgressService } from '../../services/progress.service';
 
 interface misDatos {
   nombre: string;
@@ -36,7 +37,7 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   @Output() trackClicked = new EventEmitter<any>();
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService){}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService){}
 
   ngOnInit(): void {
 
@@ -98,6 +99,37 @@ export class MiPerfilOyenteComponent implements OnInit {
   onTrackClick(track: any) {
     // En lugar de emitir el evento, llamamos al servicio para actualizar el track
     this.playerService.setTrack(track);
+  }
+
+  cerrarSesion(): void {
+
+    const currentProgress = this.tokenService.getProgresoLocal();
+
+    this.authService.guardarProgreso(currentProgress)
+    .subscribe({
+      next: () => {   
+      },
+      error: (error) => {
+        console.error('Error al guardar el progreso:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
+
+    this.authService.logout()
+    .subscribe({
+      next: () => {
+        this.tokenService.clearStorage();
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error('Error al cerrar la sesión:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
   }
   
 

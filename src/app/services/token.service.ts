@@ -9,6 +9,9 @@ export class TokenService {
   private userKey = 'userData';
   private tipoKey = 'tipoData';
   private tokenTempKey = 'tempToken';
+  private cancionActual = 'cancionActual';
+  private coleccionActual = 'coleccionActual';
+  private progreso = 'progreso';
 
   constructor() { }
 
@@ -49,11 +52,45 @@ export class TokenService {
   }
 
 
+  setCancionActual(cancion: any): void {
+    localStorage.setItem(this.cancionActual, JSON.stringify(cancion));
+  }
+
+  getCancionActual(): any {
+    const cancionData = localStorage.getItem(this.cancionActual);
+    return cancionData ? JSON.parse(cancionData) : null;
+  }
+
+  setColeccionActual(coleccion: any): void {
+    localStorage.setItem(this.coleccionActual, JSON.stringify(coleccion));
+  }
+
+  getColeccionActual(): any {
+    const coleccionData = localStorage.getItem(this.coleccionActual);
+    return coleccionData ? JSON.parse(coleccionData) : null;
+  }
+
+  setProgresoLocal(progreso: any): void {
+    localStorage.setItem(this.progreso, JSON.stringify(progreso));
+  }
+
+  getProgresoLocal(): any {
+    const progresoData = localStorage.getItem(this.progreso);
+    return progresoData ? JSON.parse(progresoData) : null;
+  }
+
+
+
+
+
   // Eliminar token (Logout)
   clearStorage(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
     localStorage.removeItem(this.tipoKey);
+    localStorage.removeItem(this.cancionActual);
+    localStorage.removeItem(this.coleccionActual);
+    localStorage.removeItem(this.progreso);
   }
 
 

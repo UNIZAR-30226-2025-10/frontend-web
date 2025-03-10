@@ -54,6 +54,9 @@
             <button class="boton-crear">
                 <h4>Crear Playlist</h4>
             </button>
+            <button class="boton-crear" (click)="cerrarSesion()">
+                <h4>Cerrar Sesión</h4>
+            </button>
         </div>
     </div>
 
@@ -69,8 +72,8 @@
             
             <div class="container">       
                 <div *ngFor="let artist of ultimosArtistas; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                    <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil  : 'nouser.png'" [alt]="artist.nombreArtista">
-                    <strong>{{ artist.nombreNombreArtista }}</strong>
+                    <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil  : 'nouser.png'" [alt]="artist.nombreArtistico">
+                    <strong>{{ artist.nombreArtistico }}</strong>
                 </div>
             </div>
         </div>

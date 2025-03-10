@@ -10,8 +10,8 @@
                 <div *ngFor="let artist of recientes; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
                     <ng-container *ngIf="artist.type === 'reciente'">
                         <div class="dentro-card">
-                            <img [src]="artist.fotoPortada && artist.fotoPortada !== 'DEFAULT' ? artist.fotoPortada : 'no_cancion.png'" [alt]="artist.nombreColeccion" [ngClass]="{'coleccion-img': artist.type === 'reciente'}">
-                            <strong style="display: block; text-align: left;">{{ artist.nombreColeccion }}</strong>
+                            <img [src]="artist.fotoPortada && artist.fotoPortada !== 'DEFAULT' ? artist.fotoPortada : 'no_cancion.png'" [alt]="artist.nombre" [ngClass]="{'coleccion-img': artist.type === 'reciente'}">
+                            <strong style="display: block; text-align: left;">{{ artist.nombre}}</strong>
                             <span>{{ artist.autor }}</span>
                         </div>
                     </ng-container>
@@ -19,8 +19,8 @@
                     <ng-container *ngIf="artist.type === 'artista'">
                         <!-- Mostrar el contenido para los artistas -->
                         <div class="dentro-artistcard">
-                            <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil : 'nouser.png'" [alt]="artist.nombreArtista" [ngClass]="{'artista-img': artist.type === 'artista'}">
-                            <strong>{{ artist.nombreArtista }}</strong>
+                            <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil : 'nouser.png'" [alt]="artist.nombreArtistico" [ngClass]="{'artista-img': artist.type === 'artista'}">
+                            <strong>{{ artist.nombreArtistico}}</strong>
                         </div>
                     </ng-container>
                 </div>
@@ -36,9 +36,9 @@
             <div class="container">       
                 <div *ngFor="let cancion of ultimasCanciones; let i = index" class="card" (click)="onTrackClick(cancion)" [ngClass]="{ 'primer-elemento': i === 0 }">
                     <div class="dentro-card">
-                        <img [src]="cancion.fotoPortada" [alt]="cancion.nombreCancion"> 
-                        <strong>{{ cancion.nombreCancion }}</strong>
-                        <p>{{ cancion.nombreArtista }}</p> 
+                        <img [src]="cancion.fotoPortada" [alt]="cancion.nombre"> 
+                        <strong>{{ cancion.nombre }}</strong>
+                        <p>{{ cancion.nombreArtisticoArtista }}</p> 
                     </div>          
                 </div>
             </div>

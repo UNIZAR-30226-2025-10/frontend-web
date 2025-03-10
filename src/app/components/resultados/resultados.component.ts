@@ -44,6 +44,7 @@ export class ResultadosComponent implements OnInit {
         this.tracks = data.canciones ?? [];
         this.albums = data.albumes ?? [];
         this.playlists = data.playlists ?? [];
+        this.perfiles = data.perfiles ?? [];
       },
       error: (error) => {
         console.error('Error al autenticar:', error);
@@ -94,7 +95,6 @@ export class ResultadosComponent implements OnInit {
     if (filtros) {
         if (scrollTop > 10) {
             filtros.classList.add('scrolled'); 
-            console.log('aqui');
         } else {
             filtros.classList.remove('scrolled'); 
         }

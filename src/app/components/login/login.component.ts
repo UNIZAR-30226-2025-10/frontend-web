@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Importante para que funcione ngIf, ngFor, etc.
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para trabajar con ngModel
 import { Router } from '@angular/router'; 
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
+import { PlayerService } from '../../services/player.service';
+import { ProgressService } from '../../services/progress.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +23,9 @@ export class LoginComponent {
   errorMessage: string = '';
   errorType: string = '';
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router) {}
+  @Output() trackClicked = new EventEmitter<any>();
+
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService) {}
 
 
   togglePassword(): void {
@@ -49,7 +53,30 @@ export class LoginComponent {
         } else if (response.tipo === "admin") {
           this.router.navigate(['/admin']);
         } else {
-          this.router.navigate(['/home/home']);
+          this.authService.pedirCancionActual()
+          .subscribe({
+            next: (response) => {
+              console.log('actual: ', response);
+              this.tokenService.setProgresoLocal(response.cancion.progreso);
+              if (response.cancion != null)  {
+                if(response.coleccion != null) {
+                  this.tokenService.setCancionActual(response.cancion);
+                  this.tokenService.setColeccionActual(response.coleccion);
+                } else {
+                  const cancionActual = response.cancion;
+                  cancionActual.modo = "enBucle";
+                  this.tokenService.setCancionActual(cancionActual);
+                }
+              }             
+            },
+            error: (error) => {
+              console.error('Error al pedir cancion actual:', error);
+            },
+            complete: () => {
+              console.log('Petición completada');
+              this.router.navigate(['/home/home']);
+            }
+          })
         }
       },
       error: (error) => {
