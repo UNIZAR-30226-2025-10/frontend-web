@@ -1,0 +1,34 @@
+name: CI Angular
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout del repositorio
+        uses: actions/checkout@v3
+
+      - name: 🏗️ Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.20.6
+
+      - name: 📦 Instalar dependencias
+        run: npm install
+
+      - name: 🛠️ Compilar el proyecto
+        run: npm run build --if-present
+
+      - name: 🧪 Ejecutar pruebas unitarias
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
+      - name: ✅ Verificar formato del código
+        run: npm run lint
