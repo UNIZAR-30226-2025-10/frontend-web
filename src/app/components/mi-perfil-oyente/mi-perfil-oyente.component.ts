@@ -49,17 +49,28 @@ export class MiPerfilOyenteComponent implements OnInit {
     this.isAuthenticated = true;
     this.foto = this.tokenService.getUser().fotoPerfil;
 
+    this.authService.pedirMisDatosOyente().subscribe({
+      next: (oyente) => {
+        this.oyente.nombre = oyente.nombre;
+        this.oyente.nSeguidores = oyente.seguidores_count;
+        this.oyente.nSeguidos = oyente.seguidos_count;
+      },
+      error: (error) => {
+        console.error('Error al pedir los datos del oyente:', error);
+      }
+    });
+
     forkJoin({
-      oyente: this.authService.pedirMisDatosOyente(),
+      //oyente: this.authService.pedirMisDatosOyente(),
       ultimosArtistas: this.authService.pedirTopArtistas(),
       misPlaylists: this.authService.pedirMisPlaylists(),
       ultimasCanciones: this.authService.pedirHistorialCanciones(),
       seguidos: this.authService.pedirMisSeguidos()
     }).subscribe({
       next: (response) => {
-        this.oyente.nombre = response.oyente.nombre;
-        this.oyente.nSeguidores= response.oyente.seguidores_count;
-        this.oyente.nSeguidos = response.oyente.seguidos_count;    
+        //this.oyente.nombre = response.oyente.nombre;
+        //this.oyente.nSeguidores= response.oyente.seguidores_count;
+        //this.oyente.nSeguidos = response.oyente.seguidos_count;    
         this.ultimosArtistas = Object.values(response.ultimosArtistas.historial_artistas);
         this.ultimasCanciones = Object.values(response.ultimasCanciones.historial_canciones);
         this.misPlaylists = Object.values(response.misPlaylists.playlists);

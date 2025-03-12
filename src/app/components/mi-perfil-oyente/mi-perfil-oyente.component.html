@@ -31,20 +31,23 @@
             <!-- AQUI IRIA LA FOTO DE PERFIL SACADA DE LA API -->
             <img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="logo">
         </div>
-        <div class="column2">
-            <!-- AQUI IRIA EL NOMBRE DE USUARIO SACADO DE LA API -->
-            <h3>{{ oyente.nombre }}</h3>
-            <div class="seguidores">
-                <a [routerLink]="['/home/seguidores',oyente.nombre]">
-                    <h4>{{ oyente.nSeguidores }} seguidores</h4>
-                </a>
-                <a [routerLink]="['/home/seguidos',oyente.nombre]">
-                    <h4>{{ oyente.nSeguidos }} seguidos</h4>
-                </a>
+
+        <div class="column2">   <!-- cambiar -->
+            <div *ngIf="oyente.nombre">
+                <!-- AQUI IRIA EL NOMBRE DE USUARIO SACADO DE LA API -->
+                <h3>{{ oyente.nombre }}</h3>
+                <div class="seguidores">
+                    <a [routerLink]="['/home/seguidores',oyente.nombre]">
+                        <h4>{{ oyente.nSeguidores }} seguidores</h4>
+                    </a>
+                    <a [routerLink]="['/home/seguidos',oyente.nombre]">
+                        <h4>{{ oyente.nSeguidos }} seguidos</h4>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="column_vacia"></div>
-        <div class="column3">
+        <div class="column3" >
             <button (click)="abrirModal()" class="botones_opciones" style="margin-top: 10px;">
                 <h5>Editar perfil</h5>
             </button>

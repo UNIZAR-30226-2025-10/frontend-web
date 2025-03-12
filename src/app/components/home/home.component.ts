@@ -31,40 +31,45 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
-
+  
     this.isAuthenticated = true;
-
+    
     forkJoin({
       artistas: this.authService.pedirTopArtistas(),
       recientes: this.authService.pedirColeccionesRecientes(),
       canciones: this.authService.pedirHistorialCanciones(),
-      playlists: this.authService.pedirMisPlaylists(),
-      recomendados: this.authService.pedirRecomendaciones()
+      playlists: this.authService.pedirMisPlaylists()
     }).subscribe({
       next: (data) => {
-        // Asignar los resultados de las peticiones
         this.artistas = data.artistas.historial_artistas;
         this.recientes = data.recientes.historial_colecciones;
         this.ultimasCanciones = data.canciones.historial_canciones;
         this.misPlaylists = data.playlists.playlists;
-        this.recomendados = data.recomendados.canciones_recomendadas;
-
-        // Una vez que todos los datos han sido recibidos, intenta mezclar
         this.intentarMezclar();
       },
       error: (error) => {
-        console.error('Error en alguna de las peticiones:', error);
+        console.error('Error en alguna de las peticiones principales:', error);
+      }
+    });
+  
+    // Carga las recomendaciones por separado
+    this.cargarRecomendaciones();
+  }
+  
+  cargarRecomendaciones() {
+    this.authService.pedirRecomendaciones().subscribe({
+      next: (data) => {
+        this.recomendados = data.canciones_recomendadas;
       },
-      complete: () => {
-        console.log('Todas las peticiones completadas');
+      error: (error) => {
+        console.error('Error cargando recomendaciones:', error);
       }
     });
   }
 
   intentarMezclar() {
-    // Verifica si ya llegaron todos los datos
     if (this.artistas.length > 0 && this.recientes.length > 0) {
-      this.mezclarListas();  // Mezclar solo si ambos arrays contienen datos
+      this.mezclarListas(); 
     }
   }
 
