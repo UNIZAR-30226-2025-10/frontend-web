@@ -10,7 +10,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class AuthService {
 
-  private apiUrl = 'http://api-noizz.onrender.com';
+  private apiUrl = 'https://api-noizz.onrender.com';
 
   constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) {}
 

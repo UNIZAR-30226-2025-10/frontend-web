@@ -53,21 +53,24 @@ export class LoginComponent {
         } else if (response.tipo === "admin") {
           this.router.navigate(['/admin']);
         } else {
+          
           this.authService.pedirCancionActual()
           .subscribe({
             next: (response) => {
-              console.log('actual: ', response);
-              this.tokenService.setProgresoLocal(response.cancion.progreso);
-              if (response.cancion != null)  {
-                if(response.coleccion != null) {
-                  this.tokenService.setCancionActual(response.cancion);
-                  this.tokenService.setColeccionActual(response.coleccion);
-                } else {
-                  const cancionActual = response.cancion;
-                  cancionActual.modo = "enBucle";
-                  this.tokenService.setCancionActual(cancionActual);
-                }
-              }             
+              if (response != null) {
+                console.log('actual: ', response);
+                this.tokenService.setProgresoLocal(response.cancion.progreso);
+                if (response.cancion != null)  {
+                  if(response.coleccion != null) {
+                    this.tokenService.setCancionActual(response.cancion);
+                    this.tokenService.setColeccionActual(response.coleccion);
+                  } else {
+                    const cancionActual = response.cancion;
+                    cancionActual.modo = "enBucle";
+                    this.tokenService.setCancionActual(cancionActual);
+                  }
+                } 
+              }            
             },
             error: (error) => {
               console.error('Error al pedir cancion actual:', error);

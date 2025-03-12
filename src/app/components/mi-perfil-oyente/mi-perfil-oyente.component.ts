@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
 import { ProgressService } from '../../services/progress.service';
+import { switchMap } from 'rxjs/operators';
+
 
 interface misDatos {
   nombre: string;
@@ -117,25 +119,16 @@ export class MiPerfilOyenteComponent implements OnInit {
     const currentProgress = this.tokenService.getProgresoLocal();
 
     this.authService.guardarProgreso(currentProgress)
+    .pipe(
+      switchMap(() => this.authService.logout()) // Espera a que guardarProgreso() termine antes de llamar a logout()
+    )
     .subscribe({
       next: () => {   
-      },
-      error: (error) => {
-        console.error('Error al guardar el progreso:', error);
-      },
-      complete: () => {
-        console.log('Petición completada');
-      }
-    });
-
-    this.authService.logout()
-    .subscribe({
-      next: () => {
         this.tokenService.clearStorage();
         this.router.navigate(['/login']);
       },
       error: (error) => {
-        console.error('Error al cerrar la sesión:', error);
+        console.error('Error al guardar el progreso:', error);
       },
       complete: () => {
         console.log('Petición completada');

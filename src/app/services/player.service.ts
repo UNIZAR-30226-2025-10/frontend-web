@@ -36,15 +36,10 @@ export class PlayerService {
     this.playedSongs = [];
     this.playedSongs.push(track);
 
-    const modifiedTrack = {
-      ...this.songList[this.currentIndex],
-      modo: "enBucle"
-    };
-
     //GUARDAR CANCION ACTUAL EN LOCAL STORAGE
-    this.tokenService.setCancionActual(modifiedTrack);
+    this.tokenService.setCancionActual(this.songList[this.currentIndex]);
     
-    this.currentTrackSource.next(modifiedTrack); // Emitir la canción actual
+    this.currentTrackSource.next(this.songList[this.currentIndex]); // Emitir la canción actual
     this.isPlayingSubject.next(true);
   }
 
@@ -57,12 +52,9 @@ export class PlayerService {
     if (this.isShuffle) {
       this.playRandomSong(); // Si está activado el modo aleatorio, empieza con una canción aleatoria
     } else {
-      const modifiedTrack = {
-        ...this.songList[this.currentIndex],
-        modo: "enOrden"
-      };
-      this.playedSongs.push(modifiedTrack);
-      this.currentTrackSource.next(modifiedTrack); // Si no, empieza con la primera canción
+      
+      this.playedSongs.push(this.songList[this.currentIndex]);
+      this.currentTrackSource.next(this.songList[this.currentIndex]); // Si no, empieza con la primera canción
     }
   }
   
@@ -76,7 +68,6 @@ export class PlayerService {
       } else {
         this.currentIndex = (this.currentIndex + 1) % this.songList.length;  // Avanzar al siguiente índice
         const nextTrack = this.songList[this.currentIndex];
-        nextTrack.modo = "enOrden";
         this.playedSongs.push(nextTrack); 
         this.currentTrackSource.next(nextTrack);
       }
@@ -88,23 +79,11 @@ export class PlayerService {
       // Eliminar la última canción reproducida del historial
       this.playedSongs.pop();
       const prevTrack = this.playedSongs[this.playedSongs.length - 1];  // Obtener la canción anterior
-      if (this.isShuffle) {
-        prevTrack.modo = "aleatorio";
-      } else {
-        prevTrack.modo = "enOrden";
-      }
       this.currentIndex = this.songList.indexOf(prevTrack);  // Actualizar el índice de la canción anterior
       this.currentTrackSource.next(prevTrack);  // Reproducir la canción anterior
     } else {
       // Si solo hay una canción en la lista o no hay historial, reproducimos la canción actual
       const currentTrack = this.songList[this.currentIndex]; // Obtener la canción actual
-      if (currentTrack.modo != "enBucle") {
-        if (this.isShuffle) {
-          currentTrack.modo = "aleatorio";
-        } else {
-          currentTrack.modo = "enOrden";
-        }
-      }
       this.currentTrackSource.next(currentTrack);  // Reproducir la canción actual
       console.log('No hay canciones anteriores para reproducir, repitiendo la canción actual');
     }
@@ -137,8 +116,6 @@ playRandomSong(): void {
   // Elegimos una canción aleatoria de las que quedan por escuchar
   const randomIndex = Math.floor(Math.random() * remainingSongs.length);
   const selectedSong = remainingSongs[randomIndex];
-
-  selectedSong.modo = "aleatorio";
  
   this.playedSongs.push(selectedSong); // Añadimos la canción al historial
   this.currentTrackSource.next(selectedSong); // Emitimos la canción

@@ -57,11 +57,9 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     this.trackSubscription = this.playerService.currentTrack$.subscribe(track => {
       if (track) {
         this.currentTrack = track;  // Actualiza el track actual
-        if (this.currentTrack.modo === "enBucle") {
+
           this.playTrack(); 
-        } else {
-          this.playTrackInCollection();
-        }     
+       
       } 
     });
 
@@ -78,15 +76,10 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       this.audioElementRef.nativeElement.src = this.tokenService.getCancionActual().audio;
       this.audioElementRef.nativeElement.currentTime = this.tokenService.getProgresoLocal();
 
-
-      //if: para cuando la cancion no viene de pulsar, sino entre sesiones o al refrescar
-      if (this.tokenService.getCancionActual().modo === "enBucle") {
-        this.audioElementRef.nativeElement.loop = true;
-      } else {
-        this.audioElementRef.nativeElement.addEventListener('ended', () => {
-          this.onSongEnd();
-        });
-      }
+      this.audioElementRef.nativeElement.addEventListener('ended', () => {
+        this.onSongEnd();
+      });
+      
     }
   }
   

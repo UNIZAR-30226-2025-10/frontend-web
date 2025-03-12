@@ -17,8 +17,8 @@ import { IntroducirCodigoComponent } from './components/introducir-codigo/introd
 import { PendienteComponent } from './components/pendiente/pendiente.component';
 import { PedirContrasenyaComponent } from './components/pedir-contrasenya/pedir-contrasenya.component';
 import { AdminComponent } from './components/admin/admin.component';
-import { SeguidosComponent } from './seguidos/seguidos.component';
-import { SeguidoresComponent } from './seguidores/seguidores.component';
+import { SeguidosComponent } from './components/seguidos/seguidos.component';
+import { SeguidoresComponent } from './components/seguidores/seguidores.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
