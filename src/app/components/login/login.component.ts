@@ -42,6 +42,7 @@ export class LoginComponent {
     this.authService.login(this.credentials)
     .subscribe({
       next: (response) => {
+        this.tokenService.clearStorage();
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.usuario);
         this.tokenService.setTipo(response.tipo);
@@ -65,9 +66,7 @@ export class LoginComponent {
                     this.tokenService.setCancionActual(response.cancion);
                     this.tokenService.setColeccionActual(response.coleccion);
                   } else {
-                    const cancionActual = response.cancion;
-                    cancionActual.modo = "enBucle";
-                    this.tokenService.setCancionActual(cancionActual);
+                    this.tokenService.setCancionActual(response.cancion);
                   }
                 } 
               }            

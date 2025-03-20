@@ -10,7 +10,6 @@ import { AlbumComponent } from './components/album/album.component';
 import { MarcoComponent } from './components/marco/marco.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResultadosComponent } from './components/resultados/resultados.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { MiPerfilOyenteComponent } from './components/mi-perfil-oyente/mi-perfil-oyente.component';
 import { MiPerfilArtistaComponent } from './components/mi-perfil-artista/mi-perfil-artista.component';
 import { IntroducirCodigoComponent } from './components/introducir-codigo/introducir-codigo.component';
@@ -19,6 +18,9 @@ import { PedirContrasenyaComponent } from './components/pedir-contrasenya/pedir-
 import { AdminComponent } from './components/admin/admin.component';
 import { SeguidosComponent } from './components/seguidos/seguidos.component';
 import { SeguidoresComponent } from './components/seguidores/seguidores.component';
+import { ArtistaComponent } from './components/artista/artista.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
+import { EstadisticasAlbumComponent } from './components/estadisticas-album/estadisticas-album.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -41,9 +43,11 @@ export const routes: Routes = [
       { path: 'resultados', component: ResultadosComponent},
       { path: 'miPerfilOyente', component: MiPerfilOyenteComponent},
       { path: 'miPerfilArtista', component: MiPerfilArtistaComponent},
-      {path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
-      {path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
-
+      { path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
+      { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
+      { path: 'artista', component: ArtistaComponent},
+      { path: 'perfil', component: PerfilComponent},
+      { path: 'estadisticasAlbum', component: EstadisticasAlbumComponent}
     ]
   }
 ];

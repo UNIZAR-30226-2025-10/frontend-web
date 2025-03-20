@@ -6,7 +6,7 @@ import { TokenService } from './token.service';
   providedIn: 'root'
 })
 export class PlayerService {
-  private currentTrackSource = new BehaviorSubject<any>(null);
+  currentTrackSource = new BehaviorSubject<any>(null);
   currentTrack$ = this.currentTrackSource.asObservable();
 
   public isPlayingSubject = new BehaviorSubject<boolean>(false);
@@ -37,10 +37,15 @@ export class PlayerService {
     this.playedSongs.push(track);
 
     //GUARDAR CANCION ACTUAL EN LOCAL STORAGE
-    this.tokenService.setCancionActual(this.songList[this.currentIndex]);
+    //this.tokenService.setCancionActual(this.songList[this.currentIndex]);
+    //console.log('que guardo', this.songList[this.currentIndex] );
     
     this.currentTrackSource.next(this.songList[this.currentIndex]); // Emitir la canción actual
     this.isPlayingSubject.next(true);
+
+    setTimeout(() => {
+      this.currentTrackSource.next(null);
+    }, 500); 
   }
 
   //Cuando se reproducen desde el play general del album

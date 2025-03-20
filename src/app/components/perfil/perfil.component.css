@@ -1,0 +1,283 @@
+  .contenido {
+    position: relative;
+    padding: 0px 0px 20px 0px;
+  }
+  .todo {
+    width: 100%;
+    min-height: 100vh;/* Altura fija para permitir el scroll interno */
+    overflow-y: auto; /* Habilita el scroll vertical */
+    position: relative;
+  }
+  .todo::-webkit-scrollbar {
+      display: none;
+  }
+  .top-div {
+    height: auto;
+    background-color: #e9e6e6; /* Fondo de ejemplo */
+    color: #000e3b;
+    top: 0;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 4fr; /* Divide en 3 columnas de igual tamaño */
+    flex-wrap: wrap; /* Permite que el contenido fluya a la siguiente línea */
+    text-align: flex-start; /* Centra el texto */
+    word-break: break-word;
+    padding: 5px;
+  }
+
+  h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 1000;
+    font-size: 50px;
+  }
+
+  .column1 {
+    display: flex;
+    flex-direction: column; /* Alineación en columna */
+    justify-content: center; /* Centra los elementos verticalmente */
+    align-items: center; /* Centra los elementos horizontalmente */
+    height: 100%;
+  }
+  .column1 img {
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    padding: 0% 0% 0% 0%;
+    margin: 20px 15px 20px 10px;
+  }
+
+  .column2 {
+    display: flex;
+    flex-direction: column; /* Alineación en columna */
+    justify-content: center; /* Centra los elementos verticalmente */
+    align-items: flex-start;
+    
+  }
+
+  .seguidores {
+    display: flex;
+    gap: 20px;
+  }
+
+  h3 {
+    color: #000e3b;
+  }
+
+  h4 {
+    font-size: 18px;
+    color: #000e3b;
+    margin: 0px;
+  }
+  
+  a {
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+    color: #000e3b
+  }
+
+  .botones {
+    padding: 25px 0px 25px 15px;
+    margin-left: 1%;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-items: center;
+    width: auto;
+    height: auto;
+  }
+  .btn-noizz {
+    height: auto;
+    width: auto;
+    padding: 2px 14px;
+    border-radius: 20px;
+    background-color: #000e3b;
+    border: 1.5px solid #000e3b;
+    color: white;
+    text-align: center;
+  }
+
+  .btn-noizz:hover {
+    background-color:#000e3b9f;
+  }
+
+  h5 {
+    font-size: 16px;
+    margin-right: 5px; 
+    margin-left: 7px; 
+    font-weight: 520;
+  }
+
+  /*PARTE ABAJO*/
+
+  .noizzy {
+    border: 2.5px solid #000e3b;
+    border-radius: 12px;
+    width: 95%;
+    height: auto;
+    margin-left: 2.5%;
+    padding: 10px;
+    display: flex;
+    overflow: hidden;
+  }
+
+  .perfilNoizzy {
+    display: flex;
+    margin-right: 10px;
+  }
+
+  .perfilNoizzy img {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+  }
+
+  .textos {
+    max-width: 100%;
+    overflow: hidden;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  .btns {
+    background-color: transparent;
+    border: none;
+    color: #000e3b;
+    margin-top: 7px;
+  }
+
+  .titulo {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    width: 95%;
+  }
+
+  h2 {
+    font-size: 25px;
+    color: #000e3b;
+    margin: 0px 0px 3px 32px;
+  }
+
+  .primer-elemento {
+    margin-left: 1%; /* O el margen que necesites */
+  }
+ 
+  .container {
+      display: flex;
+      flex-wrap: nowrap; /* 🔥 Evita que los elementos pasen a otra línea */
+      overflow-x: auto; /* 🔥 Permite el scroll horizontal */
+      white-space: nowrap;
+      max-width: 100%; /* 🔥 Se ajusta al ancho del contenedor */
+  }
+
+  .container::-webkit-scrollbar {
+      display: none;
+  }
+
+  .card, .artist-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color:#000e3b ;
+    padding: 12px;
+    border-radius: 12px;
+    border: transparent;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 150px; /* 🔥 Tamaño base */
+    height: 100%;
+    min-width: 140px; /* 🔥 Evita que desaparezca en pantallas pequeñas */
+    flex: 0 0 auto; /* 🔥 Permite ajuste flexible */
+    max-width: 100%; /* 🔥 Evita que se salga del contenedor */
+    position: relative;
+    background-color: transparent;
+  }
+
+  .card strong {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+
+  .artist-card strong, .card p {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .artist-card p, .card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .artist-card:hover, .card:hover {
+    background: rgb(230, 230, 230);
+    transform: scale(1.03); /* 🔥 Efecto más sutil */
+  }
+
+  .artist-card img {
+    width: 105px; /* 🔥 Reduce el tamaño para compactar */
+    height: 105px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 5px; /* 🔥 Menos espacio debajo de la imagen */
+}
+
+  .dentro-card {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos (imagen y texto) en columna */
+    align-items: flex-start; /* Alinea la imagen y el texto horizontalmente */
+    justify-content: center; /* Alinea la imagen y el texto verticalmente */
+    text-align: center;
+    padding: 8px;
+    max-width: 100%;
+    background-color: transparent;
+  }
+
+  .barra-superior {
+    display: none;  /* Inicialmente la ocultas */
+    position: sticky;
+    height: 55px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000e3b;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    z-index: 1000;  /* Asegúrate de que esté encima de otros elementos */
+  }
+
+  @media (max-width: 550px) {
+    h1 {
+        font-size: 30px;
+    }
+    h4 {
+      font-size: 15px;
+    }
+    .column1 img {
+      height: 110px;
+      width: 110px;
+
+    }
+  }
+
+  @media (max-width: 400px) {
+    h1 {
+        font-size: 20px;
+    }
+  }
+  
+

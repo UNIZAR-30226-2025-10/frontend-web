@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
 import { ProgressService } from '../../services/progress.service';
+import { SocketService } from '../../services/socket.service';
 
 
 @Component({
@@ -18,6 +19,8 @@ import { ProgressService } from '../../services/progress.service';
 
 
 export class MusicPlayerComponent implements OnInit, OnDestroy {
+
+  songData: any;
 
   @ViewChild('audioElement') audioElementRef!: ElementRef<HTMLAudioElement>; 
   currentTrack: any = null;
@@ -34,7 +37,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   isFavorite = false;
   screenWidth: number = window.innerWidth;
 
-  constructor(private playerService: PlayerService, private authService:AuthService, private tokenService : TokenService, private progressService: ProgressService){}
+  constructor(private playerService: PlayerService, private authService:AuthService, private tokenService : TokenService, private progressService: ProgressService, private socketService: SocketService){}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
@@ -44,6 +47,18 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   //SUSCRIPCION A UN EVENTO PARA ACTUALIZAR LA BARRA CUANDO SE CAMBIA DE CANCIÓN
   ngOnInit() {
 
+    this.socketService.connect();
+
+    this.socketService.listen('put-cancion-sola-ws').subscribe(
+      (data) => {
+        console.log('Canción recibida:', data);
+        this.songData = data; // Asignar los datos a songData
+      },
+      (error) => {
+        console.error('Error al recibir evento:', error);
+      }
+    );
+
     if(this.tokenService.getCancionActual() != null) {
       console.log('q tengo en local: ', this.tokenService.getCancionActual());
       this.currentTrack = this.tokenService.getCancionActual();
@@ -52,14 +67,16 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       this.isFavorite = this.tokenService.getCancionActual().fav;
     }
 
+    console.log("Valor inicial de currentTrack$:", this.playerService.currentTrackSource.getValue());
+
+
 
     // Nos suscribimos al observable para recibir el track actualizado
     this.trackSubscription = this.playerService.currentTrack$.subscribe(track => {
       if (track) {
-        this.currentTrack = track;  // Actualiza el track actual
-
-          this.playTrack(); 
-       
+          this.currentTrack = track;  // Actualiza el track actual
+          console.log("llama playtrack");
+          this.playTrack();
       } 
     });
 
@@ -73,12 +90,18 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     if (this.audioElementRef && this.audioElementRef.nativeElement) {
-      this.audioElementRef.nativeElement.src = this.tokenService.getCancionActual().audio;
-      this.audioElementRef.nativeElement.currentTime = this.tokenService.getProgresoLocal();
+      const audioElement = this.audioElementRef.nativeElement;
 
-      this.audioElementRef.nativeElement.addEventListener('ended', () => {
-        this.onSongEnd();
-      });
+  
+    if (audioElement.src !== this.tokenService.getCancionActual().audio) {
+      audioElement.src = this.tokenService.getCancionActual().audio;
+    }
+
+    audioElement.currentTime = this.tokenService.getProgresoLocal();
+    
+    audioElement.addEventListener('ended', () => {
+      this.onSongEnd();
+    });
       
     }
   }
@@ -96,6 +119,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.socketService.disconnect();
     // Aseguramos que la suscripción se desuscriba cuando el componente se destruya
     if (this.trackSubscription) {
       this.trackSubscription.unsubscribe();
@@ -121,11 +145,15 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       next: (response) => {
         //Esta peticion devuelve el audio, si es fav, y el nombre du user del artista
         if (response && response.audio) {
-        this.audioElementRef.nativeElement.src = response.audio;
-        this.audioElementRef.nativeElement.play();
-        this.isPlaying = true;
-        this.isFavorite = response.fav;
-        console.log('Reproduciendo:', this.currentTrack.nombre);
+          this.audioElementRef.nativeElement.src = response.audio;
+          this.currentTrack.audio = this.audioElementRef.nativeElement.src;
+          this.currentTrack.fav = response.fav;
+          this.tokenService.setCancionActual( this.currentTrack);
+          console.log('que guardo', this.currentTrack );
+          this.audioElementRef.nativeElement.play();
+          this.isPlaying = true;
+          this.isFavorite = response.fav;
+          console.log('Reproduciendo:', this.currentTrack.nombre);
       } else {
         console.error('No se pudo obtener el audio de la canción');
       }

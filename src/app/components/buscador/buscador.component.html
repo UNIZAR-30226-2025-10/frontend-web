@@ -9,7 +9,7 @@
   </div>
     <div class="right-icons">
       <button class="notis-btn"><i class="fa fa-bell"></i></button>
-        <button class="profile-btn" (click)="goPerfil()"><i class="fas fa-user"></i></button>
+        <button (click)="goPerfil()"><img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="foto"></button>
     </div>
 </div>
 

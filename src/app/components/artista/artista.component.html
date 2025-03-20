@@ -1,0 +1,111 @@
+<body>
+    <div class="contenido">
+        <div #topBar class="top-bar">
+            <button class="play-btn2">
+                <i class="fas fa-play-circle"></i>
+            </button>
+            <p style="margin-top: 8px; font-size: 15px;"><strong>Chiara Oliver</strong></p>
+        </div>
+        
+        <div class="todo"  (scroll)="onScroll($event)">
+
+            <div class="header" #header>
+                <div class ="foto">
+                    <img #profilePic [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="foto" crossOrigin="anonymous">
+                </div>
+                <div class = "datos">
+                    <div class="stats">
+                        <img class="verificado" src="verificado.png" alt="Foto">
+                        <h4 style="margin-top: 10px;">Artista verificado</h4>
+                    </div>
+                    <h1>Chiara Oliver</h1>
+                    <div class="stats" style="margin: 0px; ">
+                        <h5 style="margin: 0px;"> 1281 seguidores</h5>
+                        <button class="seguir">
+                            <h5 style="margin: 0px 10px;"> Seguir</h5>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="botones">
+                <button class="play-btn">
+                    <i class="fas fa-play-circle"></i>
+                </button>
+                <button class="shuffle-btn">
+                    <i class="ph-shuffle"></i>
+                </button> 
+                <button class="btn-noizz">
+                    <h5 style="margin: 0px;"> Ver Noizzys</h5>
+                </button>                       
+            </div>
+                
+            <div class="popular-songs" #parteAbajo>       
+                <h2 style="font-size: 20px;"><strong>Populares</strong></h2>
+                <div *ngFor="let song of canciones; let i = index">
+                    <div class="song">
+                        <p style="margin-right:12px; margin-top: 12px; opacity: 0.8;"><strong> {{ i +1 }}</strong></p>
+                        <img [src]="song.imagen ? song.imagen : 'no_cancion.png'" alt="{{ song.nombre }}">
+                        <div class="song-title"><strong>{{song.nombre}}</strong></div>
+                        <div class="song-plays" style="color:rgb(76, 75, 75);">
+                            <p style="margin-bottom: 0px;">{{song.reproducciones}}</p>
+                            <button class="favorite-btn">
+                                <i class="far fa-heart"></i>
+                            </button>            
+                            <p style="margin-bottom: 0px; width: 40px; text-align: right;">{{song.duracion}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="meGustan">
+                <h2 style="font-size: 20px; margin-top: 15px;"><strong>Canciones que te gustan</strong></h2>
+                <div class="seccion1">
+                    <div class="fotosJuntas">
+                        <button style = "border: none; background-color: transparent; padding:0px; margin:0;"><img class="foto2" src="prueba.png" alt="Foto"> </button>
+                        <img class="foto3" style="height: 20px; width: 20px; margin-left: -15px; margin-top:67px;" src="logo_noizz.png" alt="Foto">              
+                    </div>
+                    <div class="numMegustas" tyle="margin-bottom: 0px; ">
+                        <p style="font-size: 14px; margin-bottom: 1px;"><strong>Te gustan 11 canciones</strong></p>
+                        <p style=" font-size: 12px; margin-bottom: 0px; color: rgb(88, 88, 88);"> De Chiara Oliver</p> 
+                    </div>
+                </div>
+            </div>
+            <div class="discografia">
+                <h2 style="font-size: 20px; margin-top: 20px; margin-left: 50px;"><strong>Discografía</strong></h2>
+                <div class="opciones">
+                    <button class="boton-filtro" (click)="cambiarFiltro('canciones')" [ngClass]="{ 'activo': filtroActivo === 'canciones' }">
+                        <h3>Canciones</h3>
+                    </button>
+                    <button class="boton-filtro" (click)="cambiarFiltro('discos')" [ngClass]="{ 'activo': filtroActivo === 'discos' }">
+                        <h3>Discos y EPs</h3>
+                    </button>
+                </div>
+                <div *ngIf="filtroActivo === 'canciones'">
+                    <div *ngIf="canciones2.length > 0">
+                        <div class="tracks-container">       
+                            <div *ngFor="let song of canciones2; let i = index" class="track-card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                                <div class="dentro-track-card">
+                                    <img [src]="song.imagen ? song.imagen : 'no_cancion.png'" alt="{{ song.nombre}}">
+                                    <strong>{{ song.nombre }}</strong>
+                                    <p>{{ song.nombreArtisticoArtista}}</p> 
+                                </div>          
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="filtroActivo === 'discos'">
+                    <div *ngIf="canciones.length > 0">
+                        <div class="tracks-container">       
+                            <div *ngFor="let song of canciones; let i = index" class="track-card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                                <div class="dentro-track-card">
+                                    <img [src]="song.imagen ? song.imagen : 'no_cancion.png'" alt="{{ song.nombre}}">
+                                    <strong>{{ song.nombre }}</strong>
+                                    <p>{{ song.nombreArtisticoArtista}}</p> 
+                                </div>          
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

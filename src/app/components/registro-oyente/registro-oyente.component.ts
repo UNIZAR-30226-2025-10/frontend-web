@@ -58,6 +58,7 @@ export class RegistroOyenteComponent {
     this.authService.registerOyente(this.credentials)
     .subscribe({
       next: (response) => {
+        this.tokenService.clearStorage();
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.oyente);
         this.tokenService.setTipo(response.tipo);

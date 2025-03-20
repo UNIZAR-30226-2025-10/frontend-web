@@ -10,7 +10,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class AuthService {
 
-  private apiUrl = 'https://api-noizz.onrender.com';
+  private apiUrl = 'http://localhost:5000';
 
   constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) {}
 
@@ -46,8 +46,12 @@ export class AuthService {
 
     if (!token) {
       console.error('No se encontró el token de autorización');
-      return of({ error: 'No autorizado' });;
+      return of({ error: 'No autorizado' });
     }
+
+    console.log('token', token);
+    console.log(credentials);
+
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
@@ -341,7 +345,10 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
+    console.log('progreso', progreso);
+    
     const body = { progreso: progreso};
+    
 
     return this.http.patch(`${this.apiUrl}/change-progreso`, body, { headers: headers } );
   }
@@ -363,5 +370,37 @@ export class AuthService {
     const body = { id: id, fav: fav};
   
     return this.http.put(`${this.apiUrl}/change-fav`, body, { headers: headers });
+  }
+
+  pedirMisDatosArtista(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-mis-datos-artista`, { headers: headers } );
+  }
+
+  pedirMisAlbumesArtista(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-mis-albumes`, { headers: headers } );
   }
 }

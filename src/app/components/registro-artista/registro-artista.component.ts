@@ -61,6 +61,7 @@ export class RegistroArtistaComponent {
     this.authService.registerArtista(this.credentials)
     .subscribe({
       next: (response) => {
+        this.tokenService.clearStorage();
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.pendiente);
         this.tokenService.setTipo(response.tipo);

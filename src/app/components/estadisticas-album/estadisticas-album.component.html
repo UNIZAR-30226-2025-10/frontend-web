@@ -1,0 +1,77 @@
+<div class="top-div">
+    <div class="column1">
+        <img src="logo_noizz.png" alt="Foto de perfil" >
+    </div>
+
+    <div class="column2">   
+        <!--<div *ngIf="album.nombre">-->
+            <h1>MOTOMAMI</h1>
+            <h4><strong>10 canciones · 30 minutos 13 segundos</strong></h4>
+            <h4 style="margin-top: 8px; font-size: 15px;">Diciembre 2023</h4>
+        <!--</div>-->
+    </div>
+
+    <div class="column3">
+        <button class="btn-album">Editar Álbum</button>
+        <button class="btn-album">Eliminar Álbum</button>
+    </div>
+</div>
+
+<div class="bottom-div">
+    <div class="estadisticas">
+        <div class="partesMegusta">
+            <div class="partes1">
+                <p style= "margin:0px; margin-left: 30px; margin-top: 20px;"><strong>451.862 Me Gustas</strong></p>
+                <div *ngIf="!verMeGustas"><button class="btn-detalles" (click)="abrirMeGustas()">Ver a quién le gusta</button></div>
+                <div *ngIf="verMeGustas"><button class="btn-detalles" (click)="cerrarMeGustas()">Ocultar</button></div>
+            </div>
+            <div class="mostrar" *ngIf="verMeGustas">
+                <button class="btn-detalles">Mostrar todos</button>
+            </div>
+        </div>
+        <div *ngIf="verMeGustas">
+            <div *ngIf="usuarios.length > 0">
+                <div class="container">       
+                    <div *ngFor="let usuario of usuarios; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                        <img [src]="usuario.foto && usuario.foto !== 'DEFAULT' ? usuario.foto  : 'nouser.png'" [alt]="usuario.nombre">
+                        <strong>{{ usuario.nombre }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="partes">
+            <p style="margin:0px;margin-left: 30px;"><strong>197.862.786 Reproducciones</strong></p>
+            <div *ngIf="!verDetalles"><button class="btn-detalles" (click)="abrirDetalles()">Ver detalles</button></div>
+            <div *ngIf="verDetalles"><button class="btn-detalles" (click)="cerrarDetalles()">Ocultar detalles</button></div>
+        </div>
+        <div *ngIf="verDetalles" class="graficos">
+            <div class="grafico-container">
+                <canvas #graficoCanciones></canvas>
+            </div>
+            <div class="grafico-container">
+                <canvas #graficoPie></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="popular-songs">       
+        <h2 style="font-size: 20px;"><strong>Populares</strong></h2>
+        <div *ngFor="let song of canciones; let i = index">
+            <div class="song">
+                <p style="margin-right:12px; margin-top: 12px; opacity: 0.8;"><strong> {{ i +1 }}</strong></p>
+                <img [src]="song.imagen ? song.imagen : 'no_cancion.png'" alt="{{ song.nombre }}">
+                <div class="song-title"><strong>{{song.nombre}}</strong></div>
+                <div class="song-plays" style="color:rgb(76, 75, 75);">
+                    <p style="margin-bottom: 0px;">{{song.reproducciones}}</p>
+                    <button class="favorite-btn">
+                        <i class="far fa-heart"></i>
+                    </button>            
+                    <p style="margin-bottom: 0px; width: 40px; text-align: right;">{{song.duracion}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+

@@ -26,8 +26,8 @@ interface misDatos {
 export class MiPerfilOyenteComponent implements OnInit {
 
   isModalOpen = false;
-
-  nombreActual: string = "martaRata2004"; // ESTO ES OYENTE.NOMBRE
+  isModalContrasenaOpen = false;
+  isModalEliminarOpen = false;
 
   foto: string ='';
   oyente: misDatos = { nombre: '', nSeguidores: 0, nSeguidos: 0 };
@@ -36,6 +36,8 @@ export class MiPerfilOyenteComponent implements OnInit {
   ultimasCanciones: any[] = [];
   seguidos: any[] = [];
   isAuthenticated: boolean = false;
+  mensajeError = '';
+  credentials= {contrasenya:''};
 
   @Output() trackClicked = new EventEmitter<any>();
 
@@ -63,20 +65,16 @@ export class MiPerfilOyenteComponent implements OnInit {
     });
 
     forkJoin({
-      //oyente: this.authService.pedirMisDatosOyente(),
       ultimosArtistas: this.authService.pedirTopArtistas(),
       misPlaylists: this.authService.pedirMisPlaylists(),
       ultimasCanciones: this.authService.pedirHistorialCanciones(),
       seguidos: this.authService.pedirMisSeguidos()
     }).subscribe({
-      next: (response) => {
-        //this.oyente.nombre = response.oyente.nombre;
-        //this.oyente.nSeguidores= response.oyente.seguidores_count;
-        //this.oyente.nSeguidos = response.oyente.seguidos_count;    
-        this.ultimosArtistas = Object.values(response.ultimosArtistas.historial_artistas);
-        this.ultimasCanciones = Object.values(response.ultimasCanciones.historial_canciones);
-        this.misPlaylists = Object.values(response.misPlaylists.playlists);
-        this.seguidos = Object.values(response.seguidos.seguidos);
+      next: (response) => {   
+        this.ultimosArtistas = response.ultimosArtistas.historial_artistas;
+        this.ultimasCanciones = response.ultimasCanciones.historial_canciones;
+        this.misPlaylists = response.misPlaylists.playlists;
+        this.seguidos = response.seguidos.seguidos;
 
       },
       error: (error) => {
@@ -90,16 +88,59 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   abrirModal() {
     this.isModalOpen = true;
-    console.log('hola')
+  }
+
+  abrirModalContrasena() {
+    this.isModalContrasenaOpen = true;
+  }
+
+  abrirModalEliminar() {
+    this.isModalEliminarOpen = true;
   }
 
   cerrarModal() {
     this.isModalOpen = false;
   }
 
+  cerrarModalContrasena() {
+    this.isModalContrasenaOpen = false;
+  }
+
+  cerrarModalEliminar() {
+    this.isModalEliminarOpen = false;
+  }
+
+
   guardarCambios() {
 
   }
+
+  guardarCambiosContrasena() {
+    const nuevaContrasena = (document.getElementById('contrasena_nueva') as HTMLInputElement).value;
+
+    if (nuevaContrasena.length < 10) {
+      this.mensajeError = '*La nueva contraseña debe tener al menos 10 caracteres.';
+      return;
+    }
+
+    const tieneLetra = /[a-zA-Z]/.test(nuevaContrasena);
+    if (!tieneLetra) {
+      this.mensajeError = '*La nueva contraseña debe contener al menos una letra.';
+      return;
+    }
+
+    const tieneNumero = /\d/.test(nuevaContrasena);
+    const tieneCaracterEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(nuevaContrasena);
+
+    if (!(tieneNumero || tieneCaracterEspecial)) {
+      this.mensajeError = '*La nueva contraseña debe contener al menos un número o carácter especial.';
+      return;
+    }
+
+    this.mensajeError = '';
+
+  }
+
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
@@ -115,25 +156,60 @@ export class MiPerfilOyenteComponent implements OnInit {
   }
 
   cerrarSesion(): void {
+  
+    let currentProgress = this.tokenService.getProgresoLocal();
 
-    const currentProgress = this.tokenService.getProgresoLocal();
+    if(currentProgress == null) {
+      this.authService.logout()
+      .subscribe({
+        next: () => {   
+          this.tokenService.clearStorage();
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+          console.error('Error al guardar el progreso:', error);
+        },
+        complete: () => {
+          console.log('Petición completada');
+        }
+      });
+  
+    } else {
+      this.authService.guardarProgreso(currentProgress)
+      .pipe(
+        switchMap(() => this.authService.logout()) // Espera a que guardarProgreso() termine antes de llamar a logout()
+      )
+      .subscribe({
+        next: () => {   
+          this.tokenService.clearStorage();
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+          console.error('Error al guardar el progreso:', error);
+        },
+        complete: () => {
+          console.log('Petición completada');
+        }
+      });
+    }
+  }
 
-    this.authService.guardarProgreso(currentProgress)
-    .pipe(
-      switchMap(() => this.authService.logout()) // Espera a que guardarProgreso() termine antes de llamar a logout()
-    )
+  eliminarCuenta() {
+    this.credentials.contrasenya = (document.getElementById('contrasena_eliminar') as HTMLInputElement).value;
+    this.authService.eliminarCuenta(this.credentials)
     .subscribe({
       next: () => {   
         this.tokenService.clearStorage();
         this.router.navigate(['/login']);
       },
       error: (error) => {
-        console.error('Error al guardar el progreso:', error);
+        console.error('Error al eliminar la cuenta:', error);
       },
       complete: () => {
         console.log('Petición completada');
       }
     });
+
   }
   
 

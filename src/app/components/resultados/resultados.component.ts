@@ -93,13 +93,13 @@ export class ResultadosComponent implements OnInit {
     const filtros = document.querySelector('.filtros'); 
     
     if (filtros) {
-        if (scrollTop > 10) {
-            filtros.classList.add('scrolled'); 
-        } else {
-            filtros.classList.remove('scrolled'); 
-        }
+      if (scrollTop > 10) {
+          filtros.classList.add('scrolled'); 
+      } else {
+          filtros.classList.remove('scrolled'); 
+      }
     }
-}
+  }
 
 }
 
