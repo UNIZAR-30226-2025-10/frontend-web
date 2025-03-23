@@ -51,6 +51,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
 
     this.socketService.listen('put-cancion-sola-ws').subscribe(
       (data) => {
+        this.playerService.setTrack(data.cancion, [], true);
         console.log('Canción recibida:', data);
         this.songData = data; // Asignar los datos a songData
       },
@@ -72,14 +73,22 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
 
 
     // Nos suscribimos al observable para recibir el track actualizado
-    this.trackSubscription = this.playerService.currentTrack$.subscribe(track => {
-      if (track) {
-          this.currentTrack = track;  // Actualiza el track actual
-          console.log("llama playtrack");
+    this.trackSubscription = this.playerService.currentTrack$.subscribe(trackData => {
+      if (trackData && trackData.track) {
+        this.currentTrack = trackData.track; // Actualiza el track actual
+        console.log("Llamado desde socket:", trackData.fromSocket);
+    
+        if (trackData.fromSocket) {
+          console.log("llama playReceptor");
+          this.playReceptor();
+        } else {
+          console.log("llama playTrack");
           this.playTrack();
+        }
       } 
     });
-
+    
+    
     this.setInitialVolumeProgress();
 
     setInterval(() => {
@@ -166,6 +175,39 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  playReceptor() {
+    if (this.songData && this.songData.cancion) {
+      const cancion = this.songData.cancion;
+  
+      // Actualizar correctamente this.currentTrack antes de asignar el audio
+      this.currentTrack = { ...cancion };
+  
+      // Asegurar que el audio se actualiza antes de reproducir
+      this.audioElementRef.nativeElement.pause(); // Detener el audio actual
+      this.audioElementRef.nativeElement.src = this.currentTrack.audio;
+      this.audioElementRef.nativeElement.load(); // Forzar al navegador a recargar la nueva fuente
+  
+      this.tokenService.setCancionActual(this.currentTrack);
+      this.isFavorite = this.currentTrack.fav ?? false;
+  
+      // Intentar reproducir y manejar errores de autoplay
+      const playPromise = this.audioElementRef.nativeElement.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            this.isPlaying = true;
+            console.log('Reproduciendo desde socket:', this.currentTrack.nombre);
+          })
+          .catch(error => {
+            console.warn('Reproducción bloqueada por el navegador. Se requiere interacción del usuario.');
+          });
+      }
+    } else {
+      console.error('No se pudo obtener la canción desde el socket');
+    }
+  }
+  
 
   playTrackInCollection() {
     //CON ESTA PETICION SE MANDA AL BAKEND LA CANCION ACTUAL Y QUE ESTA EN UNA COLECCION

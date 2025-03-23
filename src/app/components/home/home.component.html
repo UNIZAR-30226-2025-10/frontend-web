@@ -53,11 +53,14 @@
             <div class="container">       
                 <div *ngFor="let playlist of misPlaylists; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
                     <div class="dentro-card">
-                        <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
-                        <strong>{{ playlist.nombre }}</strong>
+                        <a [routerLink]="['/home/playlist', playlist.id]"> 
+                            <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" 
+                                 [alt]="playlist.nombre"> 
+                            <strong>{{ playlist.nombre }}</strong>
+                        </a>
                     </div>          
                 </div>
-            </div>
+            </div>            
         </div>
 
         <!--RECOMENDADOS-->

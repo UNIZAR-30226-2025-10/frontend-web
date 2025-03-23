@@ -121,6 +121,8 @@ export class MiPerfilArtistaComponent implements OnInit {
     this.isModalEliminarOpen = true;
   }
 
+ 
+
   cerrarModal() {
     this.isModalOpen = false;
   }
@@ -132,6 +134,7 @@ export class MiPerfilArtistaComponent implements OnInit {
   cerrarModalEliminar() {
     this.isModalEliminarOpen = false;
   }
+
 
   guardarCambios() {
 

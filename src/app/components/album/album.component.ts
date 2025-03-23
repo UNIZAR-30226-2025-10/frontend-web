@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+/*import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PlayerService } from '../../services/player.service';
@@ -14,7 +14,7 @@ import { take } from 'rxjs';
   templateUrl: './album.component.html',
   styleUrls: ['./album.component.css']  
 })
-export class AlbumComponent /*implements OnInit*/ {
+export class AlbumComponent /*implements OnInit*//* {
   album: any = null;
   artistNames: string = '';
   sidebarOpen = false;
@@ -103,4 +103,4 @@ export class AlbumComponent /*implements OnInit*/ {
     this.playerService.toggleShuffle(); // Habilitar o deshabilitar el shuffle
     this.isShuffle = this.playerService.isShuffleEnabled();
   }
-}
+}*/

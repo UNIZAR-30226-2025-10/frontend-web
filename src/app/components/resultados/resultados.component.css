@@ -214,9 +214,21 @@ h2 {
     max-width: 100%; 
 }
 
+.dentro-playlist-card a {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+
 .albums-container a img {
     display: block; 
 }
+
+
+.dentro-playlist-card a:hover {
+    text-decoration: none; 
+}
+
 
 
 

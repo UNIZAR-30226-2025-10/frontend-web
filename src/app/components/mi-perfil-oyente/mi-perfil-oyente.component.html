@@ -61,6 +61,40 @@
         </div>
     </div>
 
+    <div *ngIf="isModalPlaylistOpen" class="modal-overlay">
+        <div class="modal-content">
+          <div class="cabecera" style="display: flex;justify-content: space-between;">
+            <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Crear playlist</p>
+            <button (click)="cerrarModalPlaylist()" class="btn-cerrar">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+      
+          <div class="atributos" style="display: flex;justify-content: space-between;">
+            <div class="image-upload-container">
+                <!-- Mostrar la imagen seleccionada o la imagen por defecto -->
+                <img [src]="previewFoto || 'logo_noizz.png'" 
+                     alt="Foto de playlist" 
+                     class="logo" 
+                     style="border-radius: 5%; width: 110px; height: 110px;">
+              
+                <label for="file-input" class="upload-icon-playlist">
+                  <i class="fa fa-upload" aria-hidden="true"></i> Subir una foto
+                </label>
+                
+                <input id="file-input" type="file" style="display: none;" (change)="onFileSelectedPlaylist($event)">
+              </div>
+              
+      
+            <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center; gap: 5px;">
+              <input type="text" id="nombre" [(ngModel)]="nombrePlaylist" placeholder="Escribe el nombre de la playlist">
+              <button class="btn-guardar" (click)="guardarCambiosPlaylist()">Guardar Cambios</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
     <!-- Primer div: fijo en la parte superior -->
     <div class="top-div">
         <div class="column1">
@@ -96,7 +130,7 @@
         </div>
     </div>
 
-    <button class="boton-playlist">
+    <button class="boton-playlist"  (click)="abrirModalPlaylist()">
         <h4>Crear Playlist</h4>
     </button>
 
@@ -149,9 +183,10 @@
 
             <div class="container">       
                 <div *ngFor="let playlist of misPlaylists; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
-                    <div class="dentro-card">
+                    <div class="dentro-card"><a [routerLink]="['/home/playlist',playlist.id]"> 
                         <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
                         <strong>{{ playlist.nombre }}</strong>
+                        </a>
                     </div>          
                 </div>
             </div>

@@ -23,6 +23,7 @@ export class SocketService {
 
     this.socket.on('connect', () => {
       console.log('Conectado a Socket.IO con ID:', this.socket.id);
+      this.tokenService.setSid(this.socket.id || '');
     });
 
     this.socket.on('connect_error', (error) => {
@@ -31,7 +32,10 @@ export class SocketService {
 
     this.socket.on('disconnect', () => {
       console.log('Desconectado de Socket.IO');
+      this.tokenService.setSid('');
     });
+
+    
   }
 
   // Crear un Observable para escuchar eventos
@@ -58,4 +62,6 @@ export class SocketService {
       this.socket.disconnect();
     }
   }
+
+  
 }

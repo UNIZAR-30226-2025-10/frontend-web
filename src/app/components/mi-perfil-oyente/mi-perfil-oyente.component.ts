@@ -28,6 +28,7 @@ export class MiPerfilOyenteComponent implements OnInit {
   isModalOpen = false;
   isModalContrasenaOpen = false;
   isModalEliminarOpen = false;
+  isModalPlaylistOpen = false;
 
   foto: string ='';
   oyente: misDatos = { nombre: '', nSeguidores: 0, nSeguidos: 0 };
@@ -38,6 +39,10 @@ export class MiPerfilOyenteComponent implements OnInit {
   isAuthenticated: boolean = false;
   mensajeError = '';
   credentials= {contrasenya:''};
+  fotoPortada: File | null = null;
+  nombrePlaylist: string = '';
+  previewFoto: string | null = null;
+
 
   @Output() trackClicked = new EventEmitter<any>();
 
@@ -97,6 +102,12 @@ export class MiPerfilOyenteComponent implements OnInit {
   abrirModalEliminar() {
     this.isModalEliminarOpen = true;
   }
+  
+  abrirModalPlaylist() {
+    this.isModalPlaylistOpen = true;
+    this.previewFoto = null;
+    console.log('Modal abierto:', this.isModalPlaylistOpen);
+  }
 
   cerrarModal() {
     this.isModalOpen = false;
@@ -108,6 +119,11 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   cerrarModalEliminar() {
     this.isModalEliminarOpen = false;
+  }
+
+  cerrarModalPlaylist() {
+    this.isModalPlaylistOpen = false;
+    this.previewFoto = null;
   }
 
 
@@ -141,6 +157,29 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   }
 
+  guardarCambiosPlaylist() {
+    if (!this.nombrePlaylist) {
+      alert("Por favor, ingresa un nombre para la playlist.");
+      return;
+    }
+  
+    const foto = this.fotoPortada ? this.fotoPortada : "logo_noizz.png"; // Imagen predeterminada
+  
+    this.authService.crearPlaylist(foto, this.nombrePlaylist)
+    .subscribe({
+      next: () => {   
+        this.cerrarModalPlaylist();
+      },
+      error: (error) => {
+        console.error("Error al crear la playlist:", error);
+      },
+      complete: () => {
+        console.log("Playlist creada con éxito");
+      }
+    });
+  }
+  
+
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
@@ -149,6 +188,24 @@ export class MiPerfilOyenteComponent implements OnInit {
       // Aquí puedes procesar el archivo o cargarlo a un servidor
     }
   }
+
+  onFileSelectedPlaylist(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    
+    if (fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      this.fotoPortada = file;
+  
+      // Crear una URL temporal para previsualizar la imagen
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewFoto = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  
+  
 
   onTrackClick(track: any) {
     // En lugar de emitir el evento, llamamos al servicio para actualizar el track

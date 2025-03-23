@@ -120,6 +120,19 @@
     background-color: transparent;
 }
 
+a {
+    text-decoration: none; 
+    color: inherit; 
+  }
+  
+  a:focus,
+  a:active,
+  a:hover {
+    outline: none; 
+    text-decoration: none; 
+    color: inherit;
+  }
+
   
 @media (max-width: 780px)  {
 

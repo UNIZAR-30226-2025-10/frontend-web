@@ -5,11 +5,13 @@ import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router'; 
 import { forkJoin } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
+import { ActivatedRoute } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [RouterModule,CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -26,7 +28,7 @@ export class HomeComponent implements OnInit {
 
   @Output() trackClicked = new EventEmitter<any>();
 
-  constructor(private authService:AuthService, private tokenService : TokenService, private router: Router, private playerService: PlayerService) {}
+  constructor(private route: ActivatedRoute,private authService:AuthService, private tokenService : TokenService, private router: Router, private playerService: PlayerService) {}
 
   ngOnInit(): void {
   

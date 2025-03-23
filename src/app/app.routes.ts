@@ -6,7 +6,7 @@ import { RegistroArtistaComponent } from './components/registro-artista/registro
 import { OlvidoContrasena1Component } from './components/olvido-contrasena1/olvido-contrasena1.component';
 import { OlvidoContrasena2Component } from './components/olvido-contrasena2/olvido-contrasena2.component';
 import { OlvidoContrasena3Component } from './components/olvido-contrasena3/olvido-contrasena3.component';
-import { AlbumComponent } from './components/album/album.component';
+//import { AlbumComponent } from './components/album/album.component';
 import { MarcoComponent } from './components/marco/marco.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResultadosComponent } from './components/resultados/resultados.component';
@@ -21,6 +21,7 @@ import { SeguidoresComponent } from './components/seguidores/seguidores.componen
 import { ArtistaComponent } from './components/artista/artista.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { EstadisticasAlbumComponent } from './components/estadisticas-album/estadisticas-album.component';
+import { PlaylistComponent } from './components/playlist/playlist.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -38,7 +39,7 @@ export const routes: Routes = [
   { path: 'home', component: MarcoComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'album/:id', component: AlbumComponent},
+      //{ path: 'album/:id', component: AlbumComponent},
       { path: 'home', component: HomeComponent},
       { path: 'resultados', component: ResultadosComponent},
       { path: 'miPerfilOyente', component: MiPerfilOyenteComponent},
@@ -47,7 +48,8 @@ export const routes: Routes = [
       { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
       { path: 'artista', component: ArtistaComponent},
       { path: 'perfil', component: PerfilComponent},
-      { path: 'estadisticasAlbum', component: EstadisticasAlbumComponent}
+      { path: 'estadisticasAlbum', component: EstadisticasAlbumComponent},
+      { path: 'playlist/:id', component: PlaylistComponent}      
     ]
   }
 ];

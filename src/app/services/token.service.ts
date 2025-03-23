@@ -119,4 +119,13 @@ export class TokenService {
     return !!this.getTempToken();
   }
 
+  setSid(sid: string): void {
+    localStorage.setItem('sid', sid);
+  }
+  
+  getSid(): string | null {
+    return localStorage.getItem('sid');
+  }
+  
+
 }

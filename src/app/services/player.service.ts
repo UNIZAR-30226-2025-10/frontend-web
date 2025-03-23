@@ -6,7 +6,7 @@ import { TokenService } from './token.service';
   providedIn: 'root'
 })
 export class PlayerService {
-  currentTrackSource = new BehaviorSubject<any>(null);
+  currentTrackSource = new BehaviorSubject<{ track: any, fromSocket: boolean } | null>(null);
   currentTrack$ = this.currentTrackSource.asObservable();
 
   public isPlayingSubject = new BehaviorSubject<boolean>(false);
@@ -28,7 +28,7 @@ export class PlayerService {
   }*/
 
   //Para cuando se accede a una canción concreta, ya sea desde buscador, home, mi Perfil o album
-  setTrack(track: any, songList: any[] = []): void {
+  setTrack(track: any, songList: any[] = [],fromSocket: boolean = false): void {
 
     // Si se pasa una lista de canciones, se establece como el nuevo contexto
     this.songList = songList.length > 0 ? songList : [track]; // Si se pasa una lista, la usamos, si no solo usamos la canción seleccionada
@@ -40,7 +40,7 @@ export class PlayerService {
     //this.tokenService.setCancionActual(this.songList[this.currentIndex]);
     //console.log('que guardo', this.songList[this.currentIndex] );
     
-    this.currentTrackSource.next(this.songList[this.currentIndex]); // Emitir la canción actual
+    this.currentTrackSource.next({ track: this.songList[this.currentIndex], fromSocket: fromSocket})
     this.isPlayingSubject.next(true);
 
     setTimeout(() => {
