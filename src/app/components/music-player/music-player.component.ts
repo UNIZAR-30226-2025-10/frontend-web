@@ -21,6 +21,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   @ViewChild('audioElement') audioElementRef!: ElementRef<HTMLAudioElement>; 
   currentTrack: any = null;
 
+
   isPlaying: boolean = false;
   private trackSubscription!: Subscription;
 
@@ -41,11 +42,46 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
 
   //SUSCRIPCION A UN EVENTO PARA ACTUALIZAR LA BARRA CUANDO SE CAMBIA DE CANCIÓN
   ngOnInit() {
+<<<<<<< Updated upstream
     // Nos suscribimos al observable para recibir el track actualizado
     this.trackSubscription = this.playerService.currentTrack$.subscribe(track => {
       if (track) {
         this.currentTrack = track;  // Actualiza el track actual
         this.playTrack();  // Reproduce el track actual
+=======
+
+    this.socketService.connect();
+
+    this.socketService.listen('put-cancion-sola-ws').subscribe(
+      (data) => {
+        console.log('Canción recibida:', data);
+        this.songData = data; // Asignar los datos a songData
+
+      },
+      (error) => {
+        console.error('Error al recibir evento:', error);
+      }
+    );
+
+    if(this.tokenService.getCancionActual() != null) {
+      console.log('q tengo en local: ', this.tokenService.getCancionActual());
+      this.currentTrack = this.tokenService.getCancionActual();
+      this.isPlaying = false;
+      this.playerService.isPlayingSubject.next(false);
+      this.isFavorite = this.tokenService.getCancionActual().fav;
+    }
+
+    console.log("Valor inicial de currentTrack$:", this.playerService.currentTrackSource.getValue());
+
+
+
+    // Nos suscribimos al observable para recibir el track actualizado
+    this.trackSubscription = this.playerService.currentTrack$.subscribe(track => {
+      if (track) {
+          this.currentTrack = track;
+          console.log("llama playtrack");
+          this.playTrack();
+>>>>>>> Stashed changes
       } 
     });
 
@@ -88,6 +124,42 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     this.authService.pedirCancion()
     .subscribe({
       next: (response) => {
+<<<<<<< Updated upstream
+=======
+        //Esta peticion devuelve el audio, si es fav, y el nombre du user del artista
+        if (response && response.audio) {
+          this.audioElementRef.nativeElement.src = response.audio;
+          this.currentTrack.audio = this.audioElementRef.nativeElement.src;
+          this.currentTrack.fav = response.fav;
+          this.tokenService.setCancionActual( this.currentTrack);
+          console.log('que guardo', this.currentTrack );
+          this.audioElementRef.nativeElement.play();
+          this.isPlaying = true;
+          this.isFavorite = response.fav;
+          console.log('Reproduciendo:', this.currentTrack.nombre);
+
+          //ACTUAR CON LO QUE DEVUELVE EL SOCKET
+
+      } else {
+        console.error('No se pudo obtener el audio de la canción');
+      }
+      },
+      error: (error) => {
+        console.error('Error en la petición:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
+  }
+
+  playTrackInCollection() {
+    //CON ESTA PETICION SE MANDA AL BAKEND LA CANCION ACTUAL Y QUE ESTA EN UNA COLECCION
+    this.authService.pedirCancionColeccion(this.currentTrack.id)
+    .subscribe({
+      next: (response) => {
+        //Esta peticion devuelve el audio, si es fav, y el nombre du user del artista
+>>>>>>> Stashed changes
         if (response && response.audio) {
         this.audioElementRef.nativeElement.src = response.audio;
         this.audioElementRef.nativeElement.play();

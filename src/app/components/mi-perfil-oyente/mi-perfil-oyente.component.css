@@ -80,8 +80,15 @@
   }
 
   .boton-crear {
+<<<<<<< Updated upstream
     height: 30px;
     width: 120px;
+=======
+    height: auto;
+    width: auto;
+    padding: 3px 12px;
+    margin-top: 5px;
+>>>>>>> Stashed changes
     border-radius: 20px;
     margin-top: 12%;
     background-color: #8ca5ffe0;
@@ -91,6 +98,23 @@
 
   .boton-crear:hover {
     background-color:#7587c8e0;
+<<<<<<< Updated upstream
+=======
+  }
+
+  .boton-playlist {
+    height: auto;
+    width: auto;
+    padding: 3px 12px;
+    border-radius: 20px;
+    background-color: #8ca5ffe0;
+    border: none;
+    margin: 20px 0px 0px 30px;
+  }
+
+  .boton-playlist:hover {
+    background-color:#7587c8e0;
+>>>>>>> Stashed changes
     border: 2px solid #7587c8e0;
   }
 

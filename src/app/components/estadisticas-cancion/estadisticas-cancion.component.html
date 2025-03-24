@@ -1,0 +1,68 @@
+<div class="top-div">
+    <div class="column1">
+        <img src="logo_noizz.png" alt="Foto de perfil" >
+    </div>
+
+    <div class="column2">   
+        <!--<div *ngIf="cancion.nombre">-->
+            <h1>OTRO DÍA</h1>
+            <h4><strong>De La última página</strong></h4>
+            <h4 class ="fecha">4 minutos 12 segundos</h4>
+            <h4 class ="fecha">Enero 2025</h4>
+        <!--</div>-->
+    </div>
+
+    <div class="column3">
+        <button class="btn-album">Eliminar Canción</button>
+    </div>
+</div>
+
+<div class="bottom-div">
+    <div class="estadisticas">
+        <p class="titulo_repros"><strong>197.862.786 Reproducciones</strong></p>
+        <div class="partesMegusta">
+            <div class="partes1">
+                <p class="titulo_megustas"><strong>451.862 Me Gustas</strong></p>
+                <div *ngIf="!verMeGustas"><button class="btn-detalles" (click)="abrirMeGustas()">Ver a quién le gusta</button></div>
+                <div *ngIf="verMeGustas"><button class="btn-detalles" (click)="cerrarMeGustas()">Ocultar</button></div>
+            </div>
+            <div class="mostrar" *ngIf="verMeGustas">
+                <button class="btn-detalles" style="margin:0px;">Mostrar todos</button>
+            </div>
+        </div>
+        <div *ngIf="verMeGustas">
+            <div *ngIf="usuarios.length > 0">
+                <div class="container">       
+                    <div *ngFor="let usuario of usuarios; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                        <img [src]="usuario.foto && usuario.foto !== 'DEFAULT' ? usuario.foto  : 'nouser.png'" [alt]="usuario.nombre">
+                        <strong>{{ usuario.nombre }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="partesMegusta">
+            <div class="partes1">
+                <p class="titulo_megustas"><strong>Añadida a 12.765 Playlists</strong></p>
+                <div *ngIf="!verPlaylists"><button class="btn-detalles" (click)="abrirPlaylists()">Ver playlists</button></div>
+                <div *ngIf="verPlaylists"><button class="btn-detalles" (click)="cerrarPlaylists()">Ocultar</button></div>
+            </div>
+            <div class="mostrar" *ngIf="verPlaylists">
+                <button class="btn-detalles" style="margin:0px;">Mostrar todas</button>
+            </div>
+        </div>
+        <div *ngIf="verPlaylists">
+            <div *ngIf="usuarios.length > 0">
+                <div class="container">       
+                    <div *ngFor="let playlist of playlists; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                        <div class="dentro-card">
+                            <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
+                            <strong>{{ playlist.nombre }}</strong>
+                            <p style="margin:0px;">{{ playlist.nombreCreador }}</p>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

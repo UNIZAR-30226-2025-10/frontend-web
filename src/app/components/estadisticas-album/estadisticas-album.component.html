@@ -1,0 +1,119 @@
+<div *ngIf="isModalOpen" class="modal-overlay">
+    <div class="modal-content">
+        <div class="cabecera" style="display: flex;justify-content: space-between;">
+            <p style="font-size: 20px; color: #000e3b; margin-top: 18px; font-weight: bold;">Editar Álbum</p>
+            <button (click)="cerrarModal()" class="btn-cerrar"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="atributos2" style="display: flex; justify-content: space-between;">
+            <div class="image-upload-container">
+                <img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="logo" style="border-radius: 12%; width: 110px; height: 110px;">
+                <label for="file-input" class="upload-icon">
+                  <i class="fa fa-upload" aria-hidden="true"></i> Subir nueva foto
+                </label>
+                <input id="file-input" type="file" style="display: none;" (change)="onFileSelected($event)">
+              </div>
+            <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center;">
+                <input type="text" id="nombre" placeholder="Escriba un nuevo nombre para el álbum">
+                <button class="btn-guardar" (click)="guardarCambios()">Guardar Cambios</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="top-div">
+    <div class="column1">
+        <img src="logo_noizz.png" alt="Foto de perfil" >
+    </div>
+
+    <div class="column2">   
+        <!--<div *ngIf="album.nombre">-->
+            <h1>MOTOMAMI</h1>
+            <h4><strong>10 canciones · 30 minutos 13 segundos</strong></h4>
+            <h4 class ="fecha">Diciembre 2023</h4>
+        <!--</div>-->
+    </div>
+
+    <div class="column3">
+        <button class="btn-album" (click)="abrirModal()">Editar Álbum</button>
+        <button class="btn-album">Eliminar Álbum</button>
+    </div>
+</div>
+
+<div class="bottom-div">
+    <div class="estadisticas">
+        <div class="partesMegusta">
+            <div class="partes1">
+                <p class="titulo_megustas"><strong>451.862 Me Gustas</strong></p>
+                <div *ngIf="!verMeGustas"><button class="btn-detalles" (click)="abrirMeGustas()">Ver a quién le gusta</button></div>
+                <div *ngIf="verMeGustas"><button class="btn-detalles" (click)="cerrarMeGustas()">Ocultar</button></div>
+            </div>
+            <div class="mostrar" *ngIf="verMeGustas">
+                <button class="btn-detalles">Mostrar todos</button>
+            </div>
+        </div>
+        <div *ngIf="verMeGustas">
+            <div *ngIf="usuarios.length > 0">
+                <div class="container">       
+                    <div *ngFor="let usuario of usuarios; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                        <img [src]="usuario.foto && usuario.foto !== 'DEFAULT' ? usuario.foto  : 'nouser.png'" [alt]="usuario.nombre">
+                        <strong>{{ usuario.nombre }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="partes">
+            <p class="titulo_repros"><strong>197.862.786 Reproducciones</strong></p>
+            <div *ngIf="!verDetalles"><button class="btn-detalles" (click)="abrirDetalles()">Ver detalles</button></div>
+            <div *ngIf="verDetalles"><button class="btn-detalles" (click)="cerrarDetalles()">Ocultar detalles</button></div>
+        </div>
+        <div *ngIf="verDetalles" class="graficos">
+            <div class="grafico-container">
+                <canvas #graficoCanciones></canvas>
+            </div>
+            <div class="grafico-container">
+                <canvas #graficoPie></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="popular-songs">       
+        <h2 style="font-size: 20px;"><strong>Canciones</strong></h2>
+        <div class="atributos">
+            <div style= "flex:1; display: flex; gap: 15px; min-width: 43%;">
+                <p style="margin:0px;">#</p>
+                <p style="margin:0px;">Título</p>
+            </div>
+            <div class="song-plays">
+                <p style="margin-bottom: 0px; width: 120px;">Reproducciones</p>
+                <p class="titulo_duracion" style="margin-bottom: 0px; width: 120px;">Duración</p>
+                <p class="titulo_estats" style="margin-bottom: 0px; width: 120px;">Estadísticas</p>
+                <button class="icono_estats"><i class="fas fa-chart-line"></i></button>
+            </div>
+        </div>
+        <div *ngFor="let song of canciones; let i = index">
+            <div class="song">
+                <div style="justify-content: center; text-align: center;"><p style="margin: 0px; margin-right:12px; color:rgb(76, 75, 75);"><strong> {{ i + 1 }}</strong></p></div>
+                <div class="song-title">
+                    <strong>{{song.nombre}}</strong>
+                    <p style="margin:0px;">{{song.nombreArtisticoArtista}}</p>
+                </div>
+                <div class="song-plays" style="color:rgb(76, 75, 75);">
+                    <p style="margin-bottom: 0px; width: 120px;">{{song.reproducciones}}</p>           
+                    <p class="duracion" style="margin-bottom: 0px; width: 120px;">{{song.duracion}}</p>
+                    <button class="estats_cancion" style="margin-bottom: 0px; width: 120px; border: none; background-color: transparent; color: rgb(76, 75, 75);">Ver estadísticas</button>
+                    <div class="tres_puntos">
+                        <button (click)="abrirDesplegable(i)" style="border: none; background-color: transparent;"><i class="fas fa-ellipsis-v"></i></button>  
+                        <div *ngIf="openDropdown === i" class="dropdown-content" #dropdown [ngStyle]="{ top: dropdownTopPosition + 'px', left: dropdownLeftPosition + 'px' }">
+                            <button class="opcion_desplegable">Ver estadísticas</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+

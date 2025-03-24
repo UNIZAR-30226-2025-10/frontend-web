@@ -51,14 +51,31 @@
             </button>
             <a [routerLink]="['/cambiarContrasenaOyente']">
                 <h5>Cambiar contraseña</h5>
+<<<<<<< Updated upstream
             </a>
             <button class="boton-crear">
                 <h4>Crear Playlist</h4>
+=======
+            </button>
+            <button class="boton-crear" style="border: none;" (click)="cerrarSesion()">
+                <p style="margin:0px;">Cerrar Sesión</p>
+            </button>
+            <button class="boton-crear" style="border: none;" (click)="abrirModalEliminar()">
+                <p style="margin:0px;">Eliminar Cuenta</p>
+>>>>>>> Stashed changes
             </button>
         </div>
     </div>
 
+<<<<<<< Updated upstream
 <!--
+=======
+    <button class="boton-playlist">
+        <p style="margin:0px;">Crear Playlist</p>
+    </button>
+
+     <!--TOP ARTISTAS-->
+>>>>>>> Stashed changes
     <div class="bottom-div">
         -TOP ARTISTAS RECEINTES-
         <div *ngIf="artistas != null">
