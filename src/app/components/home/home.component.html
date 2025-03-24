@@ -18,7 +18,8 @@
 
                     <ng-container *ngIf="artist.type === 'artista'">
                         <!-- Mostrar el contenido para los artistas -->
-                        <div class="dentro-artistcard">
+                        <div class="dentro-artistcard" >
+
                             <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil : 'nouser.png'" [alt]="artist.nombreArtistico" [ngClass]="{'artista-img': artist.type === 'artista'}">
                             <strong>{{ artist.nombreArtistico}}</strong>
                         </div>
@@ -80,3 +81,4 @@
         </div>
     </div>
 </div>
+

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
 import { Chart, registerables} from 'chart.js';
 import { CommonModule } from '@angular/common';
 
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './estadisticas-album.component.html',
   styleUrl: './estadisticas-album.component.css'
 })
-export class EstadisticasAlbumComponent implements AfterViewChecked {
+export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
 
   @ViewChild('graficoCanciones') canvas!: ElementRef;
   @ViewChild('graficoPie') canvasPie!: ElementRef;
@@ -17,6 +17,12 @@ export class EstadisticasAlbumComponent implements AfterViewChecked {
 
   verDetalles: boolean=false;
   verMeGustas: boolean=false;
+  isModalOpen = false;
+  openDropdown: number | null = null;
+  dropdownTopPosition: number = 0; 
+  dropdownLeftPosition: number = 0;
+
+  foto: string ='';
 
   usuarios = [
     { nombre: "Juan Pérez", foto: "nouser.png" },
@@ -83,6 +89,10 @@ export class EstadisticasAlbumComponent implements AfterViewChecked {
     Chart.register(...registerables);
   }
 
+  ngOnInit(): void {
+    this.foto = "logo_noizz.png" //PONER FOTO DEL ALBUM
+  }
+
   ngAfterViewChecked() {
     if (this.verDetalles && this.canvas && this.canvasPie && !this.chart && !this.chartPie) {
       this.crearGraficos();
@@ -122,7 +132,10 @@ export class EstadisticasAlbumComponent implements AfterViewChecked {
         datasets: [{
           label: "Reproducciones",
           data: [1050000, 870000, 650000, 920000, 780000, 1050000, 870000, 650000, 920000, 780000],
-          backgroundColor: ["#3498db", "#e74c3c", "#2ecc71", "#f1c40f", "#9b59b6", "#1abc9c", "#16a085", "#f39c12", "#d35400", "#8e44ad"],
+          backgroundColor: [
+            "#34495E", "#2C3E50", "#7F8C8D", "#95A5A6", "#BDC3C7",
+            "#ECF0F1", "#1ABC9C", "#16A085", "#8E44AD", "#2980B9"
+          ],
           borderWidth: 1
         }]
       },
@@ -148,7 +161,10 @@ export class EstadisticasAlbumComponent implements AfterViewChecked {
         datasets: [{
           label: "Reproducciones",
           data: [1050000, 870000, 650000, 920000, 780000, 1050000, 870000, 650000, 920000, 780000],
-          backgroundColor: ["#3498db", "#e74c3c", "#2ecc71", "#f1c40f", "#9b59b6", "#1abc9c", "#16a085", "#f39c12", "#d35400", "#8e44ad"],
+          backgroundColor: [
+            "#34495E", "#2C3E50", "#7F8C8D", "#95A5A6", "#BDC3C7",
+            "#ECF0F1", "#1ABC9C", "#16A085", "#8E44AD", "#2980B9"
+          ],
           borderWidth: 1
         }]
       },
@@ -174,5 +190,41 @@ export class EstadisticasAlbumComponent implements AfterViewChecked {
 
   cerrarMeGustas() {
     this.verMeGustas=false;
+  }
+
+  abrirModal() {
+    this.isModalOpen = true;
+  }
+
+  cerrarModal() {
+    this.isModalOpen = false;
+  }
+
+  guardarCambios() {
+
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      console.log("Archivo seleccionado:", file);
+      // Aquí puedes procesar el archivo o cargarlo a un servidor
+    }
+  }
+
+  abrirDesplegable(index: number) {
+    if (this.openDropdown === index) {
+      this.openDropdown = null;
+    } else {
+      this.openDropdown = index;
+      this.calcularPosicionDropdown(index);
+    }
+  }
+
+  calcularPosicionDropdown(index: number): void {
+    const button = document.getElementsByClassName('tres_puntos')[index] as HTMLElement;
+    const rect = button.getBoundingClientRect();  // Obtiene la posición del botón
+    this.dropdownTopPosition = rect.bottom + window.scrollY;  // Calcula la posición top
+    this.dropdownLeftPosition = rect.left + window.scrollX -105;  // Calcula la posición left
   }
 }

@@ -366,7 +366,9 @@ h3 {
     max-width: 100%; 
 }
 
-@media (max-width: 550px) {
+
+@media (max-width: 650px) {
+
     .header h1 {
         font-size: 40px;
     }
@@ -386,7 +388,9 @@ h3 {
     }
   }
 
-  @media (max-width: 400px) {
+
+ @media (max-width: 450px) {
+
     .header h1 {
         font-size: 20px;
     }

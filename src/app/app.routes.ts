@@ -22,6 +22,8 @@ import { ArtistaComponent } from './components/artista/artista.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { EstadisticasAlbumComponent } from './components/estadisticas-album/estadisticas-album.component';
 import { PlaylistComponent } from './components/playlist/playlist.component';
+import { EstadisticasCancionComponent} from './components/estadisticas-cancion/estadisticas-cancion.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -49,7 +51,9 @@ export const routes: Routes = [
       { path: 'artista', component: ArtistaComponent},
       { path: 'perfil', component: PerfilComponent},
       { path: 'estadisticasAlbum', component: EstadisticasAlbumComponent},
-      { path: 'playlist/:id', component: PlaylistComponent}      
+      { path: 'playlist/:id', component: PlaylistComponent},
+      { path: 'estadisticasCancion', component: EstadisticasCancionComponent}
+
     ]
   }
 ];

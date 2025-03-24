@@ -25,6 +25,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   @ViewChild('audioElement') audioElementRef!: ElementRef<HTMLAudioElement>; 
   currentTrack: any = null;
 
+
   isPlaying: boolean = false;
   private trackSubscription!: Subscription;
   private progressSubscription!: Subscription;
@@ -85,7 +86,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
           console.log("llama playTrack");
           this.playTrack();
         }
-      } 
+      }
     });
     
     
@@ -175,6 +176,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       }
     });
   }
+
 
   playReceptor() {
     if (this.songData && this.songData.cancion) {
