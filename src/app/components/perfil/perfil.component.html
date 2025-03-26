@@ -1,59 +1,57 @@
 <div class="contenido">
 
     <div class="barra-superior" [ngStyle]="{ 'display': mostrarBarra ? 'flex' : 'none' }">
-        <h4 style="color: white; padding:7px; margin-left: 15px;"><strong>LauritaDinamita</strong></h4>
+        <h4 style="color: white; padding:7px; margin-left: 15px;"><strong>{{this.oyente.nombre}}</strong></h4>
     </div>
 
     <div class="todo" style="position: relative;">
         <div class="top-div">
             <div class="column1">
-                <img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="logo">
+                <img [src]="oyente.foto && oyente.foto!== 'DEFAULT' ? oyente.foto : 'nouser.png'" alt="Foto de perfil">
             </div>
 
             <div class="column2">   
-                <!--<div *ngIf="oyente.nombre">-->
-                    <h1>LauritaDinamita</h1>
+                <div *ngIf="oyente.nombre">
+                    <h1>{{ this.oyente.nombre}}</h1>
                     <div class="seguidores">
                         <a>
-                            <h4><strong>10 seguidores</strong></h4>
+                            <h4><strong> {{this.oyente.nSeguidores}} seguidores</strong></h4>
                         </a>
                         <a>
-                            <h4><strong>12 seguidos</strong></h4>
+                            <h4><strong>{{this.oyente.nSeguidos}} seguidos</strong></h4>
                         </a>
                     </div>
                     <h4 style="margin-top: 8px; font-size: 15px;"> 4 playlists públicas</h4>
-                <!--</div>-->
+                </div>
             </div>
 
         </div>
 
         <div class="botones">
-            <button class="btn-noizz">
-                <h5 style="margin: 0px;">Seguir</h5>
+            <button class="btn-noizz" (click)="toggleSeguir()">
+                <h5 style="margin: 0px;">{{ oyente.siguiendo ? 'Siguiendo' : 'Seguir' }} </h5>
             </button> 
             <button class="btn-noizz">
                 <h5 style="margin: 0px;">Ver Más Noizzys</h5>
             </button>                       
         </div>
 
- 
-        <div class="noizzy">
-            <div class="perfilNoizzy">
-                <img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="logo">
-            </div>
-            <div class="textos">
-                <p style="margin-bottom: 5px; color:#000e3b">LauritaDinamita</p>
-                <p style="margin:0; word-wrap: break-word; overflow-wrap: break-word;">HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</p>
-                <div class="btns-noizzy">
-                    <button class="btns">
-                        <i class="far fa-thumbs-up"></i>
-                    </button>
-                    <button class="btns">
-                        <i class="far fa-thumbs-down"></i>
-                    </button>
-                    <button class="btns">
-                        <i class="far fa-comments"></i>
-                    </button>
+        <div *ngIf="ultimoNoizzy.texto != ''">
+            <div class="noizzy">
+                <div class="perfilNoizzy">
+                    <img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="logo">
+                </div>
+                <div class="textos">
+                    <p style="margin-bottom: 5px; color:#000e3b">{{ this.oyente.nombre}}</p>
+                    <p style="margin:0; word-wrap: break-word; overflow-wrap: break-word;">{{ultimoNoizzy.texto}}</p>
+                    <div class="btns-noizzy">
+                        <button class="btns" (click)="toggleLike()">
+                            <i [ngClass]="ultimoNoizzy.like ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'"></i>
+                        </button>
+                        <button class="btns">
+                            <i class="far fa-comments"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

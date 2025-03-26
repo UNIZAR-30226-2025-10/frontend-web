@@ -9,14 +9,14 @@
             
             <div class="atributos" style="display: flex;justify-content: space-between;">
                 <div class="image-upload-container">
-                    <img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="logo" style="border-radius: 50%; width: 110px; height: 110px;">
+                    <img [src]="fotoNueva && fotoNueva!== 'DEFAULT' ? fotoNueva : 'nouser.png'" alt="Foto de perfil" class="logo" style="border-radius: 50%; width: 110px; height: 110px;">
                     <label for="file-input" class="upload-icon">
                       <i class="fa fa-upload" aria-hidden="true"></i> Subir nueva foto
                     </label>
                     <input id="file-input" type="file" style="display: none;" (change)="onFileSelected($event)">
-                  </div>
+                </div>
                 <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center;">
-                    <input type="text" id="nombre" [(ngModel)]="oyente.nombre" placeholder="Escribe un nuevo nombre de usuario">
+                    <input type="text" id="nombre" [(ngModel)]="nombreActual" placeholder="Escribe un nuevo nombre de usuario">
                     <button class="btn-guardar" (click)="guardarCambios()">Guardar Cambios</button>
                 </div>
 
@@ -33,8 +33,14 @@
             
             <div class="atributos" style="display: flex;justify-content: space-between;">
                 <div class="textos" style="display: flex; flex-direction: column; width: 100%; justify-content: center; align-items: center; gap: 8px;">
-                    <input type="text" id="contrasena_actual" placeholder="Escribe la contraseña actual">
-                    <input type="text" id="contrasena_nueva" placeholder="Escribe la contraseña nueva">
+                    <div class="password-container">
+                        <input [type]="isPasswordViejaVisible ? 'text' : 'password'" id="contrasena_actual" placeholder="Escribe la contraseña actual">
+                        <i [ngClass]="isPasswordViejaVisible ? 'fas fa-eye' : 'fas fa-eye-slash'" (click)="togglePasswordVieja()" class="toggle-password"></i>
+                    </div>
+                    <div class="password-container">
+                        <input [type]="isPasswordNuevaVisible ? 'text' : 'password'" id="contrasena_nueva" placeholder="Escribe la contraseña nueva">
+                        <i [ngClass]="isPasswordNuevaVisible ? 'fas fa-eye' : 'fas fa-eye-slash'" (click)="togglePasswordNueva()" class="toggle-password"></i>
+                    </div>
                     <p *ngIf="mensajeError" style="color: red; font-size: 10px; margin: 0px;">{{ mensajeError }}</p>
                     <button class="btn-guardar" styles="margin-top: 0px;" (click)="guardarCambiosContrasena()">Guardar Cambios</button>
                 </div>
@@ -102,7 +108,7 @@
         </div>
 
         <div class="column2">   
-            <div *ngIf="oyente.nombre">
+            
                 <h3>{{ oyente.nombre }}</h3>
                 <div class="seguidores">
                     <a [routerLink]="['/home/seguidores',oyente.nombre]">
@@ -112,7 +118,7 @@
                         <h4>{{ oyente.nSeguidos }} seguidos</h4>
                     </a>
                 </div>
-            </div>
+            
         </div>
         <div class="column3" >
             <button (click)="abrirModal()" class="botones_opciones" style="margin-top: 10px;">
@@ -205,7 +211,7 @@
             <div class="container">       
                 <div *ngFor="let seguido of seguidos; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
                     <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombre">
-                    <strong>{{ seguido.nombre }}</strong>
+                    <strong>{{ seguido.nombreUsuario }}</strong>
                 </div>
             </div>
         </div>

@@ -45,6 +45,7 @@ export class LoginComponent {
         this.tokenService.clearStorage();
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.usuario);
+        console.log('soy:', response.usuario)
         this.tokenService.setTipo(response.tipo);
 
         if (response.tipo === "pendiente") {

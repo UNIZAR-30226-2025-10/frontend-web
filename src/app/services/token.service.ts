@@ -79,6 +79,14 @@ export class TokenService {
     return progresoData ? JSON.parse(progresoData) : null;
   }
 
+  setSid(sid: string): void {
+    localStorage.setItem('sid', sid);
+  }
+  
+  getSid(): string | null {
+    return localStorage.getItem('sid');
+  }
+
 
 
 
@@ -118,14 +126,4 @@ export class TokenService {
   hasTempToken(): boolean {
     return !!this.getTempToken();
   }
-
-  setSid(sid: string): void {
-    localStorage.setItem('sid', sid);
-  }
-  
-  getSid(): string | null {
-    return localStorage.getItem('sid');
-  }
-  
-
 }

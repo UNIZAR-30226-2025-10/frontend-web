@@ -18,11 +18,14 @@
 
                     <ng-container *ngIf="artist.type === 'artista'">
                         <!-- Mostrar el contenido para los artistas -->
-                        <div class="dentro-artistcard" >
-
-                            <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil : 'nouser.png'" [alt]="artist.nombreArtistico" [ngClass]="{'artista-img': artist.type === 'artista'}">
-                            <strong>{{ artist.nombreArtistico}}</strong>
-                        </div>
+                        <a [routerLink]="['/home/artista', artist.nombreUsuario]"> 
+                            <div class="dentro-card" >
+                                    <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil : 'nouser.png'" [alt]="artist.nombreArtistico" [ngClass]="{'artista-img': artist.type === 'artista'}">
+                                    <strong>{{ artist.nombreArtistico}}</strong>
+                                    <span>Artista</span>
+                            
+                            </div>
+                        </a>
                     </ng-container>
                 </div>
             </div>

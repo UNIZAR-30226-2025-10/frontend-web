@@ -33,7 +33,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   currentTime: number = 0; // Tiempo actual de la canción
   duration: number = 0;
 
-  volume: number = 50; //COGER VOLUMEN QUE ME DEN AL INICIAR SESION
+  volume: number = 50; //LUEGO SE COGE EL VOLUMEN QUE ME DEN AL INICIAR SESION
    
   isFavorite = false;
   screenWidth: number = window.innerWidth;
@@ -45,21 +45,31 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     this.screenWidth = (event.target as Window).innerWidth; 
   }
 
-  //SUSCRIPCION A UN EVENTO PARA ACTUALIZAR LA BARRA CUANDO SE CAMBIA DE CANCIÓN
+
   ngOnInit() {
 
     this.socketService.connect();
-
+    
     this.socketService.listen('put-cancion-sola-ws').subscribe(
       (data) => {
-        this.playerService.setTrack(data.cancion, [], true);
         console.log('Canción recibida:', data);
-        this.songData = data; // Asignar los datos a songData
+        this.songData = data;
+        this.playerService.setTrack(data.cancion, [], true);
       },
       (error) => {
         console.error('Error al recibir evento:', error);
       }
     );
+
+    this.socketService.listen('play-pause-ws').subscribe(
+      (data) => {
+        console.log('Evento recibido en cliente:', data);
+      },
+      (error) => {
+        console.error('Error al recibir evento:', error);
+      }
+    );
+    
 
     if(this.tokenService.getCancionActual() != null) {
       console.log('q tengo en local: ', this.tokenService.getCancionActual());
@@ -241,6 +251,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
 
     if(this.audioElementRef.nativeElement.src && this.audioElementRef.nativeElement.src !== '') {
       const audio = this.audioElementRef.nativeElement;
+      
       if (audio.paused) {
         audio.play();
         this.isPlaying = true;
@@ -251,6 +262,16 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
         this.playerService.isPlayingSubject.next(false);
       }
       //MANDAR AL BACKEND CUANDO HAGO PAUSA
+      this.authService.playPause(!audio.paused, this.tokenService.getProgresoLocal())
+      .subscribe({
+        next: () => {},
+        error: (error) => {
+          console.error('Error en la petición:', error);
+        },
+        complete: () => {
+          console.log('Petición completada');
+        }
+      });
     } 
   }
 
@@ -264,6 +285,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
 
   //PARA PONER BIEN EL VOLUMEN ANTES DE TOCAR LA BARRA
   setInitialVolumeProgress() {
+    this.volume = this.tokenService.getUser().volumen;
     const volumeControl = document.querySelector('.barra_volumen') as HTMLInputElement;
     if (volumeControl) {
       const progressPercent = (this.volume / 100) * 100;
@@ -310,6 +332,8 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       this.audioElementRef.nativeElement.currentTime = newTime;
       this.currentTime = newTime;
     }
+
+    
   } 
 
   //PASAR TIEMPO A FORMATO MINUTO:SEGUNDO
@@ -332,7 +356,23 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
         volumeControl.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000E3B ${progressPercent}%)`;
       }
 
-      //MANDAR AL BACKEND EL NUEVO VOLUMEN
+      //Actualizamos el volumen en local storage
+      const user = this.tokenService.getUser();
+      user.volumen = this.volume; 
+      this.tokenService.setUser(user);
+
+      //Actualizamos el volumen en la bd
+      this.authService.actualizarVolumen(this.volume)
+      .subscribe({
+        next: () => {
+        },
+        error: (error) => {
+          console.error('Error al actualizar el volumen:', error);
+        },
+        complete: () => {
+          console.log('Volumen actualizado con éxito');
+        }
+      });
     }
   }
 

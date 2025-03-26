@@ -343,6 +343,34 @@ input {
   color: white;
 }
 
+.password-container {
+  position: relative;
+  width: 100%;
+}
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #000E3B;
+  font-size: 12px;
+}
+
+a {
+  text-decoration: none; 
+  color: inherit; 
+  all: unset; 
+  display: contents;
+}
+
+a:focus,
+a:active,
+a:hover {
+  outline: none; 
+  text-decoration: none; 
+  color: inherit;
+}
 
   
   @media (max-width: 780px)  {

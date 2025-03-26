@@ -43,6 +43,15 @@ export class MiPerfilArtistaComponent implements OnInit {
   mensajeError = '';
   credentials= {contrasenya:''};
 
+  //para lo de editar perfil
+  nombreActual: string = '';
+  nombreArtisticoActual: string = '';
+  biografiaActual: string = '';
+
+  //para editar contraseña
+  isPasswordViejaVisible: boolean = false;
+  isPasswordNuevaVisible: boolean = false;
+
 
   artistas = [
     { name: 'Usuario 1', img: 'https://randomuser.me/api/portraits/men/16.jpg', status: 'status-red' },
@@ -67,15 +76,19 @@ export class MiPerfilArtistaComponent implements OnInit {
     }
 
     this.isAuthenticated = true;
-    this.foto = this.tokenService.getUser().fotoPerfil;
 
+    this.foto = this.tokenService.getUser().fotoPerfil;
     this.authService.pedirMisDatosArtista().subscribe({
       next: (oyente) => {
         this.oyente.nombreUsuario = oyente.nombre;
         this.oyente.nombreArtistico = oyente.nombreArtistico;
-        //this.oyente.biografia = oyente.biografia;
-        this.oyente.nSeguidores = oyente.seguidores_count;
-        this.oyente.nSeguidos = oyente.seguidos_count;
+        this.oyente.biografia = oyente.biografia;
+        this.oyente.nSeguidores = oyente.numSeguidores;
+        this.oyente.nSeguidos = oyente.numSeguidos;
+
+        this.nombreActual = this.oyente.nombreUsuario;
+        this.nombreArtisticoActual = this.oyente.nombreArtistico;
+        this.biografiaActual = this.oyente.biografia;
       },
       error: (error) => {
         console.error('Error al pedir los datos del artista:', error);
@@ -83,7 +96,7 @@ export class MiPerfilArtistaComponent implements OnInit {
     });
 
     forkJoin({
-      //misCanciones: this.authService.pedirMisCancionesArtista(),
+      misCanciones: this.authService.pedirMisCancionesArtista(),
       misAlbumes: this.authService.pedirMisAlbumesArtista(),
       topArtistas: this.authService.pedirTopArtistas(),
       ultimasCanciones: this.authService.pedirHistorialCanciones(),
@@ -92,7 +105,7 @@ export class MiPerfilArtistaComponent implements OnInit {
 
     }).subscribe({
       next: (response) => {   
-        //this.misCanciones = response.misCanciones.canciones;
+        this.misCanciones = response.misCanciones.canciones;
         this.misAlbumes = response.misAlbumes.albumes;
         this.topArtistas = response.topArtistas.historial_artistas;
         this.ultimasCanciones = response.ultimasCanciones.historial_canciones;
@@ -114,6 +127,8 @@ export class MiPerfilArtistaComponent implements OnInit {
   }
 
   abrirModalContrasena() {
+    this.isPasswordViejaVisible = false;
+    this.isPasswordNuevaVisible = false;
     this.isModalContrasenaOpen = true;
   }
 
@@ -122,8 +137,10 @@ export class MiPerfilArtistaComponent implements OnInit {
   }
 
  
-
   cerrarModal() {
+    this.nombreActual = this.oyente.nombreUsuario;
+    this.nombreArtisticoActual = this.oyente.nombreArtistico
+    this.biografiaActual = this.oyente.biografia;
     this.isModalOpen = false;
   }
 
@@ -137,10 +154,25 @@ export class MiPerfilArtistaComponent implements OnInit {
 
 
   guardarCambios() {
-
+    this.authService.cambiarDatosArtista(this.nombreActual, this.nombreArtisticoActual, this.biografiaActual, this.foto)
+    .subscribe({
+      next: () => {   
+        this.oyente.nombreUsuario = this.nombreActual;
+        this.oyente.nombreArtistico = this.nombreArtisticoActual;
+        this.oyente.biografia = this.biografiaActual;
+        this.cerrarModal();
+      },
+      error: (error) => {
+        console.error("Error al guardar los nuevos datos:", error);
+      },
+      complete: () => {
+        console.log("Datos guardados con éxito");
+      }
+    });
   }
 
   guardarCambiosContrasena() {
+    const viejaContrasena = (document.getElementById('contrasena_actual') as HTMLInputElement).value;
     const nuevaContrasena = (document.getElementById('contrasena_nueva') as HTMLInputElement).value;
 
     if (nuevaContrasena.length < 10) {
@@ -163,6 +195,18 @@ export class MiPerfilArtistaComponent implements OnInit {
     }
 
     this.mensajeError = '';
+    this.authService.cambiarContrasenyaOyente(viejaContrasena, nuevaContrasena)
+    .subscribe({
+      next: () => {   
+        this.cerrarModalContrasena();
+      },
+      error: (error) => {
+        console.error("Error al cambiar la contraseña:", error);
+      },
+      complete: () => {
+        console.log("Contraseña guardada con éxito");
+      }
+    });
 
   }
 
@@ -232,6 +276,14 @@ export class MiPerfilArtistaComponent implements OnInit {
 
   onTrackClick(track: any) {
     this.playerService.setTrack(track);
+  }
+
+  togglePasswordVieja(): void {
+    this.isPasswordViejaVisible = !this.isPasswordViejaVisible;
+  }
+
+  togglePasswordNueva(): void {
+    this.isPasswordNuevaVisible = !this.isPasswordNuevaVisible;
   }
 
 }

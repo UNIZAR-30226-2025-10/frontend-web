@@ -12,7 +12,7 @@ import { DurationPipe } from '../../pipes/duration.pipe';
 
 @Component({
   selector: 'app-playlist',
-  imports: [CommonModule, RouterModule, FormsModule,DurationPipe],
+  imports: [CommonModule, RouterModule, FormsModule, DurationPipe],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.css'
 })

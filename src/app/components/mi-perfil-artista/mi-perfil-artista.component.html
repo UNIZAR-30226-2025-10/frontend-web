@@ -16,9 +16,9 @@
                     <input id="file-input" type="file" style="display: none;" (change)="onFileSelected($event)">
                   </div>
                 <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center; gap: 5px;">
-                    <input type="text" id="nombre" [(ngModel)]="oyente.nombreUsuario" placeholder="Escribe un nuevo nombre de usuario">
-                    <input type="text" id="nombreArtistico" [(ngModel)]="oyente.nombreArtistico" placeholder="Escribe un nuevo nombre artístico">
-                    <input type="text" id="biografia" [(ngModel)]="oyente.biografia" placeholder="Escribe una nueva biografía">
+                    <input type="text" id="nombre" [(ngModel)]="nombreActual" placeholder="Escribe un nuevo nombre de usuario">
+                    <input type="text" id="nombreArtistico" [(ngModel)]="nombreArtisticoActual" placeholder="Escribe un nuevo nombre artístico">
+                    <input type="text" id="biografia" [(ngModel)]="biografiaActual" placeholder="Escribe una nueva biografía">
                     <button class="btn-guardar" (click)="guardarCambios()">Guardar Cambios</button>
                 </div>
 
@@ -35,12 +35,17 @@
             
             <div class="atributos" style="display: flex;justify-content: space-between;">
                 <div class="textos" style="display: flex; flex-direction: column; width: 100%; justify-content: center; align-items: center; gap: 8px;">
-                    <input type="text" id="contrasena_actual" placeholder="Escribe la contraseña actual">
-                    <input type="text" id="contrasena_nueva" placeholder="Escribe la contraseña nueva">
+                    <div class="password-container">
+                        <input [type]="isPasswordViejaVisible ? 'text' : 'password'" id="contrasena_actual" placeholder="Escribe la contraseña actual">
+                        <i [ngClass]="isPasswordViejaVisible ? 'fas fa-eye' : 'fas fa-eye-slash'" (click)="togglePasswordVieja()" class="toggle-password"></i>
+                    </div>
+                    <div class="password-container">
+                        <input [type]="isPasswordNuevaVisible ? 'text' : 'password'" id="contrasena_nueva" placeholder="Escribe la contraseña nueva">
+                        <i [ngClass]="isPasswordNuevaVisible ? 'fas fa-eye' : 'fas fa-eye-slash'" (click)="togglePasswordNueva()" class="toggle-password"></i>
+                    </div>
                     <p *ngIf="mensajeError" style="color: red; font-size: 10px; margin: 0px;">{{ mensajeError }}</p>
                     <button class="btn-guardar" styles="margin-top: 0px;" (click)="guardarCambiosContrasena()">Guardar Cambios</button>
                 </div>
-
             </div>
         </div>
     </div>
@@ -73,7 +78,7 @@
             <div *ngIf="oyente.nombreUsuario">
                 <h3>{{ oyente.nombreUsuario }}</h3>
                 <h6>Nombre artístico: {{ oyente.nombreArtistico }}</h6>
-                <h1>Aquí iría la biografía hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola</h1>
+                <h1>{{this.oyente.biografia}}</h1>
                 <div class="seguidores">
                     <a [routerLink]="['/home/seguidores',oyente.nombreUsuario]">
                         <h4>{{ oyente.nSeguidores }} seguidores</h4>
@@ -116,7 +121,7 @@
     <div class="bottom-div">
 
         <!--MIS CANCIONES-->
-        <div *ngIf="artistas != null">
+        <div *ngIf="misCanciones != null">
             <div class="titulo">
                 <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Mis canciones</strong></h2>
                 <a [routerLink]="['/historialCanciones']">
@@ -125,12 +130,16 @@
             </div>
 
             <div class="container">       
-                <div *ngFor="let artist of artistas; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
-                    <div class="dentro-card">
-                        <img [src]="artist.img" [alt]="artist.name"> 
-                        <strong>{{ artist.name }}</strong>
-                        <p>{{ artist.name }}</p> 
-                    </div>          
+                <div *ngFor="let song of misCanciones; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                    
+                        <div class="dentro-card">
+                            <a [routerLink]="['/home/estadisticasCancion', song.id]"> 
+                                <img [src]="song.fotoPortada" [alt]="song.nombre"> 
+                                <strong>{{ song.nombre }}</strong>
+                                <p>{{ oyente.nombreUsuario }}</p> 
+                            </a>
+                        </div>   
+                        
                 </div>
             </div>
         </div>

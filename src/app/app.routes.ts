@@ -48,11 +48,11 @@ export const routes: Routes = [
       { path: 'miPerfilArtista', component: MiPerfilArtistaComponent},
       { path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
       { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
-      { path: 'artista', component: ArtistaComponent},
-      { path: 'perfil', component: PerfilComponent},
+      { path: 'artista/:nombreUsuario', component: ArtistaComponent},
+      { path: 'perfil/:nombreUsuario', component: PerfilComponent},
       { path: 'estadisticasAlbum', component: EstadisticasAlbumComponent},
       { path: 'playlist/:id', component: PlaylistComponent},
-      { path: 'estadisticasCancion', component: EstadisticasCancionComponent}
+      { path: 'estadisticasCancion/:id', component: EstadisticasCancionComponent}
 
     ]
   }

@@ -9,6 +9,7 @@ import { forkJoin } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
 import { ProgressService } from '../../services/progress.service';
 import { switchMap } from 'rxjs/operators';
+import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 
 
 interface misDatos {
@@ -31,6 +32,8 @@ export class MiPerfilOyenteComponent implements OnInit {
   isModalPlaylistOpen = false;
 
   foto: string ='';
+  fotoNueva!: string;
+
   oyente: misDatos = { nombre: '', nSeguidores: 0, nSeguidos: 0 };
   ultimosArtistas: any[] = [];
   misPlaylists: any[] = [];
@@ -42,11 +45,18 @@ export class MiPerfilOyenteComponent implements OnInit {
   fotoPortada: File | null = null;
   nombrePlaylist: string = '';
   previewFoto: string | null = null;
+  nombreActual: string = '';
+
+  file!: File;
+
+   //para editar contraseña
+   isPasswordViejaVisible: boolean = false;
+   isPasswordNuevaVisible: boolean = false;
 
 
   @Output() trackClicked = new EventEmitter<any>();
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService){}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private subirCloudinary: SubirCloudinary){}
 
   ngOnInit(): void {
 
@@ -57,12 +67,14 @@ export class MiPerfilOyenteComponent implements OnInit {
 
     this.isAuthenticated = true;
     this.foto = this.tokenService.getUser().fotoPerfil;
+    this.fotoNueva = this.foto;
 
     this.authService.pedirMisDatosOyente().subscribe({
       next: (oyente) => {
-        this.oyente.nombre = oyente.nombre;
-        this.oyente.nSeguidores = oyente.seguidores_count;
-        this.oyente.nSeguidos = oyente.seguidos_count;
+        this.oyente.nombre = oyente.nombreUsuario;
+        this.nombreActual = this.oyente.nombre;
+        this.oyente.nSeguidores = oyente.numSeguidores;
+        this.oyente.nSeguidos = oyente.numSeguidos;
       },
       error: (error) => {
         console.error('Error al pedir los datos del oyente:', error);
@@ -96,6 +108,8 @@ export class MiPerfilOyenteComponent implements OnInit {
   }
 
   abrirModalContrasena() {
+    this.isPasswordViejaVisible = false;
+    this.isPasswordNuevaVisible = false;
     this.isModalContrasenaOpen = true;
   }
 
@@ -110,6 +124,8 @@ export class MiPerfilOyenteComponent implements OnInit {
   }
 
   cerrarModal() {
+    this.nombreActual = this.oyente.nombre;
+    this.fotoNueva = this.foto;
     this.isModalOpen = false;
   }
 
@@ -128,10 +144,41 @@ export class MiPerfilOyenteComponent implements OnInit {
 
 
   guardarCambios() {
-
+    if(this.fotoNueva != this.foto) {
+      this.subirCloudinary.uploadFile(this.file).subscribe({
+        next: (url) => {
+          console.log('Imagen subida:', url);
+          this.fotoNueva = url;
+        },
+        error: (err) => console.error('Error al subir la imagen:', err)
+      });  
+    }
+    
+    this.authService.cambiarDatosOyente(this.nombreActual, this.fotoNueva)
+    .subscribe({
+      next: () => {   
+        this.oyente.nombre = this.nombreActual;
+        this.foto= this.fotoNueva;
+        if (this.foto != this.tokenService.getUser().fotoPerfil) {
+          const user = this.tokenService.getUser();
+          user.fotoPerfil = this.foto;
+          this.tokenService.setUser(user);
+        }
+        this.cerrarModal();
+        
+      },
+      error: (error) => {
+        console.error("Error al guardar los nuevos datos:", error);
+        this.fotoNueva= this.foto
+      },
+      complete: () => {
+        console.log("Datos guardados con éxito");
+      }
+    }); 
   }
 
   guardarCambiosContrasena() {
+    const viejaContrasena = (document.getElementById('contrasena_actual') as HTMLInputElement).value;
     const nuevaContrasena = (document.getElementById('contrasena_nueva') as HTMLInputElement).value;
 
     if (nuevaContrasena.length < 10) {
@@ -154,6 +201,18 @@ export class MiPerfilOyenteComponent implements OnInit {
     }
 
     this.mensajeError = '';
+    this.authService.cambiarContrasenyaOyente(viejaContrasena, nuevaContrasena)
+    .subscribe({
+      next: () => {   
+        this.cerrarModalContrasena();
+      },
+      error: (error) => {
+        console.error("Error al cambiar la contraseña:", error);
+      },
+      complete: () => {
+        console.log("Contraseña guardada con éxito");
+      }
+    });
 
   }
 
@@ -180,14 +239,16 @@ export class MiPerfilOyenteComponent implements OnInit {
   }
   
 
-
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      console.log("Archivo seleccionado:", file);
-      // Aquí puedes procesar el archivo o cargarlo a un servidor
-    }
+  this.file = event.target.files[0];
+  if (this.file) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.fotoNueva = e.target.result; // Asigna la URL base64 de la imagen a la variable foto
+    };
+    reader.readAsDataURL(this.file);
   }
+}
 
   onFileSelectedPlaylist(event: Event) {
     const fileInput = event.target as HTMLInputElement;
@@ -195,13 +256,7 @@ export class MiPerfilOyenteComponent implements OnInit {
     if (fileInput.files && fileInput.files.length > 0) {
       const file = fileInput.files[0];
       this.fotoPortada = file;
-  
-      // Crear una URL temporal para previsualizar la imagen
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewFoto = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+      
     }
   }
   
@@ -267,6 +322,14 @@ export class MiPerfilOyenteComponent implements OnInit {
       }
     });
 
+  }
+
+  togglePasswordVieja(): void {
+    this.isPasswordViejaVisible = !this.isPasswordViejaVisible;
+  }
+
+  togglePasswordNueva(): void {
+    this.isPasswordNuevaVisible = !this.isPasswordNuevaVisible;
   }
   
 

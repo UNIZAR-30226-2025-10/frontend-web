@@ -1,13 +1,44 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TokenService } from '../../services/token.service';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
+
+
+interface datosArtista {
+  nombreUsuario: string;
+  nombreArtistico: string;
+  foto: string;
+  biografia: string;
+  nSeguidores: number;
+  nSeguidos: number;
+  siguiendo: boolean;
+}
+
+interface Noizzy {
+  texto: string | null;
+  id: number;
+  fecha: string;
+  like: boolean;
+}
+
+interface Cancion {
+  id: number;
+  nombre: string;
+  duracion: number;
+  reproducciones: number;
+  fotoPortada: string;
+}
 
 
 @Component({
   selector: 'app-artista',
   templateUrl: './artista.component.html',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   styleUrls: ['./artista.component.css']
 })
 export class ArtistaComponent implements OnInit, AfterViewInit {
@@ -22,151 +53,73 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
   private dominantColor: string = 'rgb(100, 100, 100)';
   filtroActivo: string = 'canciones';
 
-  constructor(private tokenService: TokenService) {}
-  
-  canciones = [
-    {
-      ranking: 1,
-      imagen: "logo_noizz.png",
-      nombre: "GRAN VÍA",
-      reproducciones: "69,698,951",
-      duracion: "3:13",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 2,
-      imagen: "logo_noizz.png",
-      nombre: "Mon Amour - Remix",
-      reproducciones: "50,000,000",
-      duracion: "3:25",
-      esFavorita: true,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 3,
-      imagen: "logo_noizz.png",
-      nombre: "Presiento",
-      reproducciones: "45,000,000",
-      duracion: "3:00",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 4,
-      imagen: "logo_noizz.png",
-      nombre: "SEGUNDO INTENTO",
-      reproducciones: "30,000,000",
-      duracion: "3:10",
-      esFavorita: true,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 5,
-      imagen: "logo_noizz.png",
-      nombre: "Formentera",
-      reproducciones: "25,000,000",
-      duracion: "3:20",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    }
-  ];
+  currentUser: string =  '';
+  artista: datosArtista = { nombreUsuario: '', nombreArtistico:'', foto: '', biografia:'', nSeguidores: 0, nSeguidos: 0, siguiendo: false};
+  ultimoNoizzy: Noizzy = { texto: '', id: 0, fecha: '', like: false};
+  albumes: any[] = [];
+  canciones: any[] = [];
+  cancionesPopulares: any[] = [];
+  numeroFavs: number = 0;
+  hoverIndex: number | null = null;
 
-  canciones2 = [
-    {
-      ranking: 1,
-      imagen: "logo_noizz.png",
-      nombre: "GRAN VÍA",
-      reproducciones: "69,698,951",
-      duracion: "3:13",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 2,
-      imagen: "logo_noizz.png",
-      nombre: "Mon Amour - Remix",
-      reproducciones: "50,000,000",
-      duracion: "3:25",
-      esFavorita: true,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 3,
-      imagen: "logo_noizz.png",
-      nombre: "Presiento",
-      reproducciones: "45,000,000",
-      duracion: "3:00",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 4,
-      imagen: "logo_noizz.png",
-      nombre: "SEGUNDO INTENTO",
-      reproducciones: "30,000,000",
-      duracion: "3:10",
-      esFavorita: true,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 5,
-      imagen: "logo_noizz.png",
-      nombre: "Formentera",
-      reproducciones: "25,000,000",
-      duracion: "3:20",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 1,
-      imagen: "logo_noizz.png",
-      nombre: "GRAN VÍA",
-      reproducciones: "69,698,951",
-      duracion: "3:13",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 2,
-      imagen: "logo_noizz.png",
-      nombre: "Mon Amour - Remix",
-      reproducciones: "50,000,000",
-      duracion: "3:25",
-      esFavorita: true,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 3,
-      imagen: "logo_noizz.png",
-      nombre: "Presiento",
-      reproducciones: "45,000,000",
-      duracion: "3:00",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 4,
-      imagen: "logo_noizz.png",
-      nombre: "SEGUNDO INTENTO",
-      reproducciones: "30,000,000",
-      duracion: "3:10",
-      esFavorita: true,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 5,
-      imagen: "logo_noizz.png",
-      nombre: "Formentera",
-      reproducciones: "25,000,000",
-      duracion: "3:20",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    }
-  ];
-  
+  constructor(private tokenService: TokenService, private authService: AuthService, private route: ActivatedRoute) {}
+
   ngOnInit() {
     this.foto = this.tokenService.getUser().fotoPerfil;
+
+    const nombreUsuario = this.route.snapshot.paramMap.get('nombreUsuario'); 
+    if (nombreUsuario) {
+      this.currentUser = nombreUsuario;
+      console.log('nombre:', this.currentUser)
+    }
+
+    this.authService.pedirDatosOtroArtista(this.currentUser)
+    .subscribe({
+      next: (response) => {   
+        this.artista.nombreUsuario = response.artista.nombreUsuario;
+        this.artista.nombreArtistico = response.artista.nombreArtistico;
+        this.artista.foto = response.artista.fotoPerfil;
+        this.artista.biografia = response.artista.biografia;
+        this.artista.nSeguidores = response.artista.numSeguidores;
+        this.artista.nSeguidos = response.artista.numSeguidos;
+        this.artista.siguiendo = response.artista.siguiendo;
+        if(response.ultimoNoizzy != null) {
+          this.ultimoNoizzy.id = response.ultimoNoizzy.id;
+          this.ultimoNoizzy.fecha = response.ultimoNoizzy.fecha;
+          this.ultimoNoizzy.like = response.ultimoNoizzy.like;
+          this.ultimoNoizzy.texto = response.ultimoNoizzy.texto;
+        }
+      },
+      error: (error) => {
+        console.error("Error al guardar los nuevos datos:", error);
+      },
+      complete: () => {
+        console.log("Datos guardados con éxito");
+      }
+    });
+
+    forkJoin({
+      albumes: this.authService.pedirAlbumesOtroArtista(this.currentUser),
+      canciones: this.authService.pedirCancionesOtroArtista(this.currentUser),
+      cancionesPopulares: this.authService.pedirCancionesPopularesOtroArtista(this.currentUser),
+      numeroFavs: this.authService.pedirNumeroCancionesFavsArtista(this.currentUser)
+
+    }).subscribe({
+      next: (data) => {
+        this.albumes = data.albumes.albumes;
+        this.canciones = data.canciones.canciones;
+        this.cancionesPopulares = data.cancionesPopulares.canciones_populares.map((cancion: Cancion) => ({
+          ...cancion,
+          duracion: this.convertirTiempo(cancion.duracion)
+        }));
+        this.numeroFavs = data.numeroFavs.total_favoritas;        
+      },
+      error: (error) => {
+        console.error('Error en alguna de las peticiones principales:', error);
+      }
+    });
+
+    
   }
 
   ngAfterViewInit(): void {
@@ -282,14 +235,46 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
     });
 }
 
+cambiarFiltro(filtro: string) {
+  this.filtroActivo = filtro;
+}
+
+toggleSeguir() {
+  this.artista.siguiendo = !this.artista.siguiendo;
+  //MANDAR AL BACKEND
+}
+
+toggleFav(id: any) {
+  const cancionIndex = this.cancionesPopulares.findIndex(c => c.id === id);
+    
+  if (cancionIndex !== -1) {
+    this.cancionesPopulares[cancionIndex].fav = !this.cancionesPopulares[cancionIndex].fav;
+    this.cancionesPopulares = [...this.cancionesPopulares];
+
+    this.numeroFavs += this.cancionesPopulares[cancionIndex].fav ? 1 : -1;
+
+    this.authService.favoritos(id, this.cancionesPopulares[cancionIndex].fav)
+    .subscribe({
+      next: () => {},
+      error: (error) => {
+        console.error("Error al guardar en favoritos:", error);
+      },
+      complete: () => {
+        console.log("Canción añadida a favoritos con éxito");
+      }
+    });
+  } 
+}
 
 
-
-  
-
-  cambiarFiltro(filtro: string) {
-    this.filtroActivo = filtro;
+  convertirTiempo(segundos: number): string {
+    const minutos = Math.floor(segundos / 60);
+    const segundosRestantes = segundos % 60;
+    
+    return `${minutos}:${segundosRestantes.toString().padStart(2, "0")}`;
   }
+
+  playSong(id: any) {}
 
 }
 

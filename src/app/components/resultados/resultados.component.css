@@ -150,6 +150,12 @@ h2 {
     font-weight: 500;
 }
 
+.artist-card {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .artist-card img {
     width: 105px; /* 🔥 Reduce el tamaño para compactar */
     height: 105px;
@@ -229,6 +235,16 @@ h2 {
     text-decoration: none; 
 }
 
+a {
+    text-decoration: none; 
+    color: inherit; 
+}
+  
+a:focus, a:active, a:hover {
+    outline: none; 
+    text-decoration: none; 
+    color: inherit;
+}
 
 
 

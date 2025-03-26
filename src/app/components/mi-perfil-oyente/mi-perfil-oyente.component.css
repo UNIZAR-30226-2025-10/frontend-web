@@ -115,6 +115,7 @@
     flex: 1; /* Este div ocupará el espacio restante */
     background-color: #dddcdc; /* Fondo de ejemplo */
     overflow-y: auto; /* Habilita el scroll vertical */
+    margin-bottom: 30px;
   }
 
   .titulo {
@@ -359,6 +360,20 @@ a:hover {
   outline: none; 
   text-decoration: none; 
   color: inherit;
+}
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #000E3B;
+  font-size: 12px;
 }
 
 

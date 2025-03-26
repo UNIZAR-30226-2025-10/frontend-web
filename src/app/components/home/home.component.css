@@ -115,9 +115,12 @@
 }
 
 .dentro-artistcard {
-    padding: 8px;
-    max-width: 100%;
-    background-color: transparent;
+  display: flex;
+  flex-direction: column; 
+  padding: 8px;
+  max-width: 100%;
+  background-color: transparent;
+  align-items: flex-start;
 }
 
 a {
