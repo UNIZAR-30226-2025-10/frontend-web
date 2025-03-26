@@ -17,8 +17,20 @@ import { IntroducirCodigoComponent } from './components/introducir-codigo/introd
 import { PendienteComponent } from './components/pendiente/pendiente.component';
 import { PedirContrasenyaComponent } from './components/pedir-contrasenya/pedir-contrasenya.component';
 import { AdminComponent } from './components/admin/admin.component';
+<<<<<<< Updated upstream
 import { SeguidosComponent } from './seguidos/seguidos.component';
 import { SeguidoresComponent } from './seguidores/seguidores.component';
+=======
+import { SeguidosComponent } from './components/seguidos/seguidos.component';
+import { SeguidoresComponent } from './components/seguidores/seguidores.component';
+import { ArtistaComponent } from './components/artista/artista.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
+import { EstadisticasAlbumComponent } from './components/estadisticas-album/estadisticas-album.component';
+import { PlaylistComponent } from './components/playlist/playlist.component';
+import { EstadisticasCancionComponent} from './components/estadisticas-cancion/estadisticas-cancion.component';
+import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
+
+>>>>>>> Stashed changes
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -42,8 +54,19 @@ export const routes: Routes = [
       { path: 'resultados', component: ResultadosComponent},
       { path: 'perfilOyente', component: PerfilOyenteComponent},
       { path: 'miPerfilArtista', component: MiPerfilArtistaComponent},
+<<<<<<< Updated upstream
       {path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
       {path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
+=======
+      { path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
+      { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
+      { path: 'artista', component: ArtistaComponent},
+      { path: 'perfil', component: PerfilComponent},
+      { path: 'estadisticasAlbum', component: EstadisticasAlbumComponent},
+      { path: 'playlist/:id', component: PlaylistComponent},
+      { path: 'estadisticasCancion', component: EstadisticasCancionComponent},
+      { path: 'notificaciones', component: NotificacionesComponent}
+>>>>>>> Stashed changes
 
     ]
   }
