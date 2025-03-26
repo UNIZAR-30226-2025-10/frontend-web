@@ -23,6 +23,7 @@ import { PerfilComponent } from './components/perfil/perfil.component';
 import { EstadisticasAlbumComponent } from './components/estadisticas-album/estadisticas-album.component';
 import { PlaylistComponent } from './components/playlist/playlist.component';
 import { EstadisticasCancionComponent} from './components/estadisticas-cancion/estadisticas-cancion.component';
+import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
 
 
 export const routes: Routes = [
@@ -46,13 +47,14 @@ export const routes: Routes = [
       { path: 'resultados', component: ResultadosComponent},
       { path: 'miPerfilOyente', component: MiPerfilOyenteComponent},
       { path: 'miPerfilArtista', component: MiPerfilArtistaComponent},
-      { path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
-      { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
       { path: 'artista/:nombreUsuario', component: ArtistaComponent},
       { path: 'perfil/:nombreUsuario', component: PerfilComponent},
       { path: 'estadisticasAlbum', component: EstadisticasAlbumComponent},
       { path: 'playlist/:id', component: PlaylistComponent},
-      { path: 'estadisticasCancion/:id', component: EstadisticasCancionComponent}
+      { path: 'estadisticasCancion/:id', component: EstadisticasCancionComponent},
+      { path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
+      { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
+      { path: 'notificaciones', component: NotificacionesComponent}
 
     ]
   }

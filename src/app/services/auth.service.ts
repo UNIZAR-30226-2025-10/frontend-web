@@ -308,6 +308,23 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-seguidos`, { headers: headers } );
   }
 
+  pedirMisSeguidores(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-seguidores`, { headers: headers } );
+  }
+
+
   buscador(query:string): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -360,11 +377,11 @@ export class AuthService {
     });
     
     const body = { progreso: progreso};
-
     return this.http.patch(`${this.apiUrl}/change-progreso`, body, { headers: headers } );
   }
 
-  favoritos(id:any, fav: boolean): Observable<any> {
+
+  favoritos(id:string, fav: boolean): Observable<any> {
     const token = this.tokenService.getToken();
   
     if (!token) {
@@ -697,6 +714,25 @@ export class AuthService {
   }
 
   pedirMisCancionesArtista(): Observable<any> {
+      const token = this.tokenService.getToken();
+  
+      if (!token) {
+        console.error('No se encontró el token');
+        return of({ error: 'No autorizado' });;
+      }
+  
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      });
+  
+      return this.http.get(`${this.apiUrl}/get-mis-canciones`, { headers: headers } );
+    }
+
+
+  
+
+  pedirInvitaciones(): Observable<any> {
     const token = this.tokenService.getToken();
 
     if (!token) {
@@ -709,7 +745,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.get(`${this.apiUrl}/get-mis-canciones`, { headers: headers } );
+    return this.http.get(`${this.apiUrl}/get-invitaciones`, { headers: headers } );
   }
 
 
@@ -725,7 +761,44 @@ export class AuthService {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-
     return this.http.get(`${this.apiUrl}/get-signature`, { headers: headers } );
   }
+
+
+  invitarUsuario(seguidorId:string,playlistId:string): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token de autorización');
+      return of({ error: 'No autorizado' });
+    }
+
+    console.log('token', token);
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = { nombreUsuario: seguidorId, playlist: playlistId};
+
+    return this.http.post(`${this.apiUrl}/invite-to-playlist`, body, { headers: headers });  
+  }
+
+  pedirMiNombre(): Observable<any> {
+        const token = this.tokenService.getToken();
+    
+        if (!token) {
+          console.error('No se encontró el token');
+          return of({ error: 'No autorizado' });;
+        }
+    
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        });
+  
+        return this.http.get(`${this.apiUrl}/get-mi-nombre`, { headers: headers } );
+      }
+
 }

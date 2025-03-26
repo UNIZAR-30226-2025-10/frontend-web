@@ -12,7 +12,7 @@ import { DurationPipe } from '../../pipes/duration.pipe';
 
 @Component({
   selector: 'app-playlist',
-  imports: [CommonModule, RouterModule, FormsModule, DurationPipe],
+  imports: [CommonModule, RouterModule, FormsModule,DurationPipe],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.css'
 })
@@ -27,9 +27,12 @@ export class PlaylistComponent {
     currentPlaylistId: number | null = null;
     showDropdownId: number | null = null;
     showListsDropdown: boolean = false;
+    DropdownSeguidores: boolean = false;
+    misSeguidores: any[] = [];
+    esMiPlaylist: boolean = false;
+    soyColaborador: boolean = false; 
+    usuarioActual: string = ''; 
     
-  
-
     @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
 
     constructor(private el: ElementRef, private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private route: ActivatedRoute){}
@@ -64,9 +67,8 @@ export class PlaylistComponent {
         this.isPlaying = !!track; // Si hay una canción, isPlaying será true
         this.currentTrack = track;
       });
-
+      this.getMiNombre();
       this.pedirMisPlaylist(); 
-      
   }
 
 
@@ -94,6 +96,13 @@ export class PlaylistComponent {
     }
     console.log('Toggling lists dropdown:', this.showListsDropdown);
   }
+
+  toggleDropdownSeguidores(): void {
+    this.DropdownSeguidores = !this.DropdownSeguidores;
+    if (!this.misSeguidores || this.misSeguidores.length === 0) {
+      this.pedirMisSeguidores();
+    }
+  }
   
   
 
@@ -102,22 +111,24 @@ export class PlaylistComponent {
     this.isShuffle = this.playerService.isShuffleEnabled();
   }
 
-  toggleFavorite(cancion: any) {
-    cancion.fav = !cancion.fav; 
-    this.tokenService.setCancionActual(cancion);  
-  
-    this.authService.favoritos("32", cancion.fav)  //CANCION.ID
-      .subscribe({
-        next: (response) => {
-          console.log('Favorito actualizado', response);
-        },
-        error: (error) => {
-          console.error('Error en la petición:', error);
-        },
-        complete: () => {
-          console.log('Petición completada');
-        }
-      });
+  toggleFavorite(id: any) {
+    const cancionIndex = this.playlist.canciones.findIndex((c: { id: any; }) => c.id === id);
+    
+  if (cancionIndex !== -1) {
+    this.playlist.canciones[cancionIndex].fav = !this.playlist.canciones[cancionIndex].fav;
+    this.playlist.canciones = [...this.playlist.canciones];
+
+    this.authService.favoritos(id, this.playlist.canciones[cancionIndex].fav)
+    .subscribe({
+      next: () => {},
+      error: (error) => {
+        console.error("Error al guardar en favoritos:", error);
+      },
+      complete: () => {
+        console.log("Canción añadida a favoritos con éxito");
+      }
+    });
+  }
   }
   
 
@@ -143,12 +154,34 @@ export class PlaylistComponent {
       next: (response) => {   
         this.playlist = response;
         console.log('Playlist:', this.playlist);
+        this.esMiPlaylist = this.playlist?.playlist?.creador === this.usuarioActual;
+        this.soyColaborador = this.playlist?.playlist?.colaboradores?.includes(this.usuarioActual);
+        console.log('Es mi playlist?:', this.esMiPlaylist);
+        console.log('Soy colaborador?:', this.soyColaborador);
+        console.log('usuario', this.usuarioActual);
+        console.log('creador',  this.playlist?.playlist?.creador);
       },
       error: (error) => {
         console.error("Error al obtener los datos de la playlist:", error);
       },
       complete: () => {
         console.log("Playlist recuperada con éxito");
+      }
+    });
+  }
+
+  getMiNombre(): void {
+    this.authService.pedirMiNombre()
+    .subscribe({
+      next: (response) => {   
+        this.usuarioActual = response.nombreUsuario;
+        console.log('Nombre de usuario:', this.usuarioActual);
+      },
+      error: (error) => {
+        console.error("Error al obtener el nombre del usuario", error);
+      },
+      complete: () => {
+        console.log("Nombre recuperado con éxito");
       }
     });
   }
@@ -204,6 +237,44 @@ export class PlaylistComponent {
         },
         complete: () => {
           console.log("Playlists recuperadas con éxito");
+        }
+      });
+  }
+
+  pedirMisSeguidores(): void {
+    this.authService.pedirMisSeguidores()
+      .subscribe({
+        next: (response) => {
+          console.log('Respuesta completa:', response);
+          
+          if (response && response.seguidores) {
+            this.misSeguidores = response.seguidores;
+          } else {
+            console.error('La respuesta no contiene el formato esperado de playlists');
+          }
+          
+          console.log('Mis seguidores:', this.misSeguidores);
+        },
+        error: (error) => {
+          console.error("Error al obtener los seguidores:", error);
+        },
+        complete: () => {
+          console.log("Seguidores recuperados con éxito");
+        }
+      });
+  }
+
+  invitarUsuario(seguidor: { nombreUsuario: string },playlist: any): void {
+    this.authService.invitarUsuario(seguidor.nombreUsuario,playlist)
+      .subscribe({
+        next: (response) => {
+          console.log('Solicitud enviada');
+        },
+        error: (error) => {
+          console.error("Error al enviar la solicitud");
+        },
+        complete: () => {
+          console.log("Solicitud enviada con éxito");
         }
       });
   }

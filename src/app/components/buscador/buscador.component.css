@@ -66,11 +66,23 @@ button {
     color: white;
 }
 
+
 .foto {
     width: 30px;
     height: 30px;
     border-radius: 50%;
 }
+
+
+.notis-btn a {
+    color: inherit !important; 
+    text-decoration: none; 
+}
+  
+.notis-btn a i {
+color: white !important; 
+}
+  
 
 @media (max-width: 768px) {
     .logo {
