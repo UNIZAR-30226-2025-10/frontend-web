@@ -46,6 +46,9 @@ export class PlaylistComponent {
     filteredPlaylists: any[] = [];
     searchPlaylistTerm: string = '';
 
+    searchInvitadosTerm: string = '';
+    searchedInvitados: any[] = [];
+
     @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
  
     @HostListener('document:click', ['$event'])
@@ -152,9 +155,6 @@ export class PlaylistComponent {
 
   toggleDropdownSeguidores(): void {
     this.DropdownSeguidores = !this.DropdownSeguidores;
-    if (!this.misSeguidores || this.misSeguidores.length === 0) {
-      this.pedirMisSeguidores();
-    }
   }
 
   toggleDropdownMenu(): void {
@@ -213,8 +213,8 @@ export class PlaylistComponent {
         this.fotoNueva = this.playlist.playlist.fotoPortada;
         this.nombreActual = this.playlist.playlist.nombrePlaylist;
         console.log('Playlist:', this.playlist);
-        this.esMiPlaylist = this.playlist?.playlist?.creador === this.usuarioActual;
-        this.soyColaborador = this.playlist?.playlist?.colaboradores?.includes(this.usuarioActual);
+        this.esMiPlaylist = this.playlist?.rol==="creador";
+        this.soyColaborador = this.playlist?.rol==="colaborador";
         console.log('Es mi playlist?:', this.esMiPlaylist);
         console.log('Soy colaborador?:', this.soyColaborador);
         console.log('usuario', this.usuarioActual);
@@ -247,7 +247,8 @@ export class PlaylistComponent {
   eliminarDePlaylist(playlistId: string,cancionId:string): void {
     this.authService.deleteFromPlaylist(cancionId,playlistId)
     .subscribe({
-      next: (response) => {   
+      next: (response) => { 
+        this.playlist.canciones = this.playlist.canciones.filter((c: { id: string; }) => c.id !== cancionId);
         console.log('Cancion eliminada', response);
       },
       error: (error) => {
@@ -320,21 +321,6 @@ export class PlaylistComponent {
           console.log("Solicitud enviada con éxito");
         }
       });
-  }
-
-  editarPlaylist(playlist: any): void {
-    /*this.authService.invitarUsuario()
-      .subscribe({
-        next: (response) => {
-          console.log('Solicitud enviada');
-        },
-        error: (error) => {
-          console.error("Error al enviar la solicitud");
-        },
-        complete: () => {
-          console.log("Solicitud enviada con éxito");
-        }
-      });*/
   }
 
   eliminarPlaylist(playlist: any): void {
@@ -430,6 +416,25 @@ export class PlaylistComponent {
 
     preventDropdownClose(event: Event) {
       event.stopPropagation();
+    }
+
+    buscarInvitados() {
+      if (!this.searchInvitadosTerm.trim()) {
+        this.searchedInvitados = [];
+        return;
+      }
+
+      this.authService.buscarInvitados(this.searchInvitadosTerm, this.currentPlaylistId)
+        .subscribe({
+          next: (response) => {
+            this.searchedInvitados = response.perfiles || [];
+            console.log('Resultados de búsqueda:', response);
+          },
+          error: (error) => {
+            console.error("Error al buscar invitados:", error);
+            this.searchedInvitados = [];
+          }
+        });
     }
 
 }

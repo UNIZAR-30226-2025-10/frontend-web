@@ -26,15 +26,28 @@
             <i class="fas fa-plus" style="font-size: 0.7em; position: absolute; left: 90%; top: -10%;"></i>
             <div class="seguidores-dropdown" *ngIf="DropdownSeguidores">
               <p style="margin-left:10px;margin-bottom:2px">Invitar a:</p>
+              <div class="search-container" (click)="preventDropdownClose($event)">
+                  <input 
+                      type="text" 
+                      placeholder="Buscar usuarios" 
+                      [(ngModel)]="searchInvitadosTerm" 
+                      (input)="buscarInvitados()"
+                      (click)="preventDropdownClose($event)"
+                      class="invitados-search-input"
+                  >
+              </div>
               <ul>
-                <ng-template ngFor let-seguidor [ngForOf]="misSeguidores">
-                  <li (click)="invitarUsuario(seguidor, currentPlaylistId)">
-                    <img [src]="seguidor.fotoPerfil && seguidor.fotoPerfil!== 'DEFAULT' ? seguidor.fotoPerfil : 'nouser.png'" alt="Foto de {{ seguidor.nombreUsuario }}" >
-                    {{seguidor.nombreUsuario }}  
-                  </li>
-                </ng-template>
+                  <ng-template ngFor let-invitado [ngForOf]="searchedInvitados">
+                      <li (click)="invitarUsuario(invitado, currentPlaylistId)">
+                          <img 
+                              [src]="invitado.fotoPerfil && invitado.fotoPerfil !== 'DEFAULT' ? invitado.fotoPerfil : 'nouser.png'" 
+                              alt="Foto de {{ invitado.nombreUsuario }}"
+                          >
+                          {{ invitado.nombreUsuario }}
+                      </li>
+                  </ng-template>
               </ul>
-            </div>
+          </div>
         </span>
         <span (click)="toggleDropdownMenu()" style="position: relative; display: inline-block;">
           <i class="fas fa-ellipsis-h" style="margin-left:10px;"></i>

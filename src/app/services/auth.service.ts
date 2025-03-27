@@ -977,6 +977,21 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-estadisticas-playlists?id=${id}`, { headers: headers });
   }
 
+  buscarInvitados(termino: string, playlistId: number | null): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+     return this.http.get(`${this.apiUrl}/search-invitados?termino=${termino}&playlist=${playlistId}`, { headers });
+  }
+
   
 
 }
