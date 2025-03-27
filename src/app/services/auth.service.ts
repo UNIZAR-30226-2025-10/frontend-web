@@ -435,6 +435,23 @@ export class AuthService {
     return this.http.delete(`${this.apiUrl}/delete-from-playlist`,  { body, headers });  
   }
 
+  deletePlaylist(idPlaylist: string): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const body = { id: idPlaylist};
+  
+    return this.http.delete(`${this.apiUrl}/delete-playlist`,  { body, headers });  
+  }
 
   pedirMisDatosArtista(): Observable<any> {
     const token = this.tokenService.getToken();
@@ -481,9 +498,27 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    const body = { foto: foto, nombre: nombre};
+    const body = { nombre: nombre, fotoPortada: foto,};
 
     return this.http.post(`${this.apiUrl}/create-playlist`, body,{ headers: headers } );
+  }
+
+  cambiarPrivacidadPlaylist(idPlaylist:string,privacidad:boolean): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = { id: idPlaylist, privacidad: privacidad,};
+
+    return this.http.patch(`${this.apiUrl}/change-privacidad`, body,{ headers: headers } );
   }
 
   pedirDatosPlaylist(id: string): Observable<any> {
@@ -500,6 +535,24 @@ export class AuthService {
     });
 
     return this.http.get(`${this.apiUrl}/get-datos-playlist?id=${id}`, { headers: headers } );
+  }
+
+  cambiarDatosPlaylist(idPlaylist:any,nombre:string,foto:string): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = { id: idPlaylist, nuevaFoto:foto , nuevoNombre: nombre};
+
+    return this.http.put(`${this.apiUrl}/change-playlist`,body, { headers: headers } );
   }
 
   playPause(reproduciendo: any, progreso: any):Observable<any> {

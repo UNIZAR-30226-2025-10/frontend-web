@@ -22,23 +22,60 @@
           <i class="ph-shuffle"></i> 
         </div>
         <span (click)="toggleDropdownSeguidores()" style="position: relative; display: inline-block;">
-          <i class="far fa-user" style="font-size: 1.5em;"></i>
-          <i class="fas fa-plus" style="font-size: 0.7em; position: absolute; left: 90%; top: -10%;"></i>
-          <div class="seguidores-dropdown" *ngIf="DropdownSeguidores">
-            <p style="margin-left:10px;margin-bottom:2px">Invitar a:</p>
-            <ul>
-              <ng-template ngFor let-seguidor [ngForOf]="misSeguidores">
-                <li (click)="invitarUsuario(seguidor, currentPlaylistId)">
-                  <img [src]="seguidor.fotoPerfil && seguidor.fotoPerfil!== 'DEFAULT' ? seguidor.fotoPerfil : 'nouser.png'" alt="Foto de {{ seguidor.nombreUsuario }}" >
-                  {{seguidor.nombreUsuario }}  
-                </li>
-              </ng-template>
-            </ul>
+          <i class="far fa-user" style="margin-left:5px;font-size: 1.5em;"></i>
+            <i class="fas fa-plus" style="font-size: 0.7em; position: absolute; left: 90%; top: -10%;"></i>
+            <div class="seguidores-dropdown" *ngIf="DropdownSeguidores">
+              <p style="margin-left:10px;margin-bottom:2px">Invitar a:</p>
+              <ul>
+                <ng-template ngFor let-seguidor [ngForOf]="misSeguidores">
+                  <li (click)="invitarUsuario(seguidor, currentPlaylistId)">
+                    <img [src]="seguidor.fotoPerfil && seguidor.fotoPerfil!== 'DEFAULT' ? seguidor.fotoPerfil : 'nouser.png'" alt="Foto de {{ seguidor.nombreUsuario }}" >
+                    {{seguidor.nombreUsuario }}  
+                  </li>
+                </ng-template>
+              </ul>
+            </div>
+        </span>
+        <span (click)="toggleDropdownMenu()" style="position: relative; display: inline-block;">
+          <i class="fas fa-ellipsis-h" style="margin-left:10px;"></i>
+            <div class="menu-dropdown" *ngIf="DropdownMenu">
+              <ul>
+                  <li (click)="abrirModalEditar()">
+                    Editar Datos
+                  </li>
+                  <li (click)="eliminarPlaylist(currentPlaylistId)">
+                    Eliminar
+                  </li>
+                  <li (click)="cambiarPrivacidad(currentPlaylistId,playlist.privacidad)">
+                    Hacer privada
+                  </li>
+              </ul>
+            </div>
+        </span>
+        <div *ngIf="isModalEditarOpen" class="modal-overlay">
+          <div class="modal-content">
+              <div class="cabecera" style="display: flex;justify-content: space-between;">
+                  <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Editar Playlist</p>
+                  <button (click)="cerrarModalEditar()" class="btn-cerrar"><i class="fas fa-times"></i></button>
+              </div>
+              
+              <div class="atributos" style="display: flex;justify-content: space-between;">
+                  <div class="image-upload-container">
+                      <img [src]="fotoNueva && fotoNueva!== 'DEFAULT' ? fotoNueva : 'no_cancion.png'" alt="Foto de perfil" class="logo" style="border-radius: 5%; width: 110px; height: 110px;">
+                      <label for="file-input" class="upload-icon-playlist">
+                        <i class="fa fa-upload" aria-hidden="true"></i> Subir nueva foto
+                      </label>
+                      <input id="file-input" type="file" style="display: none;" (change)="onFileSelectedPlaylist($event)">
+                  </div>
+                  <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center;">
+                      <input type="text" id="nombre" [(ngModel)]="nombreActual" placeholder="Escribe un nuevo nombre">
+                      <button class="btn-guardar" (click)="guardarCambiosPlaylist()">Guardar Cambios</button>
+                  </div>
+  
+              </div>
           </div>
-      </span>
-      
-
-
+      </div>
+        
     </div>
     <div class="playlist">
         <div *ngFor="let cancion of playlist?.canciones; let i = index" 
@@ -63,11 +100,11 @@
             <button class="favorite-btn" (click)="toggleFavorite(cancion.id);$event.stopPropagation()" [ngClass]="{'disabled-btn': !currentTrack}">
                 <i [ngClass]="cancion.fav ? 'fas fa-heart' : 'far fa-heart'"></i>
               </button>
-              <div class="circle-plus" (click)="toggleDropdown(cancion.id); $event.stopPropagation()">
-                <i class="fas fa-plus"></i>
+              <div class="song-ellipsis" (click)="toggleDropdown(cancion.id); $event.stopPropagation()">
+                <i class="fas fa-ellipsis-h"></i>
               
                 <!-- dropdown menu principal -->
-                <div class="dropdown-menu" *ngIf="showDropdownId === cancion.id" [ngClass]="{ 'show': showDropdownId === cancion.id }">
+                <div class="dropdown-menu" *ngIf="showDropdownId === cancion.id" [ngClass]="{ 'show': showDropdownId === cancion.id }" >
                   <ul>
                     <li class="list-option" (click)="toggleListsDropdown($event)">
                       Añadir a lista
@@ -75,12 +112,24 @@
               
                       <!-- dropdown menu listas -->
                       <div class="lists-dropdown" *ngIf="showListsDropdown">
+                        <div class="search-container" (click)="preventDropdownClose($event)">
+                          <input 
+                              type="text" 
+                              placeholder="Buscar playlist" 
+                              [(ngModel)]="searchPlaylistTerm" 
+                              (input)="filterPlaylists()"
+                              class="playlist-search-input"
+                          >
+                      </div>
                         <ul>
                           <li [routerLink]="['/nuevalista']">Nueva lista</li>
-                          <ng-template ngFor let-playlist [ngForOf]="misPlaylists">
-                            <li *ngIf="playlist?.id !== currentPlaylistId" (click)="anadiraPlaylist(playlist.id, cancion.id)">
-                              {{ playlist?.nombre }}  
-                            </li>
+                          <ng-template ngFor let-playlist [ngForOf]="filteredPlaylists">
+                              <li 
+                                  *ngIf="playlist?.id !== currentPlaylistId" 
+                                  (click)="anadiraPlaylist(playlist.id, cancion.id)"
+                              >
+                                  {{ playlist?.nombre }}
+                              </li>
                           </ng-template>
                         </ul>
                       </div>

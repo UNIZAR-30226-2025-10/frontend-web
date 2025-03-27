@@ -41,9 +41,9 @@ export class MiPerfilOyenteComponent implements OnInit {
   isAuthenticated: boolean = false;
   mensajeError = '';
   credentials= {contrasenya:''};
-  fotoPortada: File | null = null;
+  fotoPortada!: string;
+  fileP!: File;
   nombrePlaylist: string = '';
-  previewFoto: string | null = null;
 
   //para editar perfil
   nombreActual: string = '';
@@ -121,7 +121,6 @@ export class MiPerfilOyenteComponent implements OnInit {
   
   abrirModalPlaylist() {
     this.isModalPlaylistOpen = true;
-    this.previewFoto = null;
     console.log('Modal abierto:', this.isModalPlaylistOpen);
   }
 
@@ -143,7 +142,7 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   cerrarModalPlaylist() {
     this.isModalPlaylistOpen = false;
-    this.previewFoto = null;
+    this.fotoPortada = '';
   }
 
 
@@ -253,26 +252,47 @@ export class MiPerfilOyenteComponent implements OnInit {
   }
 
   guardarCambiosPlaylist() {
-    if (!this.nombrePlaylist) {
-      alert("Por favor, ingresa un nombre para la playlist.");
-      return;
+    if (this.fileP) { // Verifica si hay un archivo seleccionado
+        this.subirCloudinary.uploadFile(this.fileP, 'playlist').pipe(
+            switchMap((url) => {
+                console.log('Imagen subida:', url);
+                this.fotoPortada = url;
+                return this.authService.crearPlaylist(this.fotoPortada, this.nombrePlaylist);
+            })
+        ).subscribe({
+            next: () => {
+                this.cerrarModalPlaylist();
+                console.log("Playlist creada con éxito");
+            },
+            error: (error) => {
+                console.error("Error al crear la playlist", error);
+            }
+        });
+    } else {
+        const foto = this.fotoPortada ? this.fotoPortada : "DEFAULT"; // Imagen predeterminada
+        this.authService.crearPlaylist(foto, this.nombrePlaylist)
+        .subscribe({
+            next: () => {   
+                this.cerrarModalPlaylist();
+                console.log("Playlist creada con éxito");
+            },
+            error: (error) => {
+                console.error("Error al crear la playlist:", error);
+            }
+        });
     }
-  
-    const foto = this.fotoPortada ? this.fotoPortada : "logo_noizz.png"; // Imagen predeterminada
-  
-    this.authService.crearPlaylist(foto, this.nombrePlaylist)
-    .subscribe({
-      next: () => {   
-        this.cerrarModalPlaylist();
-      },
-      error: (error) => {
-        console.error("Error al crear la playlist:", error);
-      },
-      complete: () => {
-        console.log("Playlist creada con éxito");
-      }
-    });
-  }
+}
+
+onFileSelectedPlaylist(event:any) {
+    this.fileP = event.target.files[0];
+    if (this.fileP) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+            this.fotoPortada = e.target.result; // Asigna la URL base64 de la imagen a la variable fotoPortada
+        };
+        reader.readAsDataURL(this.fileP);
+    }
+}
   
 
   onFileSelected(event: any) {
@@ -286,15 +306,6 @@ export class MiPerfilOyenteComponent implements OnInit {
     }
   }
 
-  onFileSelectedPlaylist(event: Event) {
-    const fileInput = event.target as HTMLInputElement;
-    
-    if (fileInput.files && fileInput.files.length > 0) {
-      const file = fileInput.files[0];
-      this.fotoPortada = file;
-      
-    }
-  }
   
   
 

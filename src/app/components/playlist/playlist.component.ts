@@ -8,6 +8,9 @@ import { Router } from '@angular/router';
 import { PlayerService } from '../../services/player.service';
 import { ActivatedRoute } from '@angular/router';
 import { DurationPipe } from '../../pipes/duration.pipe';
+import { Location } from '@angular/common';
+import { SubirCloudinary } from '../../services/subir-cloudinary.service';
+import { switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -28,14 +31,56 @@ export class PlaylistComponent {
     showDropdownId: number | null = null;
     showListsDropdown: boolean = false;
     DropdownSeguidores: boolean = false;
+    DropdownMenu: boolean = false;
     misSeguidores: any[] = [];
     esMiPlaylist: boolean = false;
     soyColaborador: boolean = false; 
     usuarioActual: string = ''; 
-    
-    @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
+    isModalEditarOpen= false;
+    mensajeError = '';
 
-    constructor(private el: ElementRef, private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private route: ActivatedRoute){}
+    nombreActual: string = '';
+    fotoNueva!: string;
+    file!: File;
+
+    filteredPlaylists: any[] = [];
+    searchPlaylistTerm: string = '';
+
+    @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
+ 
+    @HostListener('document:click', ['$event'])
+    clickOutside(event: Event) {
+        // Cerrar el dropdown de la canción
+        if (this.showDropdownId !== null) {
+            const target = event.target as HTMLElement;
+            const isDropdownOrChild = target.closest('.song-ellipsis');
+            if (!isDropdownOrChild) {
+                this.showDropdownId = null;
+                this.showListsDropdown = false;
+            }
+        }
+
+        // Cerrar el dropdown de seguidores
+        if (this.DropdownSeguidores) {
+            const target = event.target as HTMLElement;
+            const isDropdownOrChild = target.closest('.fa-user');
+            if (!isDropdownOrChild) {
+                this.DropdownSeguidores = false;
+            }
+        }
+
+        // Cerrar el dropdown de menú
+        if (this.DropdownMenu) {
+            const target = event.target as HTMLElement;
+            const isDropdownOrChild = target.closest('.fa-ellipsis-h');
+            if (!isDropdownOrChild) {
+                this.DropdownMenu = false;
+            }
+        }
+    }
+
+
+    constructor(private el: ElementRef, private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private route: ActivatedRoute,private location: Location,  private subirCloudinary: SubirCloudinary){}
 
     ngOnInit(): void {
       const playlistId = this.route.snapshot.paramMap.get('id'); 
@@ -67,8 +112,16 @@ export class PlaylistComponent {
         this.isPlaying = !!track; // Si hay una canción, isPlaying será true
         this.currentTrack = track;
       });
-      this.getMiNombre();
       this.pedirMisPlaylist(); 
+  }
+
+  abrirModalEditar() {
+    this.isModalEditarOpen = true;
+  }
+
+  cerrarModalEditar() {
+    this.isModalEditarOpen = false;
+    this.fotoNueva = '';
   }
 
 
@@ -103,7 +156,11 @@ export class PlaylistComponent {
       this.pedirMisSeguidores();
     }
   }
-  
+
+  toggleDropdownMenu(): void {
+    this.DropdownMenu = !this.DropdownMenu;
+  }
+
   
 
   toggleShuffle(): void {
@@ -153,6 +210,8 @@ export class PlaylistComponent {
     .subscribe({
       next: (response) => {   
         this.playlist = response;
+        this.fotoNueva = this.playlist.playlist.fotoPortada;
+        this.nombreActual = this.playlist.playlist.nombrePlaylist;
         console.log('Playlist:', this.playlist);
         this.esMiPlaylist = this.playlist?.playlist?.creador === this.usuarioActual;
         this.soyColaborador = this.playlist?.playlist?.colaboradores?.includes(this.usuarioActual);
@@ -166,22 +225,6 @@ export class PlaylistComponent {
       },
       complete: () => {
         console.log("Playlist recuperada con éxito");
-      }
-    });
-  }
-
-  getMiNombre(): void {
-    this.authService.pedirMiNombre()
-    .subscribe({
-      next: (response) => {   
-        this.usuarioActual = response.nombreUsuario;
-        console.log('Nombre de usuario:', this.usuarioActual);
-      },
-      error: (error) => {
-        console.error("Error al obtener el nombre del usuario", error);
-      },
-      complete: () => {
-        console.log("Nombre recuperado con éxito");
       }
     });
   }
@@ -229,7 +272,7 @@ export class PlaylistComponent {
           } else {
             console.error('La respuesta no contiene el formato esperado de playlists');
           }
-          
+          this.filteredPlaylists = this.misPlaylists;
           console.log('Mis playlists asignadas:', this.misPlaylists);
         },
         error: (error) => {
@@ -278,5 +321,115 @@ export class PlaylistComponent {
         }
       });
   }
+
+  editarPlaylist(playlist: any): void {
+    /*this.authService.invitarUsuario()
+      .subscribe({
+        next: (response) => {
+          console.log('Solicitud enviada');
+        },
+        error: (error) => {
+          console.error("Error al enviar la solicitud");
+        },
+        complete: () => {
+          console.log("Solicitud enviada con éxito");
+        }
+      });*/
+  }
+
+  eliminarPlaylist(playlist: any): void {
+    this.authService.deletePlaylist(playlist)
+      .subscribe({
+        next: (response) => {
+          this.location.back();
+        },
+        error: (error) => {
+          console.error("Error al eliminar la playlist");
+        },
+        complete: () => {
+          console.log("Playlist eliminada con éxito");
+        }
+      });
+  }
+
+  cambiarPrivacidad(playlist: any,privacidad:boolean): void {
+    privacidad=!privacidad;
+    this.authService.cambiarPrivacidadPlaylist(playlist,privacidad)
+      .subscribe({
+        next: (response) => {
+        },
+        error: (error) => {
+          console.error("Error al cambiar la privacidad de la playlist");
+        },
+        complete: () => {
+          console.log("Privacidad cambiada con éxito");
+        }
+      });
+  }
+
+  onFileSelectedPlaylist(event:any) {
+    this.file = event.target.files[0];
+    if (this.file) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+            this.fotoNueva = e.target.result; // Asigna la URL base64 de la imagen a la variable fotoPortada
+        };
+        reader.readAsDataURL(this.file);
+    }
+  }
+
+  guardarCambiosPlaylist() {
+      if (this.file) {
+        this.subirCloudinary.uploadFile(this.file, 'playlist').pipe(
+          switchMap((url) => {
+            console.log('Imagen subida:', url);
+            this.fotoNueva = url;
+            return this.authService.cambiarDatosPlaylist(this.currentPlaylistId,this.nombreActual, this.fotoNueva);
+          })
+        ).subscribe({
+          next: () => {
+            this.playlist.playlist.nombrePlaylist = this.nombreActual;
+            this.playlist.playlist.fotoPortada= this.fotoNueva;
+            this.cerrarModalEditar();
+          },
+          error: (error) => {
+            console.error("Error al guardar los nuevos datos:", error);
+            this.nombreActual = this.playlist.playlist.nombrePlaylist
+          },
+          complete: () => {
+            console.log("Datos guardados con éxito");
+          }
+        });
+      } else {
+        const foto = this.fotoNueva ? this.fotoNueva : "DEFAULT";
+        this.authService.cambiarDatosPlaylist(this.currentPlaylistId,this.nombreActual, foto).subscribe({
+          next: () => {
+            this.playlist.playlist.nombrePlaylist = this.nombreActual;
+            this.cerrarModalEditar();
+          },
+          error: (error) => {
+            console.error("Error al guardar los nuevos datos:", error);
+            this.nombreActual = this.playlist.playlist.nombrePlaylist;
+          },
+          complete: () => {
+            console.log("Datos guardados con éxito");
+          }
+        });
+      }
+    }
+
+    filterPlaylists() {
+      if (!this.searchPlaylistTerm) {
+        this.filteredPlaylists = this.misPlaylists;
+      } else {
+        this.filteredPlaylists = this.misPlaylists.filter(playlist => 
+          playlist.nombre.toLowerCase().includes(this.searchPlaylistTerm.toLowerCase())
+        );
+      }
+    }
+
+    preventDropdownClose(event: Event) {
+      event.stopPropagation();
+    }
 
 }
