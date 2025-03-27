@@ -749,7 +749,7 @@ export class AuthService {
   }
 
 
-  pedirFirma(): Observable<any> {
+  pedirFirma(folder: any): Observable<any> {
     const token = this.tokenService.getToken();
 
     if (!token) {
@@ -761,7 +761,7 @@ export class AuthService {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    return this.http.get(`${this.apiUrl}/get-signature`, { headers: headers } );
+    return this.http.get(`${this.apiUrl}/get-signature?folder=${folder}`, { headers: headers } );
   }
 
 
@@ -785,20 +785,145 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/invite-to-playlist`, body, { headers: headers });  
   }
 
-  pedirMiNombre(): Observable<any> {
-        const token = this.tokenService.getToken();
-    
-        if (!token) {
-          console.error('No se encontró el token');
-          return of({ error: 'No autorizado' });;
-        }
-    
-        const headers = new HttpHeaders({
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        });
+  aceptarInvitacion(playlistId:string): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token de autorización');
+      return of({ error: 'No autorizado' });
+    }
+
+    console.log('token', token);
   
-        return this.http.get(`${this.apiUrl}/get-mi-nombre`, { headers: headers } );
-      }
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = { id: playlistId};
+  
+    return this.http.post(`${this.apiUrl}/accept-invitacion`, body, { headers: headers });
+  }
+
+  rechazarInvitacion(playlistId:string): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token de autorización');
+      return of({ error: 'No autorizado' });
+    }
+
+    console.log('token', token);
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = { id: playlistId};
+  
+    return this.http.delete(`${this.apiUrl}/delete-invitacion`,{body, headers });
+  }
+
+
+  pedirMiNombre(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-mi-nombre`, { headers: headers } );
+  }
+
+  eliminarCancion(id: string): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.delete(`${this.apiUrl}/delete-cancion?id=${id}`, {headers: headers});
+  }
+
+  eliminarAlbum(id: string): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.delete(`${this.apiUrl}/delete-album?id=${id}`, {headers: headers});
+  }
+  
+  cambiarDatosAlbum(id: string, nombre: any, fotoPortada: any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const body = { nombre: nombre, fotoPortada: fotoPortada };
+  
+    return this.http.patch(`${this.apiUrl}/change-album?id=${id}`, body, { headers: headers });
+  }
+  
+  pedirMeGustasCancion(id: any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(`${this.apiUrl}/get-estadisticas-favs?id=${id}`, { headers: headers });
+  }
+
+  pedirPlaylistsContienenCancion(id: any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(`${this.apiUrl}/get-estadisticas-playlists?id=${id}`, { headers: headers });
+  }
+
+  
 
 }

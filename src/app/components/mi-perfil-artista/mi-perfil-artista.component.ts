@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PlayerService } from '../../services/player.service';
+import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 
 
 interface misDatos {
@@ -31,7 +32,6 @@ export class MiPerfilArtistaComponent implements OnInit {
   isModalEliminarOpen = false;
 
   isAuthenticated: boolean = false;
-  foto: string ='';
   oyente: misDatos = { nombreUsuario: '', nombreArtistico: '', biografia: '', nSeguidores: 0, nSeguidos: 0 };
   misCanciones: any[] = [];
   misAlbumes: any[] = [];
@@ -47,6 +47,9 @@ export class MiPerfilArtistaComponent implements OnInit {
   nombreActual: string = '';
   nombreArtisticoActual: string = '';
   biografiaActual: string = '';
+  foto: string ='';
+  fotoNueva!: string;
+  file!: File;
 
   //para editar contraseña
   isPasswordViejaVisible: boolean = false;
@@ -66,7 +69,7 @@ export class MiPerfilArtistaComponent implements OnInit {
     { name: 'Usuario 10', img: 'https://randomuser.me/api/portraits/men/23.jpg', status: 'status-red' }
   ];
 
-  constructor(private authService: AuthService, private tokenService: TokenService,  private router: Router, private playerService: PlayerService){}
+  constructor(private authService: AuthService, private tokenService: TokenService,  private router: Router, private playerService: PlayerService, private subirCloudinary: SubirCloudinary){}
 
   ngOnInit(): void {
 
@@ -78,7 +81,9 @@ export class MiPerfilArtistaComponent implements OnInit {
     this.isAuthenticated = true;
 
     this.foto = this.tokenService.getUser().fotoPerfil;
-    this.authService.pedirMisDatosArtista().subscribe({
+    this.fotoNueva = this.foto;
+    this.authService.pedirMisDatosArtista()
+    .subscribe({
       next: (oyente) => {
         this.oyente.nombreUsuario = oyente.nombre;
         this.oyente.nombreArtistico = oyente.nombreArtistico;
@@ -141,10 +146,13 @@ export class MiPerfilArtistaComponent implements OnInit {
     this.nombreActual = this.oyente.nombreUsuario;
     this.nombreArtisticoActual = this.oyente.nombreArtistico
     this.biografiaActual = this.oyente.biografia;
+    this.fotoNueva = this.foto;
+    this.mensajeError = '';
     this.isModalOpen = false;
   }
 
   cerrarModalContrasena() {
+    this.mensajeError = '';
     this.isModalContrasenaOpen = false;
   }
 
@@ -154,27 +162,86 @@ export class MiPerfilArtistaComponent implements OnInit {
 
 
   guardarCambios() {
-    this.authService.cambiarDatosArtista(this.nombreActual, this.nombreArtisticoActual, this.biografiaActual, this.foto)
-    .subscribe({
-      next: () => {   
-        this.oyente.nombreUsuario = this.nombreActual;
-        this.oyente.nombreArtistico = this.nombreArtisticoActual;
-        this.oyente.biografia = this.biografiaActual;
-        this.cerrarModal();
-      },
-      error: (error) => {
-        console.error("Error al guardar los nuevos datos:", error);
-      },
-      complete: () => {
-        console.log("Datos guardados con éxito");
-      }
-    });
+
+    if (this.nombreActual.includes(" "))  {
+      this.mensajeError = '*El nombre de usuario no puede contener espacios.';
+      return;
+    }
+
+    this.mensajeError = '';
+
+    if (this.fotoNueva !== this.foto) {
+      this.subirCloudinary.uploadFile(this.file, 'artistas').pipe(
+        // Esperar a que se termine la subida y obtener la URL de la imagen
+        switchMap((url) => {
+          console.log('Imagen subida:', url);
+          this.fotoNueva = url;
+          // Aquí realizamos la llamada a cambiarDatosArtista
+          return this.authService.cambiarDatosArtista(this.nombreActual, this.nombreArtisticoActual, this.biografiaActual, this.fotoNueva);
+        })
+      ).subscribe({
+        next: () => {   
+          this.oyente.nombreUsuario = this.nombreActual;
+          this.oyente.nombreArtistico = this.nombreArtisticoActual;
+          this.oyente.biografia = this.biografiaActual;
+          this.foto = this.fotoNueva;
+          if (this.foto !== this.tokenService.getUser().fotoPerfil) {
+            const user = this.tokenService.getUser();
+            user.fotoPerfil = this.foto;
+            this.tokenService.setUser(user);
+          }
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error("Error al guardar los nuevos datos:", error);
+          this.nombreActual = this.oyente.nombreUsuario;
+          this.nombreArtisticoActual = this.oyente.nombreArtistico;
+          this.biografiaActual = this.oyente.biografia;
+          this.fotoNueva = this.foto;
+        },
+        complete: () => {
+          console.log("Datos guardados con éxito");
+        }
+      });
+    } else {
+      // Si la foto no cambió, solo se actualizan los datos
+      this.authService.cambiarDatosArtista(this.nombreActual, this.nombreArtisticoActual, this.biografiaActual, this.fotoNueva).subscribe({
+        next: () => {
+          this.oyente.nombreUsuario = this.nombreActual;
+          this.oyente.nombreArtistico = this.nombreArtisticoActual;
+          this.oyente.biografia = this.biografiaActual;
+          this.foto = this.fotoNueva;
+          if (this.foto !== this.tokenService.getUser().fotoPerfil) {
+            const user = this.tokenService.getUser();
+            user.fotoPerfil = this.foto;
+            this.tokenService.setUser(user);
+          }
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error("Error al guardar los nuevos datos:", error);
+          this.nombreActual = this.oyente.nombreUsuario;
+          this.nombreArtisticoActual = this.oyente.nombreArtistico;
+          this.biografiaActual = this.oyente.biografia;
+          this.fotoNueva = this.foto;
+        },
+        complete: () => {
+          console.log("Datos guardados con éxito");
+        }
+      });
+    }
   }
+  
 
   guardarCambiosContrasena() {
     const viejaContrasena = (document.getElementById('contrasena_actual') as HTMLInputElement).value;
     const nuevaContrasena = (document.getElementById('contrasena_nueva') as HTMLInputElement).value;
 
+    if (viejaContrasena === '') {
+      this.mensajeError = '*Debes introducir la contraseña actual.';
+      return;
+    }
+    
     if (nuevaContrasena.length < 10) {
       this.mensajeError = '*La nueva contraseña debe tener al menos 10 caracteres.';
       return;
@@ -211,10 +278,13 @@ export class MiPerfilArtistaComponent implements OnInit {
   }
 
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      console.log("Archivo seleccionado:", file);
-      // Aquí puedes procesar el archivo o cargarlo a un servidor
+    this.file = event.target.files[0];
+    if (this.file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.fotoNueva = e.target.result;
+      };
+      reader.readAsDataURL(this.file);
     }
   }
 

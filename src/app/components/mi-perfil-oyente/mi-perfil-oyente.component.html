@@ -17,6 +17,7 @@
                 </div>
                 <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center;">
                     <input type="text" id="nombre" [(ngModel)]="nombreActual" placeholder="Escribe un nuevo nombre de usuario">
+                    <p *ngIf="mensajeError" style="color: red; font-size: 10px; margin: 0px;">{{ mensajeError }}</p>
                     <button class="btn-guardar" (click)="guardarCambios()">Guardar Cambios</button>
                 </div>
 
@@ -112,10 +113,10 @@
                 <h3>{{ oyente.nombre }}</h3>
                 <div class="seguidores">
                     <a [routerLink]="['/home/seguidores',oyente.nombre]">
-                        <h4>{{ oyente.nSeguidores }} seguidores</h4>
+                        <h4>{{ oyente.nSeguidores }}{{ oyente.nSeguidores === 1 ? ' Seguidor' : ' Seguidores' }}</h4>
                     </a>
                     <a [routerLink]="['/home/seguidos',oyente.nombre]">
-                        <h4>{{ oyente.nSeguidos }} seguidos</h4>
+                        <h4>{{ oyente.nSeguidos }}{{ oyente.nSeguidos === 1 ? ' Seguido' : ' Seguidos' }}</h4>
                     </a>
                 </div>
             

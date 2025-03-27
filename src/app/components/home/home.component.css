@@ -126,6 +126,8 @@
 a {
     text-decoration: none; 
     color: inherit; 
+    all: unset; 
+    display: contents;
   }
   
   a:focus,

@@ -12,17 +12,18 @@ export class SubirCloudinary {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   // Método para subir archivo a Cloudinary con la firma
-  uploadFile(file: File): Observable<string> {
-    return this.authService.pedirFirma().pipe(
+  uploadFile(file: File, folder: any): Observable<string> {
+    return this.authService.pedirFirma(folder).pipe(
       switchMap(signatureData => {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('api_key', signatureData.api_key);
         formData.append('timestamp', signatureData.timestamp.toString());
         formData.append('signature', signatureData.signature);
-        formData.append('folder', signatureData.folder);
+        formData.append('folder', folder);
   
         const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${signatureData.cloud_name}/image/upload`;
+        console.log('url devuelta:', cloudinaryUrl)
   
         return this.http.post<any>(cloudinaryUrl, formData).pipe(
           map(response => response.secure_url)

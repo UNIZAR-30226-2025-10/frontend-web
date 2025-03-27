@@ -52,6 +52,7 @@ export const routes: Routes = [
       { path: 'estadisticasAlbum', component: EstadisticasAlbumComponent},
       { path: 'playlist/:id', component: PlaylistComponent},
       { path: 'estadisticasCancion/:id', component: EstadisticasCancionComponent},
+      { path: 'estadisticasAlbum/:id', component: EstadisticasAlbumComponent},
       { path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
       { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
       { path: 'notificaciones', component: NotificacionesComponent}

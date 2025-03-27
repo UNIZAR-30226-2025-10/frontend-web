@@ -61,8 +61,9 @@ export class LoginComponent {
             next: (response) => {
               if (response != null) {
                 console.log('actual: ', response);
-                this.tokenService.setProgresoLocal(response.cancion.progreso);
+                this.tokenService.setCancionActual(null);
                 if (response.cancion != null)  {
+                  this.tokenService.setProgresoLocal(response.cancion.progreso);
                   if(response.coleccion != null) {
                     this.tokenService.setCancionActual(response.cancion);
                     this.tokenService.setColeccionActual(response.coleccion);

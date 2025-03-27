@@ -1,10 +1,25 @@
 import { Component, OnInit, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
 import { Chart, registerables} from 'chart.js';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { SubirCloudinary } from '../../services/subir-cloudinary.service';
+import { switchMap } from 'rxjs/operators';
+
+interface Cancion {
+  id: number;
+  nombre: string;
+  duracion: number;
+  reproducciones: number;
+  fotoPortada: string;
+  //AÑADIR LO QUE SEA
+}
 
 @Component({
   selector: 'app-estadisticas-album',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './estadisticas-album.component.html',
   styleUrl: './estadisticas-album.component.css'
 })
@@ -18,11 +33,18 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
   verDetalles: boolean=false;
   verMeGustas: boolean=false;
   isModalOpen = false;
+  isModalEliminarOpen: boolean = false;
   openDropdown: number | null = null;
   dropdownTopPosition: number = 0; 
   dropdownLeftPosition: number = 0;
+  currentIdAlbum: string = '';
+  album: any = {};
 
+  //PARA LA EDICION DEL ALBUM
+  nombreActual: string = '';
   foto: string ='';
+  fotoNueva!: string;
+  file!: File;
 
   usuarios = [
     { nombre: "Juan Pérez", foto: "nouser.png" },
@@ -85,12 +107,58 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
     }
   ];
 
-  constructor() {
+  constructor( private route: ActivatedRoute, private location: Location, private authService: AuthService, private subirCloudinary: SubirCloudinary) {
     Chart.register(...registerables);
   }
 
   ngOnInit(): void {
-    this.foto = "logo_noizz.png" //PONER FOTO DEL ALBUM
+
+    const idAlbum = this.route.snapshot.paramMap.get('id'); 
+    if (idAlbum) {
+      this.currentIdAlbum = idAlbum;
+    }
+
+    this.authService.datosAlbum(this.currentIdAlbum)
+    .subscribe({
+      next: (response) => {   
+        this.album = response.album;
+        this.nombreActual = this.album.nombre;
+        this.foto = this.album.fotoPortada;
+        this.fotoNueva = this.foto;
+
+        //Ajustar duración album
+        this.album.minutos = Math.floor(response.album.duracion / 60);
+        const segundosRestantes = response.album.duracion % 60;
+        this.album.segundos = segundosRestantes.toString().padStart(2, "0");
+
+        //Ajustar formato de la fecha del album
+        this.album.fechaPublicacion = this.formatearFecha(response.album.fechaPublicacion);
+
+        //Ajustar duración canciones
+        this.album.canciones = response.album.canciones.map((cancion: Cancion) => ({
+          ...cancion,
+          duracion: this.convertirTiempo(cancion.duracion)
+        }));
+      },
+      error: (error) => {
+        console.error("Error al recibir los datos del álbum:", error);
+      },
+      complete: () => {
+        console.log("Datos recibidos con éxito");
+      }
+    });
+  }
+
+  formatearFecha(fechaStr: string): string {
+    const fecha = new Date(fechaStr);
+    return new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(fecha);
+  }
+
+  convertirTiempo(segundos: number): string {
+    const minutos = Math.floor(segundos / 60);
+    const segundosRestantes = segundos % 60;
+    
+    return `${minutos}:${segundosRestantes.toString().padStart(2, "0")}`;
   }
 
   ngAfterViewChecked() {
@@ -196,19 +264,72 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
     this.isModalOpen = true;
   }
 
+  abrirModalEliminar() {
+    this.isModalEliminarOpen = true;
+  }
+
   cerrarModal() {
+    this.nombreActual = this.album.nombre;
+    this.fotoNueva = this.foto;
     this.isModalOpen = false;
   }
 
-  guardarCambios() {
-
+  cerrarModalEliminar() {
+    this.isModalEliminarOpen = false;
   }
 
+  guardarCambios() {
+    if (this.fotoNueva !== this.foto) {
+      this.subirCloudinary.uploadFile(this.file, 'albumes').pipe(
+        switchMap((url) => {
+          console.log('Imagen subida:', url);
+          this.fotoNueva = url;
+          return this.authService.cambiarDatosAlbum(this.currentIdAlbum, this.nombreActual, this.fotoNueva);
+        })
+      ).subscribe({
+        next: () => {
+          this.album.nombre = this.nombreActual;
+          this.foto = this.fotoNueva;
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error("Error al guardar los nuevos datos:", error);
+          this.nombreActual = this.album.nombre;
+          this.fotoNueva = this.foto;
+        },
+        complete: () => {
+          console.log("Datos guardados con éxito");
+        }
+      });
+    } else {
+      // Si la foto no cambió, solo actualizamos los datos del álbum
+      this.authService.cambiarDatosAlbum(this.currentIdAlbum, this.nombreActual, this.fotoNueva).subscribe({
+        next: () => {
+          this.album.nombre = this.nombreActual;
+          this.foto = this.fotoNueva;
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error("Error al guardar los nuevos datos:", error);
+          this.nombreActual = this.album.nombre;
+          this.fotoNueva = this.foto;
+        },
+        complete: () => {
+          console.log("Datos guardados con éxito");
+        }
+      });
+    }
+  }
+  
+
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      console.log("Archivo seleccionado:", file);
-      // Aquí puedes procesar el archivo o cargarlo a un servidor
+    this.file = event.target.files[0];
+    if (this.file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.fotoNueva = e.target.result;
+      };
+      reader.readAsDataURL(this.file);
     }
   }
 
@@ -226,5 +347,22 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
     const rect = button.getBoundingClientRect();  // Obtiene la posición del botón
     this.dropdownTopPosition = rect.bottom + window.scrollY;  // Calcula la posición top
     this.dropdownLeftPosition = rect.left + window.scrollX -105;  // Calcula la posición left
+  }
+
+  eliminarAlbum() {
+    this.authService.eliminarAlbum(this.currentIdAlbum)
+    .subscribe({
+      next: () => {   
+        this.isModalEliminarOpen = false;
+        this.location.back();
+      },
+      error: (error) => {
+        console.error("Error al eliminar el álbum:", error);
+      },
+      complete: () => {
+        console.log("Álbum eliminado con éxito");
+      }
+    });
+
   }
 }

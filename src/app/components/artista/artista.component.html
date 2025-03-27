@@ -21,7 +21,7 @@
                     <h1>{{artista.nombreArtistico}}</h1>
                     <p class="bio">{{artista.biografia}}</p>
                     <div class="stats" style="margin: 0px; ">
-                        <h5 style="margin: 0px;"> {{artista.nSeguidores}} seguidores</h5>
+                        <h5 style="margin: 0px;"> {{artista.nSeguidores}} {{ artista.nSeguidores === 1 ? ' Seguidor' : ' Seguidores' }}</h5>
                         <button class="seguir"  (click)="toggleSeguir()">
                             <h5 style="margin: 0px 10px;"> {{ artista.siguiendo ? 'Siguiendo' : 'Seguir' }} </h5>
                         </button>
@@ -48,7 +48,7 @@
                         <img [src]="song.fotoPortada ? song.fotoPortada : 'no_cancion.png'" alt="{{ song.nombre }}">
                         <div class="song-title"><strong>{{song.nombre}}</strong></div>
                         <div class="song-plays" style="color:rgb(76, 75, 75);">
-                            <p class ="repros" style="margin-bottom: 0px;  white-space: nowrap;">{{song.reproducciones}} reproducciones</p>
+                            <p class ="repros" style="margin-bottom: 0px;  white-space: nowrap;">{{song.reproducciones}} {{ song.reproducciones === 1 ? ' Reproducción' : ' Reproducciones' }}</p>
                             <button class="favorite-btn" (click)="toggleFav(song.id)">
                                 <i [ngClass]="song.fav ? 'fas fa-heart' : 'far fa-heart'"></i>
                             </button>            
@@ -65,7 +65,7 @@
                         <img class="foto3" style="height: 20px; width: 20px; margin-left: -15px; margin-top:67px;" src="corazon.png" alt="Foto corazon">              
                     </div>
                     <div class="numMegustas" tyle="margin-bottom: 0px; ">
-                        <p style="font-size: 14px; margin-bottom: 1px;"><strong>Te gustan {{numeroFavs}} canciones</strong></p>
+                        <p style="font-size: 14px; margin-bottom: 1px;"><strong>Te {{ numeroFavs === 1 ? ' gusta' : ' gustan' }} {{numeroFavs}} {{ numeroFavs === 1 ? ' canción' : ' canciones' }}</strong></p>
                         <p style=" font-size: 12px; margin-bottom: 0px; color: rgb(88, 88, 88);"> De {{artista.nombreArtistico}}</p> 
                     </div>
                 </div>

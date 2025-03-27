@@ -70,7 +70,6 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
     const nombreUsuario = this.route.snapshot.paramMap.get('nombreUsuario'); 
     if (nombreUsuario) {
       this.currentUser = nombreUsuario;
-      console.log('nombre:', this.currentUser)
     }
 
     this.authService.pedirDatosOtroArtista(this.currentUser)

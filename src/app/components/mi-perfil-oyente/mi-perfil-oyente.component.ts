@@ -31,8 +31,7 @@ export class MiPerfilOyenteComponent implements OnInit {
   isModalEliminarOpen = false;
   isModalPlaylistOpen = false;
 
-  foto: string ='';
-  fotoNueva!: string;
+
 
   oyente: misDatos = { nombre: '', nSeguidores: 0, nSeguidos: 0 };
   ultimosArtistas: any[] = [];
@@ -45,13 +44,16 @@ export class MiPerfilOyenteComponent implements OnInit {
   fotoPortada: File | null = null;
   nombrePlaylist: string = '';
   previewFoto: string | null = null;
-  nombreActual: string = '';
 
+  //para editar perfil
+  nombreActual: string = '';
+  foto: string ='';
+  fotoNueva!: string;
   file!: File;
 
-   //para editar contraseña
-   isPasswordViejaVisible: boolean = false;
-   isPasswordNuevaVisible: boolean = false;
+  //para editar contraseña
+  isPasswordViejaVisible: boolean = false;
+  isPasswordNuevaVisible: boolean = false;
 
 
   @Output() trackClicked = new EventEmitter<any>();
@@ -126,10 +128,12 @@ export class MiPerfilOyenteComponent implements OnInit {
   cerrarModal() {
     this.nombreActual = this.oyente.nombre;
     this.fotoNueva = this.foto;
+    this.mensajeError = '';
     this.isModalOpen = false;
   }
 
   cerrarModalContrasena() {
+    this.mensajeError = '';
     this.isModalContrasenaOpen = false;
   }
 
@@ -144,43 +148,75 @@ export class MiPerfilOyenteComponent implements OnInit {
 
 
   guardarCambios() {
-    if(this.fotoNueva != this.foto) {
-      this.subirCloudinary.uploadFile(this.file).subscribe({
-        next: (url) => {
+
+    if (this.nombreActual.includes(" "))  {
+      this.mensajeError = '*El nombre de usuario no puede contener espacios.';
+      return;
+    }
+
+    this.mensajeError = '';
+    if (this.fotoNueva !== this.foto) {
+      this.subirCloudinary.uploadFile(this.file, 'perfiles').pipe(
+
+        switchMap((url) => {
           console.log('Imagen subida:', url);
           this.fotoNueva = url;
+          return this.authService.cambiarDatosOyente(this.nombreActual, this.fotoNueva);
+        })
+      ).subscribe({
+        next: () => {
+          this.oyente.nombre = this.nombreActual;
+          this.foto = this.fotoNueva;
+          if (this.foto !== this.tokenService.getUser().fotoPerfil) {
+            const user = this.tokenService.getUser();
+            user.fotoPerfil = this.foto;
+            this.tokenService.setUser(user);
+          }
+          this.cerrarModal();
         },
-        error: (err) => console.error('Error al subir la imagen:', err)
-      });  
-    }
-    
-    this.authService.cambiarDatosOyente(this.nombreActual, this.fotoNueva)
-    .subscribe({
-      next: () => {   
-        this.oyente.nombre = this.nombreActual;
-        this.foto= this.fotoNueva;
-        if (this.foto != this.tokenService.getUser().fotoPerfil) {
-          const user = this.tokenService.getUser();
-          user.fotoPerfil = this.foto;
-          this.tokenService.setUser(user);
+        error: (error) => {
+          console.error("Error al guardar los nuevos datos:", error);
+          this.nombreActual = this.oyente.nombre;
+          this.fotoNueva = this.foto;
+        },
+        complete: () => {
+          console.log("Datos guardados con éxito");
         }
-        this.cerrarModal();
-        
-      },
-      error: (error) => {
-        console.error("Error al guardar los nuevos datos:", error);
-        this.fotoNueva= this.foto
-      },
-      complete: () => {
-        console.log("Datos guardados con éxito");
-      }
-    }); 
+      });
+    } else {
+      this.authService.cambiarDatosOyente(this.nombreActual, this.fotoNueva).subscribe({
+        next: () => {
+          this.oyente.nombre = this.nombreActual;
+          this.foto = this.fotoNueva;
+          if (this.foto !== this.tokenService.getUser().fotoPerfil) {
+            const user = this.tokenService.getUser();
+            user.fotoPerfil = this.foto;
+            this.tokenService.setUser(user);
+          }
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error("Error al guardar los nuevos datos:", error);
+          this.nombreActual = this.oyente.nombre;
+          this.fotoNueva = this.foto;
+        },
+        complete: () => {
+          console.log("Datos guardados con éxito");
+        }
+      });
+    }
   }
+  
 
   guardarCambiosContrasena() {
     const viejaContrasena = (document.getElementById('contrasena_actual') as HTMLInputElement).value;
     const nuevaContrasena = (document.getElementById('contrasena_nueva') as HTMLInputElement).value;
 
+    if (viejaContrasena === '') {
+      this.mensajeError = '*Debes introducir la contraseña actual.';
+      return;
+    }
+    
     if (nuevaContrasena.length < 10) {
       this.mensajeError = '*La nueva contraseña debe tener al menos 10 caracteres.';
       return;
@@ -240,15 +276,15 @@ export class MiPerfilOyenteComponent implements OnInit {
   
 
   onFileSelected(event: any) {
-  this.file = event.target.files[0];
-  if (this.file) {
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      this.fotoNueva = e.target.result; // Asigna la URL base64 de la imagen a la variable foto
-    };
-    reader.readAsDataURL(this.file);
+    this.file = event.target.files[0];
+    if (this.file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.fotoNueva = e.target.result; // Asigna la URL base64 de la imagen a la variable foto
+      };
+      reader.readAsDataURL(this.file);
+    }
   }
-}
 
   onFileSelectedPlaylist(event: Event) {
     const fileInput = event.target as HTMLInputElement;

@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+
+
 
 @Component({
   selector: 'app-estadisticas-cancion',
@@ -9,40 +14,80 @@ import { CommonModule } from '@angular/common';
 })
 export class EstadisticasCancionComponent implements OnInit{
 
-  foto: string ='';
-
+  currentIdCancion: string = '';
+  cancion: any = {};
   verPlaylists: boolean=false;
   verMeGustas: boolean=false;
+  eliminarModalIsOpen:boolean = false;
 
-  usuarios = [
-    { nombre: "Juan Pérez", foto: "nouser.png" },
-    { nombre: "Ana Gómez", foto: "nouser.png" },
-    { nombre: "Carlos López", foto: "nouser.png" },
-    { nombre: "Maria Rodríguez", foto: "nouser.png" },
-    { nombre: "Pedro Sánchez", foto: "nouser.png" },
-    { nombre: "Juan Pérez", foto: "nouser.png" },
-    { nombre: "Ana Gómez", foto: "nouser.png" },
-    { nombre: "Carlos López", foto: "nouser.png" },
-    { nombre: "Maria Rodríguez", foto: "nouser.png" },
-    { nombre: "Pedro Sánchez", foto: "nouser.png" }
-  ];
+  constructor(private authService: AuthService, private route: ActivatedRoute, private location: Location) {}
 
-  playlists = [
-    { nombre: "Mix Rock", fotoPortada: "logo_noizz.png", nombreCreador: "Laurita03"},
-    { nombre: "Mix Pop", fotoPortada: "logo_noizz.png",  nombreCreador: "Laurita03"},
-    { nombre: "Para estudiar", fotoPortada: "logo_noizz.png", nombreCreador: "Laurita03" },
-    { nombre: "Mix Country", fotoPortada: "logo_noizz.png",  nombreCreador: "Laurita03"},
-    { nombre: "Mix Techno", fotoPortada: "logo_noizz.png",  nombreCreador: "Laurita03"},
-    { nombre: "Mix Soft", fotoPortada: "logo_noizz.png", nombreCreador: "Laurita03" },
-    { nombre: "Para dormir", fotoPortada: "logo_noizz.png",  nombreCreador: "Laurita03"}
-  ];
+  usuarios : any[] = [];
+  playlists: any[] = []; 
+  privadas: number = 0;
 
   ngOnInit(): void {
-    this.foto = "logo_noizz.png" //PONER FOTO DEL ALBUM
+
+    const idCancion = this.route.snapshot.paramMap.get('id'); 
+    if (idCancion) {
+      this.currentIdCancion = idCancion;
+    }
+
+    this.authService.pedirEstadisticasCancion(this.currentIdCancion)
+    .subscribe({
+      next: (response) => {   
+        this.cancion = response.cancion;
+
+        //Ajustar duración
+        this.cancion.minutos = Math.floor(response.cancion.duracion / 60);
+        const segundosRestantes = response.cancion.duracion % 60;
+        this.cancion.segundos = segundosRestantes.toString().padStart(2, "0");
+
+        //Ajustar formato de la fecha
+        this.cancion.fechaPublicacion = this.formatearFecha(response.cancion.fechaPublicacion);
+
+      },
+      error: (error) => {
+        console.error("Error al recibir los datos de la cancion:", error);
+      },
+      complete: () => {
+        console.log("Datos de la cancion recibidos con éxito");
+      }
+    });
+
+  }
+
+  formatearFecha(fechaStr: string): string {
+    const fecha = new Date(fechaStr);
+    return new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(fecha);
+  }
+
+  abrirComprobacionEliminar() {
+    this.eliminarModalIsOpen = true;
+  }
+
+  cerrarComprobacionEliminar() {
+    this.eliminarModalIsOpen = false;
   }
 
   abrirMeGustas() {
-    this.verMeGustas=true;
+    if (this.usuarios.length === 0) {
+      this.authService.pedirMeGustasCancion(this.currentIdCancion)
+      .subscribe({
+        next: (response) => { 
+          this.usuarios = response.oyentes_favs;
+          this.verMeGustas=true;
+        },
+        error: (error) => {
+          console.error("Error al recibir los perfiles que han dado me gusta a la cancion:", error);
+        },
+        complete: () => {
+          console.log("Perfiles recibidos con éxito");
+        }
+      });
+    } else {
+      this.verMeGustas=true;
+    }
   }
 
   cerrarMeGustas() {
@@ -50,11 +95,46 @@ export class EstadisticasCancionComponent implements OnInit{
   }
 
   abrirPlaylists() {
-    this.verPlaylists=true;
+    if (this.playlists.length === 0) {
+      this.authService.pedirPlaylistsContienenCancion(this.currentIdCancion)
+      .subscribe({
+        next: (response) => { 
+          this.playlists = response.playlists_publicas;
+          this.privadas = response.n_privadas;
+          this.verPlaylists=true;
+        },
+        error: (error) => {
+          console.error("Error al recibir las playlists donde está la cancion:", error);
+        },
+        complete: () => {
+          console.log("Playlists recibidas con éxito");
+        }
+      });
+    } else {
+      this.verPlaylists=true;
+    }
   }
 
   cerrarPlaylists() {
     this.verPlaylists=false;
   }
 
+  eliminarCancion() {
+
+    this.authService.eliminarCancion(this.currentIdCancion)
+    .subscribe({
+      next: () => {   
+        this.eliminarModalIsOpen = false;
+        this.location.back();
+      },
+      error: (error) => {
+        console.error("Error al eliminar la canción:", error);
+      },
+      complete: () => {
+        console.log("Canción eliminada con éxito");
+      }
+    });
+
+  }
+  
 }

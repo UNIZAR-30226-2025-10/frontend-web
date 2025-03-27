@@ -9,7 +9,7 @@
             
             <div class="atributos" style="display: flex;justify-content: space-between;">
                 <div class="image-upload-container">
-                    <img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="logo" style="border-radius: 50%; width: 110px; height: 110px;">
+                    <img [src]="fotoNueva && fotoNueva!== 'DEFAULT' ? fotoNueva : 'nouser.png'" alt="Foto de perfil" class="logo" style="border-radius: 50%; width: 110px; height: 110px;">
                     <label for="file-input" class="upload-icon">
                       <i class="fa fa-upload" aria-hidden="true"></i> Subir nueva foto
                     </label>
@@ -17,6 +17,7 @@
                   </div>
                 <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center; gap: 5px;">
                     <input type="text" id="nombre" [(ngModel)]="nombreActual" placeholder="Escribe un nuevo nombre de usuario">
+                    <p *ngIf="mensajeError" style="color: red; font-size: 10px; margin: 0px;">{{ mensajeError }}</p>
                     <input type="text" id="nombreArtistico" [(ngModel)]="nombreArtisticoActual" placeholder="Escribe un nuevo nombre artístico">
                     <input type="text" id="biografia" [(ngModel)]="biografiaActual" placeholder="Escribe una nueva biografía">
                     <button class="btn-guardar" (click)="guardarCambios()">Guardar Cambios</button>
@@ -81,10 +82,10 @@
                 <h1>{{this.oyente.biografia}}</h1>
                 <div class="seguidores">
                     <a [routerLink]="['/home/seguidores',oyente.nombreUsuario]">
-                        <h4>{{ oyente.nSeguidores }} seguidores</h4>
+                        <h4>{{ oyente.nSeguidores }} {{ oyente.nSeguidores === 1 ? ' Seguidor' : ' Seguidores' }}</h4>
                     </a>
                     <a [routerLink]="['/home/seguidos',oyente.nombreUsuario]">
-                        <h4>{{ oyente.nSeguidos }} seguidos</h4>
+                        <h4>{{ oyente.nSeguidos }} {{ oyente.nSeguidos === 1 ? ' Seguido' : ' Seguidos' }}</h4>
                     </a>
                 </div>
             </div>
@@ -121,10 +122,10 @@
     <div class="bottom-div">
 
         <!--MIS CANCIONES-->
-        <div *ngIf="misCanciones != null">
+        <div *ngIf="misCanciones.length > 0">
             <div class="titulo">
                 <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Mis canciones</strong></h2>
-                <a [routerLink]="['/historialCanciones']">
+                <a [routerLink]="['/todasMisCanciones']">
                     <h4 style="margin-top: 18px; font-size: 13px; margin-right: 15px;">Mostrar todas</h4>
                 </a>
             </div>
@@ -148,7 +149,7 @@
         <div *ngIf="misAlbumes.length > 0">
             <div class="titulo">
                 <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Mis álbumes</strong></h2>
-                <a [routerLink]="['/historialCanciones']">
+                <a [routerLink]="['/todosMisAlbumes']">
                     <h4 style="margin-top: 18px; font-size: 13px; margin-right: 15px;">Mostrar todos</h4>
                 </a>
             </div>
@@ -156,8 +157,10 @@
             <div class="container">       
                 <div *ngFor="let album of misAlbumes; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
                     <div class="dentro-card">
-                        <img [src]="album.fotoPortada && album.fotoPortada !== 'DEFAULT' ? album.fotoPortada  : 'nouser.png'" [alt]="album.nombre">
-                        <strong>{{ album.nombre }}</strong>
+                        <a [routerLink]="['/home/estadisticasAlbum', album.id]">
+                            <img [src]="album.fotoPortada && album.fotoPortada !== 'DEFAULT' ? album.fotoPortada  : 'nouser.png'" [alt]="album.nombre">
+                            <strong>{{ album.nombre }}</strong>
+                        </a>
                     </div>          
                 </div>
             </div>

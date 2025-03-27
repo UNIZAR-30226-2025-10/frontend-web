@@ -109,20 +109,22 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (this.audioElementRef && this.audioElementRef.nativeElement) {
-      const audioElement = this.audioElementRef.nativeElement;
-
+    if(this.currentTrack != null) {
+      if (this.audioElementRef && this.audioElementRef.nativeElement) {
+        const audioElement = this.audioElementRef.nativeElement;
   
-    if (audioElement.src !== this.tokenService.getCancionActual().audio) {
-      audioElement.src = this.tokenService.getCancionActual().audio;
-    }
-
-    audioElement.currentTime = this.tokenService.getProgresoLocal();
     
-    audioElement.addEventListener('ended', () => {
-      this.onSongEnd();
-    });
+      if (audioElement.src !== this.tokenService.getCancionActual().audio) {
+        audioElement.src = this.tokenService.getCancionActual().audio;
+      }
+  
+      audioElement.currentTime = this.tokenService.getProgresoLocal();
       
+      audioElement.addEventListener('ended', () => {
+        this.onSongEnd();
+      });
+        
+      }
     }
   }
   
