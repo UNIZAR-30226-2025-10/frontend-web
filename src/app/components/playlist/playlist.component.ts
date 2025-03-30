@@ -36,6 +36,7 @@ export class PlaylistComponent {
     esMiPlaylist: boolean = false;
     soyColaborador: boolean = false; 
     usuarioActual: string = ''; 
+
     isModalEditarOpen= false;
     mensajeError = '';
 
@@ -43,11 +44,22 @@ export class PlaylistComponent {
     fotoNueva!: string;
     file!: File;
 
+    //buscador de mis playlists (para añadir canción a una playlist)
     filteredPlaylists: any[] = [];
     searchPlaylistTerm: string = '';
 
+    //buscador para invitados
     searchInvitadosTerm: string = '';
     searchedInvitados: any[] = [];
+
+    //buscador para playlist vacia
+    searchSongTerm: string = '';
+    searchResults: any[] = [];
+
+    // modal crear playlist
+    isModalPlaylistOpen = false;
+    cancionActual: any;
+    NuevaPlaylist: any;
 
     @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
  
@@ -127,6 +139,17 @@ export class PlaylistComponent {
     this.fotoNueva = '';
   }
 
+  abrirModalPlaylist(cancion:any) {
+    this.isModalPlaylistOpen = true;
+    this.cancionActual=cancion;
+    console.log('Modal abierto:', this.isModalPlaylistOpen);
+  }
+
+  cerrarModalPlaylist() {
+    this.isModalPlaylistOpen = false;
+    this.fotoNueva = '';
+  }
+
 
   toggleDropdown(cancionId: number): void {
     console.log(`Toggling dropdown for cancionId: ${cancionId}`);
@@ -177,7 +200,12 @@ export class PlaylistComponent {
 
     this.authService.favoritos(id, this.playlist.canciones[cancionIndex].fav)
     .subscribe({
-      next: () => {},
+      next: () => {
+        if (this.playlist.playlist.nombrePlaylist === 'Favoritos') {
+          console.log('Canción eliminada de favoritos:', id);
+          this.playlist.canciones = this.playlist.canciones.filter((c: { id: string; }) => c.id !== id);
+        }
+      },
       error: (error) => {
         console.error("Error al guardar en favoritos:", error);
       },
@@ -205,7 +233,7 @@ export class PlaylistComponent {
   }
   
 
-  getPlaylist(playlistId: string): void {
+  getPlaylist(playlistId: any): void {
     this.authService.pedirDatosPlaylist(playlistId)
     .subscribe({
       next: (response) => {   
@@ -213,12 +241,10 @@ export class PlaylistComponent {
         this.fotoNueva = this.playlist.playlist.fotoPortada;
         this.nombreActual = this.playlist.playlist.nombrePlaylist;
         console.log('Playlist:', this.playlist);
+
         this.esMiPlaylist = this.playlist?.rol==="creador";
-        this.soyColaborador = this.playlist?.rol==="colaborador";
-        console.log('Es mi playlist?:', this.esMiPlaylist);
-        console.log('Soy colaborador?:', this.soyColaborador);
-        console.log('usuario', this.usuarioActual);
-        console.log('creador',  this.playlist?.playlist?.creador);
+        this.soyColaborador = this.playlist?.rol==="participante";
+
       },
       error: (error) => {
         console.error("Error al obtener los datos de la playlist:", error);
@@ -229,7 +255,8 @@ export class PlaylistComponent {
     });
   }
 
-  anadiraPlaylist(playlistId: string,cancionId:string): void {
+
+  anadiraPlaylist(playlistId: any,cancionId:string): void {
     this.authService.addToPlaylist(cancionId,playlistId)
     .subscribe({
       next: (response) => {   
@@ -323,6 +350,7 @@ export class PlaylistComponent {
       });
   }
 
+
   eliminarPlaylist(playlist: any): void {
     this.authService.deletePlaylist(playlist)
       .subscribe({
@@ -351,6 +379,21 @@ export class PlaylistComponent {
           console.log("Privacidad cambiada con éxito");
         }
       });
+  }
+
+  abandonarPlaylist(playlistId: any): void {
+    this.authService.abandonarPlaylist(playlistId)
+    .subscribe({
+      next: (response) => { 
+        this.location.back();
+      },
+      error: (error) => {
+        console.error("Error al abandonar la playlist:", error);
+      },
+      complete: () => {
+        console.log("Playlist abandonada con éxito");
+      }
+    });
   }
 
   onFileSelectedPlaylist(event:any) {
@@ -435,6 +478,74 @@ export class PlaylistComponent {
             this.searchedInvitados = [];
           }
         });
+    }
+
+    searchSongsForPlaylist() {
+      if (!this.searchSongTerm || this.searchSongTerm.trim().length === 0) {
+        this.searchResults = [];
+        return;
+      }
+    
+      if (!this.currentPlaylistId) {
+        console.error('No playlist ID available');
+        return;
+      }
+    
+      this.authService.buscadorPlaylist(this.searchSongTerm,this.currentPlaylistId)
+        .subscribe({
+          next: (response) => {
+            this.searchResults = response.canciones || [];
+            console.log('Resultados de búsqueda:', response);
+          },
+          error: (error) => {
+            console.error("Error al buscar canciones:", error);
+            this.searchResults = [];
+          }
+        });
+      
+    }
+
+    crearPlaylist(cancionId:any): void {
+      if (this.file) {
+        this.subirCloudinary.uploadFile(this.file, 'playlist').pipe(
+          switchMap((url) => {
+            console.log('Imagen subida:', url);
+            this.fotoNueva = url;
+            return this.authService.crearPlaylist(this.fotoNueva,this.nombre);
+          })
+        ).subscribe({
+          next: (response) => {
+            this.NuevaPlaylist=response.id;
+            this.anadiraPlaylist(this.NuevaPlaylist,cancionId);
+            this.cerrarModalPlaylist();
+            console.log("Playlist creada con éxito");
+            this.pedirMisPlaylist(); 
+          },
+          error: (error) => {
+            console.error("Error al crear la playlist", error);
+          },
+          complete: () => {
+            console.log("Playlist creada con éxito");
+          }
+        });
+      } else {
+        const foto = this.fotoNueva ? this.fotoNueva : "DEFAULT";
+        this.authService.crearPlaylist(foto, this.nombre).subscribe({
+          next: (response) => {
+            this.NuevaPlaylist=response.id;
+            this.anadiraPlaylist(this.NuevaPlaylist,cancionId);
+            this.cerrarModalPlaylist();
+            console.log("Playlist creada con éxito");
+            this.pedirMisPlaylist(); 
+          },
+          error: (error) => {
+            console.error("Error al crear la playlist:", error);
+          },
+          complete: () => {
+            console.log("Playlist creada con éxito");
+          }
+        });
+      }
     }
 
 }
