@@ -1,0 +1,190 @@
+<<<<<<< Updated upstream
+=======
+
+  .bottom {
+    padding: 0px 0px 20px 0px;
+  }
+
+  .titulo {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  h2 {
+    font-size: 25px;
+    color: #000e3b;
+    margin: 0px 0px 3px 30px;
+  }
+
+  .primer-elemento {
+    margin-left: 1%; /* O el margen que necesites */
+  }
+ 
+.container {
+    display: flex;
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
+    white-space: nowrap;
+    max-width: 100%;
+    text-align: center; 
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.artist-card, .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color:#000e3b ;
+    padding: 12px;
+    border-radius: 12px;
+    border: transparent;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 150px;
+    height: 100%;
+    min-width: 140px; 
+    flex: 0 0 auto;
+    max-width: 100%; 
+    position: relative;
+    background-color: transparent;
+}
+
+.artist-card strong, .card strong {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.artist-card p, .card p {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.artist-card img {
+    width: 100px; 
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 5px; 
+}
+
+.card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.artist-card:hover, .card:hover {
+  background: rgb(230, 230, 230);
+  transform: scale(1.03); 
+}
+
+.artista-img {
+    border-radius: 50%;
+}
+
+.coleccion-img {
+    border-radius: 8px;
+}
+
+.dentro-card {
+  display: flex;
+  flex-direction: column; /* Alinea los elementos (imagen y texto) en columna */
+  align-items: flex-start; /* Alinea la imagen y el texto horizontalmente */
+  justify-content: center; /* Alinea la imagen y el texto verticalmente */
+  text-align: center;
+  gap:3px;
+  padding: 8px;
+  max-width: 100%;
+  background-color: transparent;
+}
+
+.dentro-artistcard {
+  display: flex;
+  flex-direction: column; 
+  padding: 8px;
+  max-width: 100%;
+  background-color: transparent;
+  align-items: flex-start;
+}
+
+a {
+    text-decoration: none; 
+    color: inherit; 
+    all: unset; 
+    display: contents;
+  }
+  
+  a:focus,
+  a:active,
+  a:hover {
+    outline: none; 
+    text-decoration: none; 
+    color: inherit;
+  }
+
+  
+@media (max-width: 780px)  {
+
+.top-div {
+    gap: 1%; /* Espacio entre columnas */
+
+}
+
+.seguidores {
+    display: block;
+}
+}
+
+@media (max-width: 480px)  {
+
+.top-div {
+    height: 20vh; /* Esto hace que el div superior tenga una altura de 100px */
+}
+
+.column1 img {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    padding: 0% 0% 0% 0%;
+}
+
+h3 {
+    font-size: 18px;
+    color: #000e3b;
+}
+
+h4 {
+font-size: 12px;
+color: #000e3b;
+margin: 0px;
+}
+
+h5 {
+    font-size: 10px;
+    color: #000e3b
+}
+
+.boton-crear {
+    height: 30px;
+    width: 100px;  
+}
+
+.seguidores {
+    display: block;
+}
+}
+>>>>>>> Stashed changes

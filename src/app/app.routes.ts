@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 import { LoginComponent } from './components/login/login.component';
 import { OpcionesRegistroComponent } from './components/opciones-registro/opciones-registro.component';
 import { RegistroOyenteComponent } from './components/registro-oyente/registro-oyente.component';
@@ -27,6 +28,12 @@ import { ArtistaComponent } from './components/artista/artista.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { EstadisticasAlbumComponent } from './components/estadisticas-album/estadisticas-album.component';
 import { EstadisticasCancionComponent} from './components/estadisticas-cancion/estadisticas-cancion.component';
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
+import { CancionesFavsComponent } from './components/canciones-favs/canciones-favs.component';
+
 >>>>>>> Stashed changes
 
 export const routes: Routes = [
@@ -39,13 +46,14 @@ export const routes: Routes = [
   { path: 'olvidoContrasena2', component: OlvidoContrasena2Component},
   { path: 'olvidoContrasena3', component: OlvidoContrasena3Component},
   { path: 'introducirCodigo', component: IntroducirCodigoComponent},
-  { path: 'pendiente', component: PendienteComponent},
-  { path: 'pedirContrasenya', component: PedirContrasenyaComponent},
-  { path: 'admin', component: AdminComponent},
-  { path: 'home', component: MarcoComponent,
+  { path: 'pendiente', component: PendienteComponent, canActivate: [authGuard], data: { roles: ['pendiente'] }},
+  { path: 'pedirContrasenya', component: PedirContrasenyaComponent, canActivate: [authGuard], data: { roles: ['pendiente'] }},
+  { path: 'admin', component: AdminComponent,  canActivate: [authGuard], data: { roles: ['admin'] } },
+  { path: 'home', component: MarcoComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } ,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'album/:id', component: AlbumComponent},
+<<<<<<< Updated upstream
       { path: 'home', component: HomeComponent},
       { path: 'resultados', component: ResultadosComponent},
       { path: 'resultados', component: ResultadosComponent},
@@ -62,6 +70,22 @@ export const routes: Routes = [
       { path: 'perfil', component: PerfilComponent},
       { path: 'estadisticasAlbum', component: EstadisticasAlbumComponent},
       { path: 'estadisticasCancion', component: EstadisticasCancionComponent}
+>>>>>>> Stashed changes
+=======
+      { path: 'home', component: HomeComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'resultados', component: ResultadosComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'miPerfilOyente', component: MiPerfilOyenteComponent,  canActivate: [authGuard], data: { roles: 'oyente' }},
+      { path: 'miPerfilArtista', component: MiPerfilArtistaComponent,  canActivate: [authGuard], data: { roles: 'artista' }},
+      { path: 'artista/:nombreUsuario', component: ArtistaComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'perfil/:nombreUsuario', component: PerfilComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'playlist/:id', component: PlaylistComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'estadisticasCancion/:id', component: EstadisticasCancionComponent,  canActivate: [authGuard], data: { roles: 'artista' }},
+      { path: 'estadisticasAlbum/:id', component: EstadisticasAlbumComponent,  canActivate: [authGuard], data: { roles: 'artista' }},
+      { path: 'seguidos/:nombreUsuario', component: SeguidosComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'notificaciones', component: NotificacionesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'cancionesFavs/:nombreUsuario', component: CancionesFavsComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } }
+
 >>>>>>> Stashed changes
     ]
   }

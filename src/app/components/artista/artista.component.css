@@ -243,6 +243,10 @@ h4 {
     margin-top: 10px;
     margin-left: 15px;
 }
+.foto2:hover {
+    transform: scale(1.03);
+}
+
 .numMegustas {
     display: flex;
     flex-direction: column;
@@ -291,10 +295,10 @@ h3 {
 
 .tracks-container {
     display: flex;
-    flex-wrap: nowrap; /* 🔥 Evita que los elementos pasen a otra línea */
-    overflow-x: auto; /* 🔥 Permite el scroll horizontal */
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
     white-space: nowrap;
-    max-width: 100%; /* 🔥 Se ajusta al ancho del contenedor */
+    max-width: 100%; 
 
 }
 
@@ -313,11 +317,11 @@ h3 {
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 150px; /* 🔥 Tamaño base */
+    width: 150px; /*  Tamaño base */
     height: 100%;
-    min-width: 140px; /* 🔥 Evita que desaparezca en pantallas pequeñas */
-    flex: 0 0 auto; /* 🔥 Permite ajuste flexible */
-    max-width: 100%; /* 🔥 Evita que se salga del contenedor */
+    min-width: 140px; /*  Evita que desaparezca en pantallas pequeñas */
+    flex: 0 0 auto; /*  Permite ajuste flexible */
+    max-width: 100%; /*  Evita que se salga del contenedor */
     position: relative;
 
     
@@ -366,6 +370,53 @@ h3 {
     max-width: 100%; 
 }
 
+<<<<<<< Updated upstream
+=======
+.track-card:hover {
+    background: rgb(230, 230, 230);
+    transform: scale(1.03); /*  Efecto más sutil */
+}
+
+a {
+    text-decoration: none; 
+    color: inherit; 
+    all: unset; 
+    display: contents;
+}
+
+a:focus,
+a:active,
+a:hover {
+    outline: none; 
+    text-decoration: none; 
+    color: inherit;
+}
+
+.dropdown-content {
+    position: absolute; /* Posiciona el desplegable de manera absoluta en relación al contenedor */
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 4px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100; /* Asegura que el desplegable esté por encima de otros elementos */
+    display: block;
+    max-width: 200px; /* Ancho máximo del desplegable */
+    font-size: 14px;
+}
+
+.opcion_desplegable {
+    border:none; 
+    background-color: transparent; 
+    color: rgb(76, 75, 75);
+}
+
+.opcion_desplegable:hover {
+    text-decoration: underline;
+}
+
+
+>>>>>>> Stashed changes
 @media (max-width: 650px) {
     .header h1 {
         font-size: 40px;

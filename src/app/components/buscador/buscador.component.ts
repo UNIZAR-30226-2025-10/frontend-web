@@ -31,8 +31,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
   constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService) {}
 
   ngOnInit() {
-    // Guardar la URL actual antes de la búsqueda
-    
+
     this.previousUrl = this.router.url;
 
     this.subscription = this.limpiarBuscadorService.limpiarBuscador$.subscribe(data => {
@@ -41,6 +40,8 @@ export class BuscadorComponent implements OnInit, OnDestroy{
         this.searchQuery = '';  // Limpiar el input de búsqueda
       }
     });
+
+   
 
     this.searchQuerySubject.pipe(
       debounceTime(500),  

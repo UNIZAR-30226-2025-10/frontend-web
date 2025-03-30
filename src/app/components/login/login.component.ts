@@ -5,6 +5,12 @@ import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
+<<<<<<< Updated upstream
+=======
+import { PlayerService } from '../../services/player.service';
+import { ProgressService } from '../../services/progress.service';
+import { FavoritosService } from '../../services/favoritos.service';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-login',
@@ -21,7 +27,13 @@ export class LoginComponent {
   errorMessage: string = '';
   errorType: string = '';
 
+<<<<<<< Updated upstream
   constructor(private authService: AuthService, private tokenService: TokenService, private router: Router) {}
+=======
+  @Output() trackClicked = new EventEmitter<any>();
+
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private favoritosService: FavoritosService) {}
+>>>>>>> Stashed changes
 
 
   togglePassword(): void {
@@ -49,7 +61,39 @@ export class LoginComponent {
         } else if (response.tipo === "admin") {
           this.router.navigate(['/admin']);
         } else {
+<<<<<<< Updated upstream
           this.router.navigate(['/home/home']);
+=======
+          
+          this.authService.pedirCancionActual()
+          .subscribe({
+            next: (response) => {
+              if (response != null) {
+                console.log('actual: ', response);
+                console.log('id actualizar:', this.favoritosService.actualizarFavSource.getValue())
+                this.favoritosService.actualizarFavSource.next({ actualizarFavId: null})
+                console.log('id actualizar:', this.favoritosService.actualizarFavSource.getValue())
+                this.tokenService.setCancionActual(null);
+                if (response.cancion != null)  {
+                  this.tokenService.setProgresoLocal(response.cancion.progreso);
+                  if(response.coleccion != null) {
+                    this.tokenService.setCancionActual(response.cancion);
+                    this.tokenService.setColeccionActual(response.coleccion);
+                  } else {
+                    this.tokenService.setCancionActual(response.cancion);
+                  }
+                } 
+              }            
+            },
+            error: (error) => {
+              console.error('Error al pedir cancion actual:', error);
+            },
+            complete: () => {
+              console.log('Petición completada');
+              this.router.navigate(['/home/home']);
+            }
+          })
+>>>>>>> Stashed changes
         }
       },
       error: (error) => {

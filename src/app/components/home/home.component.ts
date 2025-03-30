@@ -14,13 +14,46 @@ export class HomeComponent implements OnInit {
   @ViewChild('audioElement') audioElementRef!: ElementRef<HTMLAudioElement>;
   songUrl: string = '';
 
+<<<<<<< Updated upstream
   constructor(private authService:AuthService, private tokenService : TokenService, private router: Router) {}
 
   ngOnInit(): void {
       if(!this.tokenService.isAuthenticatedAndOyente() && !this.tokenService.isAuthenticatedAndArtista()) {
         this.router.navigate(['/login']);
+=======
+  messageReceived: string = '';
+
+  recientes: any[] = [];
+  artistas: any[] = [];
+  ultimasCanciones: any[] = [];
+  misPlaylists: any[] = [];
+  recomendados: any[] = [];
+
+  @Output() trackClicked = new EventEmitter<any>();
+
+  constructor(private route: ActivatedRoute,private authService:AuthService, private tokenService : TokenService, private router: Router, private playerService: PlayerService) {}
+
+  ngOnInit(): void {
+
+    forkJoin({
+      artistas: this.authService.pedirTopArtistas(),
+      recientes: this.authService.pedirColeccionesRecientes(),
+      canciones: this.authService.pedirHistorialCanciones(),
+      playlists: this.authService.pedirMisPlaylists()
+    }).subscribe({
+      next: (data) => {
+        this.artistas = data.artistas.historial_artistas;
+        this.recientes = data.recientes.historial_colecciones;
+        this.ultimasCanciones = data.canciones.historial_canciones;
+        this.misPlaylists = data.playlists.playlists;
+        this.intentarMezclar();
+      },
+      error: (error) => {
+        console.error('Error en alguna de las peticiones principales:', error);
+>>>>>>> Stashed changes
       }
   }
+<<<<<<< Updated upstream
 
   playAudio() {
     this.authService.pedirCancion()
@@ -33,6 +66,13 @@ export class HomeComponent implements OnInit {
       } else {
         console.error('No se pudo obtener la canción');
       }
+=======
+  
+  cargarRecomendaciones() {
+    this.authService.pedirRecomendaciones().subscribe({
+      next: (data) => {
+        this.recomendados = data.canciones_recomendadas;
+>>>>>>> Stashed changes
       },
       error: (error) => {
         console.error('Error al autenticar:', error);

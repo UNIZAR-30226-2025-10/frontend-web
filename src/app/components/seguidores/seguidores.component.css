@@ -10,14 +10,15 @@
     display: grid;
     padding: 2% 1.5% 1% 3%;
     font-family: 'Poppins', sans-serif;
+    color: #000e3b;
 }
 
 /* Contenedor de las imágenes */
-.seguidores {
+.seguidos {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start; /* Alinea las imágenes a la derecha */
-    gap: 15px;
+    gap: 0px;
     padding: 0;
     margin: 0 auto;
     width: 95%;
@@ -26,8 +27,8 @@
 
 /* Imagen de los seguidores */
 .img {
-    height: 125px;
-    width: 125px;
+    height: 100px;
+    width: 100px;
     border-radius: 50%;
     padding: 0;
     margin: 10px 0;
@@ -35,31 +36,15 @@
     flex-basis: calc(16.66% - 10px); /* 6 imágenes por fila */
 }
 
-
-/* Estilo del botón de regresar */
-.back-button {
-    display: flex;
-    align-items: flex-start;
-}
-
-#backButton {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    margin-right: 10px; /* Espacio entre la flecha y el texto */
-}
-/* Filtros */
 .filters {
     display: flex;
     justify-content: flex-start;
     gap: 15px;
     margin-bottom: 15px;
-    padding-left: 10px; /* Ajusta el espacio a la izquierda para que coincida con el encabezado */
 }
 
 .filter {
-    color: black;
+    color: #000e3b;
     cursor: pointer;
 }
 
@@ -79,3 +64,29 @@ h3 {
     align-items: center;
     padding-left: 0px; /* Ajusta el espacio a la izquierda */
 }
+
+.seguidorcard {
+    display:flex; 
+    flex-direction: column; 
+    align-items: center;
+    padding: 5px 20px;
+    border-radius: 12px;
+}
+.seguidorcard:hover {
+    background-color: #e9e6e6;
+}
+
+a {
+    text-decoration: none; 
+    color: inherit; 
+    all: unset; 
+    display: contents;
+  }
+  
+  a:focus,
+  a:active,
+  a:hover {
+    outline: none; 
+    text-decoration: none; 
+    color: inherit;
+  }

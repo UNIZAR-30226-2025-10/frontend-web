@@ -57,11 +57,11 @@
     color: #000e3b
   }
   
-  a {
+  .linkseguidores {
     text-decoration: none;
   }
   
-  a:hover {
+  .linkseguidores:hover {
     text-decoration: underline;
     color: #000e3b
   }

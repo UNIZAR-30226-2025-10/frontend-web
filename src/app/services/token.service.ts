@@ -11,6 +11,7 @@ export class TokenService {
   private tokenTempKey = 'tempToken';
 
   constructor() { }
+ 
 
   // Guardar token
   setToken(token: string): void {
@@ -49,6 +50,49 @@ export class TokenService {
   }
 
 
+<<<<<<< Updated upstream
+=======
+  setCancionActual(cancion: any): void {
+    localStorage.setItem(this.cancionActual, JSON.stringify(cancion));
+  }
+
+  getCancionActual(): any {
+    const cancionData = localStorage.getItem(this.cancionActual);
+    return cancionData ? JSON.parse(cancionData) : null;
+  }
+
+  setColeccionActual(coleccion: any): void {
+    localStorage.setItem(this.coleccionActual, JSON.stringify(coleccion));
+  }
+
+  getColeccionActual(): any {
+    const coleccionData = localStorage.getItem(this.coleccionActual);
+    return coleccionData ? JSON.parse(coleccionData) : null;
+  }
+
+  setProgresoLocal(progreso: any): void {
+    localStorage.setItem(this.progreso, JSON.stringify(progreso));
+  }
+
+  getProgresoLocal(): any {
+    const progresoData = localStorage.getItem(this.progreso);
+    return progresoData ? JSON.parse(progresoData) : null;
+  }
+
+  setSid(sid: string): void {
+    localStorage.setItem('sid', sid);
+  }
+  
+  getSid(): string | null {
+    return localStorage.getItem('sid');
+  }
+
+
+
+
+
+
+>>>>>>> Stashed changes
   // Eliminar token (Logout)
   clearStorage(): void {
     localStorage.removeItem(this.tokenKey);
@@ -61,22 +105,6 @@ export class TokenService {
     localStorage.removeItem(this.tokenTempKey);
   }
 
-  // Verificar si el usuario está autenticado
-  isAuthenticatedAndOyente(): boolean {
-    return !!this.getToken() && this.getTipo()=="oyente";
-  }
-
-  isAuthenticatedAndArtista(): boolean {
-    return !!this.getToken() && this.getTipo()=="artista";
-  }
-
-  isAuthenticatedAndPendiente(): boolean {
-    return !!this.getToken() && this.getTipo()=="pendiente";
-  }
-
-  isAuthenticatedAndValido(): boolean {
-    return !!this.getToken() && this.getTipo()=="valido";
-  }
 
   hasTempToken(): boolean {
     return !!this.getTempToken();
