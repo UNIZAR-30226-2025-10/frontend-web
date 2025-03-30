@@ -6,7 +6,7 @@
       <img *ngIf="currentTrack.fotoPortada" [src]="currentTrack.fotoPortada" alt="Portada" class="album-cover" />
       <div class="track-details">
           <h3><strong>{{ currentTrack.nombre }}</strong></h3>
-          <h4>{{ currentTrack.nombreArtisticoArtista }}</h4>
+          <button class="btn-artista" (click)="goPantallaArtista()"><h4>{{ currentTrack.nombreArtisticoArtista }}</h4></button>
       </div>
     </ng-container>
 

@@ -36,7 +36,5 @@ export class SidebarComponent {
             userMeIcon.classList.remove('scrolled'); // Quita la clase si el scroll es menor o igual a 10px
         }
     }
-}
-
-  
+  }
 }

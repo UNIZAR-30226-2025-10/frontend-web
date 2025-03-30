@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { FavoritosService } from '../../services/favoritos.service';
 
 
 interface datosArtista {
@@ -32,6 +33,7 @@ interface Cancion {
   duracion: number;
   reproducciones: number;
   fotoPortada: string;
+  featuring: any[];
 }
 
 
@@ -60,9 +62,13 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
   canciones: any[] = [];
   cancionesPopulares: any[] = [];
   numeroFavs: number = 0;
-  hoverIndex: number | null = null;
 
-  constructor(private tokenService: TokenService, private authService: AuthService, private route: ActivatedRoute) {}
+  hoverIndex: number | null = null;
+  openDropdown: number | null = null;
+  dropdownTopPosition: number = 0; 
+  dropdownLeftPosition: number = 0;
+
+  constructor(private tokenService: TokenService, private authService: AuthService, private route: ActivatedRoute, private favoritosService: FavoritosService) {}
 
   ngOnInit() {
     this.foto = this.tokenService.getUser().fotoPerfil;
@@ -105,13 +111,16 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
 
     }).subscribe({
       next: (data) => {
+        console.log('cancionespop:', data.cancionesPopulares.canciones_populares);
         this.albumes = data.albumes.albumes;
         this.canciones = data.canciones.canciones;
         this.cancionesPopulares = data.cancionesPopulares.canciones_populares.map((cancion: Cancion) => ({
           ...cancion,
-          duracion: this.convertirTiempo(cancion.duracion)
+          duracion: this.convertirTiempo(cancion.duracion),
+          featuring: cancion.featuring.length ? ` ${cancion.featuring.join(', ')}` : ''
         }));
-        this.numeroFavs = data.numeroFavs.total_favoritas;        
+        this.numeroFavs = data.numeroFavs.total_favoritas;   
+        console.log('canciones:', data.cancionesPopulares.canciones_populares);     
       },
       error: (error) => {
         console.error('Error en alguna de las peticiones principales:', error);
@@ -247,19 +256,23 @@ toggleFav(id: any) {
   const cancionIndex = this.cancionesPopulares.findIndex(c => c.id === id);
     
   if (cancionIndex !== -1) {
-    this.cancionesPopulares[cancionIndex].fav = !this.cancionesPopulares[cancionIndex].fav;
-    this.cancionesPopulares = [...this.cancionesPopulares];
-
-    this.numeroFavs += this.cancionesPopulares[cancionIndex].fav ? 1 : -1;
-
-    this.authService.favoritos(id, this.cancionesPopulares[cancionIndex].fav)
+  
+    this.authService.favoritos(id, !this.cancionesPopulares[cancionIndex].fav)
     .subscribe({
-      next: () => {},
+      next: () => {
+        this.cancionesPopulares[cancionIndex].fav = !this.cancionesPopulares[cancionIndex].fav;
+        this.cancionesPopulares = [...this.cancionesPopulares];
+        this.numeroFavs += this.cancionesPopulares[cancionIndex].fav ? 1 : -1;
+
+        //ACTUALIZAR MARCO SI ES LA QUE ESTÁ SONANDO
+        this.favoritosService.actualizarFavMarco(id);
+
+      },
       error: (error) => {
         console.error("Error al guardar en favoritos:", error);
       },
       complete: () => {
-        console.log("Canción añadida a favoritos con éxito");
+        console.log("Canción añadida o quitada de favoritos con éxito");
       }
     });
   } 
@@ -274,6 +287,26 @@ toggleFav(id: any) {
   }
 
   playSong(id: any) {}
+
+  abrirDesplegable(index: number) {
+    
+    if (this.openDropdown === index) {
+      console.log('cerrando:', index);
+      this.openDropdown = null;
+    } else {
+      this.openDropdown = index;
+      console.log('abriendo:', index);
+      this.calcularPosicionDropdown(index);
+    }
+  }
+
+  calcularPosicionDropdown(index: number): void {
+    const button = document.getElementsByClassName('tres_puntos')[index] as HTMLElement;
+    const rect = button.getBoundingClientRect();  // Obtiene la posición del botón
+    this.dropdownTopPosition = rect.bottom + window.scrollY + 185;  // Calcula la posición top
+    this.dropdownLeftPosition = rect.left + window.scrollX -105;  // Calcula la posición left
+  }
+
 
 }
 

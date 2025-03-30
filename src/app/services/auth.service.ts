@@ -57,7 +57,10 @@ export class AuthService {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    return this.http.post(`${this.apiUrl}/delete-account`, credentials, { headers: headers });
+
+    const body = { contrasenya: credentials};
+
+    return this.http.delete(`${this.apiUrl}/delete-account`, { body, headers });
   }
 
   enviarCorreo(credentials: any): Observable<any> {
@@ -134,25 +137,18 @@ export class AuthService {
   //PARA REPRODUCIR UNA CANCION SOLA (QUE NO ESTA EN ALBUM O PLAYLIST)
   pedirCancionSola(id: string): Observable<any> {
     const token = this.tokenService.getToken();
-    const sid = this.tokenService.getSid();
   
     if (!token) {
       console.error('No se encontró el token');
       return of({ error: 'No autorizado' });
     }
 
-    if (!sid) {
-      console.error('No se encontró el SID');
-      return of({ error: 'Falta SID.' });
-    }
   
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'sid': sid
     });
   
-    // Aquí enviamos el 'id' en el cuerpo de la solicitud, no en la URL
     const body = { id: id };
   
     return this.http.put(`${this.apiUrl}/put-cancion-sola`, body, { headers: headers });
@@ -358,22 +354,15 @@ export class AuthService {
 
   guardarProgreso(progreso: any): Observable<any> {
     const token = this.tokenService.getToken();
-    const sid = this.tokenService.getSid();
 
     if (!token) {
       console.error('No se encontró el token');
       return of({ error: 'No autorizado' });;
     }
 
-    if (!sid) {
-      console.error('No se encontró el SID');
-      return of({ error: 'Falta SID.' });
-    }
-
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'sid': sid
     });
     
     const body = { progreso: progreso};
@@ -395,6 +384,7 @@ export class AuthService {
     });
   
     const body = { id: id, fav: fav};
+    console.log('id, fav:', id, fav);
   
     return this.http.put(`${this.apiUrl}/change-fav`, body, { headers: headers });
   }
@@ -558,27 +548,20 @@ export class AuthService {
   playPause(reproduciendo: any, progreso: any):Observable<any> {
 
     const token = this.tokenService.getToken();
-    const sid = this.tokenService.getSid();
   
     if (!token) {
       console.error('No se encontró el token');
       return of({ error: 'No autorizado' });
     }
-
-    if (!sid) {
-      console.error('No se encontró el SID');
-      return of({ error: 'Falta SID.' });
-    }
   
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'sid': sid
     });
 
     const body = {reproduciendo: reproduciendo, progreso: progreso};
 
-    return this.http.patch(`${this.apiUrl}/change-progreso`, body, { headers: headers } );
+    return this.http.patch(`${this.apiUrl}/play-pause`, body, { headers: headers } );
   }
 
   cambiarDatosOyente(nombre: any, fotoPerfil: any):Observable<any> {
@@ -750,6 +733,22 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-numero-canciones-favoritas?nombreUsuario=${nombreUsuario}`, { headers: headers });
   }
 
+  pedirCancionesFavsArtista(nombreUsuario: any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(`${this.apiUrl}/get-canciones-favoritas?nombreUsuario=${nombreUsuario}`, { headers: headers });
+  }
+
   pedirEstadisticasCancion(id:any): Observable<any> {
     const token = this.tokenService.getToken();
   
@@ -782,8 +781,6 @@ export class AuthService {
       return this.http.get(`${this.apiUrl}/get-mis-canciones`, { headers: headers } );
     }
 
-
-  
 
   pedirInvitaciones(): Observable<any> {
     const token = this.tokenService.getToken();
@@ -975,6 +972,23 @@ export class AuthService {
     });
 
     return this.http.get(`${this.apiUrl}/get-estadisticas-playlists?id=${id}`, { headers: headers });
+  }
+
+  incrementarReproduccionesCancion(): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    // Asegúrate de enviar un objeto vacío `{}` como primer argumento
+    return this.http.put(`${this.apiUrl}/add-reproduccion`, {}, { headers });
   }
 
   buscarInvitados(termino: string, playlistId: number | null): Observable<any> {

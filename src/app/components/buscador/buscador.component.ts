@@ -35,8 +35,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
 
   ngOnInit() {
-    // Guardar la URL actual antes de la búsqueda
-    
+
     this.previousUrl = this.router.url;
     this.foto = this.tokenService.getUser().fotoPerfil;
 
@@ -46,6 +45,8 @@ export class BuscadorComponent implements OnInit, OnDestroy{
         this.searchQuery = '';  // Limpiar el input de búsqueda
       }
     });
+
+   
 
     this.searchQuerySubject.pipe(
       debounceTime(500),  

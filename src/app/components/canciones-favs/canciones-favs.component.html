@@ -1,0 +1,47 @@
+<div class="top-bar">
+    <div class="nombre">
+        <h1>Canciones que te gustan de {{currentNombreArtistico}}</h1>
+    </div>
+   
+    <div class="atributos">
+        <div style= "flex:1; display: flex; gap: 15px; min-width: 330px;">
+            <p style="margin:0px;">#</p>
+            <p style="margin:0px;">Título</p>
+        </div>
+        <div class="song-plays" style="margin-right: 15px;">
+            <p class="titulo_album" style="margin-bottom: 0px; width: 120px;">Álbum</p>
+            <p class="titulo_duracion" style="margin-bottom: 0px; width: 140px;">Fecha en la que se añadió</p>
+            <p class="titulo_estats" style="margin-bottom: 0px; width: 120px;">Duración</p>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-div">
+    <div *ngFor="let song of canciones; let i = index">
+        <div class="song" (mouseenter)="hoverIndex = i+1"  (mouseleave)="hoverIndex = null">
+            <p class="song-index" style="margin-right:12px; margin-top: 12px; opacity: 0.8; width: 10px;"><strong *ngIf="!hoverIndex || hoverIndex !== i+1">{{ i + 1 }}</strong><button style="border:none; background-color: transparent; margin: 0px; padding: 0px; color:#000e3b; opacity: 0.8; font-size: 11px;" *ngIf="hoverIndex === i+1" (click)="playSong(song.id)"><i class="fas fa-play"></i></button> </p>
+            <img [src]="song.fotoPortada ? song.fotoPortada : 'no_cancion.png'" alt="{{ song.nombre }}">
+            <div class="song-title">
+                <strong>{{song.nombre}}</strong>
+                <div style="display:flex; gap: 0px;">
+                    <p style="margin:0px;">{{ currentNombreArtistico }}</p>
+                    <p *ngIf="song.featuring" style="margin: 0px;"> &nbsp;ft.{{ song.featuring }}</p> 
+                </div>
+            </div>
+            <div style="display:flex; gap: 0px;">
+                <div class="song-plays" style="color:rgb(76, 75, 75);">
+                    <p class="albumcancion" style="margin-bottom: 0px; width: 120px;">{{song.album}}</p>     
+                    <p class="fechaanadido" style="margin-bottom: 0px; width: 140px;">{{song.fecha}}</p>         
+                    <p class="duracion" style="margin-bottom: 0px; width: 120px;">{{song.duracion}}</p>
+                </div>
+                <div class="tres_puntos">
+                    <button (click)="abrirDesplegable(i)" style="border: none; background-color: transparent;"><i class="fas fa-ellipsis-v" [ngStyle]="{ visibility: hoverIndex === i+1 ? 'visible' : 'hidden' }"></i></button>  
+                    <div *ngIf="openDropdown === i" class="dropdown-content" #dropdown [ngStyle]="{ top: dropdownTopPosition + 'px', left: dropdownLeftPosition + 'px' }">
+                        <button class="opcion_desplegable">Añadir a playlist</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

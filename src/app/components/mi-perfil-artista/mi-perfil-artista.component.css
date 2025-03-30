@@ -59,11 +59,11 @@
     font-weight: normal;
   }
 
-  a {
+  .linkseguidores {
     text-decoration: none;
   }
   
-  a:hover {
+  .linkseguidores:hover {
     text-decoration: underline;
     color: #000e3b
   }
@@ -134,6 +134,7 @@
     flex: 1; /* Este div ocupará el espacio restante */
     background-color: #dddcdc; /* Fondo de ejemplo */
     overflow-y: auto; /* Habilita el scroll vertical */
+    padding: 0px 0px 20px 0px;
   }
 
   .titulo {

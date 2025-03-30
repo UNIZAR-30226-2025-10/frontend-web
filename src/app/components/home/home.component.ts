@@ -24,21 +24,12 @@ export class HomeComponent implements OnInit {
   ultimasCanciones: any[] = [];
   misPlaylists: any[] = [];
   recomendados: any[] = [];
-  isAuthenticated: boolean = false;
 
   @Output() trackClicked = new EventEmitter<any>();
 
   constructor(private route: ActivatedRoute,private authService:AuthService, private tokenService : TokenService, private router: Router, private playerService: PlayerService) {}
 
   ngOnInit(): void {
-  
-
-    if(!this.tokenService.isAuthenticatedAndOyente() && !this.tokenService.isAuthenticatedAndArtista()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-  
-    this.isAuthenticated = true;
 
     forkJoin({
       artistas: this.authService.pedirTopArtistas(),
@@ -63,7 +54,6 @@ export class HomeComponent implements OnInit {
   }
   
   cargarRecomendaciones() {
-    console.log("recomendados");
     this.authService.pedirRecomendaciones().subscribe({
       next: (data) => {
         this.recomendados = data.canciones_recomendadas;

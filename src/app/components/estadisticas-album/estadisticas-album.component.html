@@ -77,7 +77,7 @@
             </div>
         </div>
         <div class="partes">
-            <p class="titulo_repros"><strong>197.862.786 Reproducciones</strong></p>
+            <p class="titulo_repros"><strong>{{album.reproducciones}} {{ album.reproducciones === 1 ? ' Reproducción' : ' Reproducciones' }}</strong></p>
             <div *ngIf="!verDetalles"><button class="btn-detalles" (click)="abrirDetalles()">Ver detalles</button></div>
             <div *ngIf="verDetalles"><button class="btn-detalles" (click)="cerrarDetalles()">Ocultar detalles</button></div>
         </div>
@@ -105,21 +105,25 @@
                 <button class="icono_estats"><i class="fas fa-chart-line"></i></button>
             </div>
         </div>
-        <div *ngFor="let song of canciones; let i = index">
+        <div *ngFor="let song of album.canciones; let i = index">
             <div class="song">
                 <div style="justify-content: center; text-align: center;"><p style="margin: 0px; margin-right:12px; color:rgb(76, 75, 75);"><strong> {{ i + 1 }}</strong></p></div>
                 <div class="song-title">
                     <strong>{{song.nombre}}</strong>
-                    <p style="margin:0px;">{{song.nombreArtisticoArtista}}</p>
+                    <div style="display:flex; gap: 0px;">
+                        <p style="margin:0px;">{{album.nombreArtisticoArtista}}</p>
+                        <p *ngIf="song.featuring" style="margin: 0px;"> &nbsp;ft.{{ song.featuring }}</p> 
+                    </div>
+                    
                 </div>
                 <div class="song-plays" style="color:rgb(76, 75, 75);">
                     <p style="margin-bottom: 0px; width: 120px;">{{song.reproducciones}}</p>           
                     <p class="duracion" style="margin-bottom: 0px; width: 120px;">{{song.duracion}}</p>
-                    <button class="estats_cancion" style="margin-bottom: 0px; width: 120px; border: none; background-color: transparent; color: rgb(76, 75, 75);">Ver estadísticas</button>
+                    <button class="estats_cancion" (click)="verEstadisticas(song.id)"style="margin-bottom: 0px; width: 120px; border: none; background-color: transparent; color: rgb(76, 75, 75);">Ver estadísticas</button>
                     <div class="tres_puntos">
                         <button (click)="abrirDesplegable(i)" style="border: none; background-color: transparent;"><i class="fas fa-ellipsis-v"></i></button>  
                         <div *ngIf="openDropdown === i" class="dropdown-content" #dropdown [ngStyle]="{ top: dropdownTopPosition + 'px', left: dropdownLeftPosition + 'px' }">
-                            <button class="opcion_desplegable">Ver estadísticas</button>
+                            <button class="opcion_desplegable" (click)="verEstadisticas(song.id)">Ver estadísticas</button>
                         </div>
                     </div>
                 </div>

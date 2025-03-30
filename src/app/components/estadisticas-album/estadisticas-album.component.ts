@@ -7,6 +7,8 @@ import { Location } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router'; 
+
 
 interface Cancion {
   id: number;
@@ -14,6 +16,7 @@ interface Cancion {
   duracion: number;
   reproducciones: number;
   fotoPortada: string;
+  featuring: any[];
   //AÑADIR LO QUE SEA
 }
 
@@ -59,55 +62,8 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
     { nombre: "Pedro Sánchez", foto: "nouser.png" }
   ];
 
-  canciones = [
-    {
-      ranking: 1,
-      imagen: "logo_noizz.png",
-      nombre: "GRAN VÍA",
-      reproducciones: "69,698,951",
-      duracion: "3:13",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 2,
-      imagen: "logo_noizz.png",
-      nombre: "Mon Amour - Remix",
-      reproducciones: "50,000,000",
-      duracion: "3:25",
-      esFavorita: true,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 3,
-      imagen: "logo_noizz.png",
-      nombre: "Presiento",
-      reproducciones: "45,000,000",
-      duracion: "3:00",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 4,
-      imagen: "logo_noizz.png",
-      nombre: "SEGUNDO INTENTO",
-      reproducciones: "30,000,000",
-      duracion: "3:10",
-      esFavorita: true,
-      nombreArtisticoArtista: "Chiara Oliver"
-    },
-    {
-      ranking: 5,
-      imagen: "logo_noizz.png",
-      nombre: "Formentera",
-      reproducciones: "25,000,000",
-      duracion: "3:20",
-      esFavorita: false,
-      nombreArtisticoArtista: "Chiara Oliver"
-    }
-  ];
 
-  constructor( private route: ActivatedRoute, private location: Location, private authService: AuthService, private subirCloudinary: SubirCloudinary) {
+  constructor( private route: ActivatedRoute, private location: Location, private authService: AuthService, private subirCloudinary: SubirCloudinary, private router: Router) {
     Chart.register(...registerables);
   }
 
@@ -137,7 +93,8 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
         //Ajustar duración canciones
         this.album.canciones = response.album.canciones.map((cancion: Cancion) => ({
           ...cancion,
-          duracion: this.convertirTiempo(cancion.duracion)
+          duracion: this.convertirTiempo(cancion.duracion),
+          featuring: cancion.featuring.length ? ` ${cancion.featuring.join(', ')}` : ''
         }));
       },
       error: (error) => {
@@ -189,21 +146,25 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
       console.error("Los canvas no están disponibles todavía.");
       return;
     }
-
+  
     const ctx = this.canvas.nativeElement.getContext('2d');
     const ctxPie = this.canvasPie.nativeElement.getContext('2d');
+  
+    // Extraer nombres de canciones y reproducciones del álbum
+    const labels = this.album.canciones.map((cancion: { nombre: string }) => cancion.nombre);
+    const data = this.album.canciones.map((cancion: { reproducciones: number }) => cancion.reproducciones);
 
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ["Canción 1", "Canción 2", "Canción 3", "Canción 4", "Canción 5", "Canción 6", "Canción 7", "Canción 8", "Canción 9", "Canción 10"],
+        labels: labels,
         datasets: [{
           label: "Reproducciones",
-          data: [1050000, 870000, 650000, 920000, 780000, 1050000, 870000, 650000, 920000, 780000],
+          data: data,
           backgroundColor: [
             "#34495E", "#2C3E50", "#7F8C8D", "#95A5A6", "#BDC3C7",
             "#ECF0F1", "#1ABC9C", "#16A085", "#8E44AD", "#2980B9"
-          ],
+          ].slice(0, labels.length),
           borderWidth: 1
         }]
       },
@@ -212,27 +173,28 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: true, // Mantén el texto visible
+            display: true,
             labels: {
-              usePointStyle: true,  // Usar estilo de punto en lugar del cuadro
-              boxWidth: 0  // Elimina el cuadro de color
+              usePointStyle: true,
+              boxWidth: 0
             }
           }
         }
       }
     });
+  
 
     this.chartPie = new Chart(ctxPie, {
       type: 'pie', // Tipo 'pie' para gráfico de pastel
       data: {
-        labels: ["Canción 1", "Canción 2", "Canción 3", "Canción 4", "Canción 5", "Canción 6", "Canción 7", "Canción 8", "Canción 9", "Canción 10"],
+        labels: labels,
         datasets: [{
           label: "Reproducciones",
-          data: [1050000, 870000, 650000, 920000, 780000, 1050000, 870000, 650000, 920000, 780000],
+          data: data,
           backgroundColor: [
             "#34495E", "#2C3E50", "#7F8C8D", "#95A5A6", "#BDC3C7",
             "#ECF0F1", "#1ABC9C", "#16A085", "#8E44AD", "#2980B9"
-          ],
+          ].slice(0, labels.length),
           borderWidth: 1
         }]
       },
@@ -363,6 +325,9 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
         console.log("Álbum eliminado con éxito");
       }
     });
+  }
 
+  verEstadisticas(id: any) {
+    this.router.navigate(['/home/estadisticasCancion', id]);
   }
 }

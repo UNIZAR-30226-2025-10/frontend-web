@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
 import { PlayerService } from '../../services/player.service';
 import { ProgressService } from '../../services/progress.service';
+import { FavoritosService } from '../../services/favoritos.service';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,7 @@ export class LoginComponent {
 
   @Output() trackClicked = new EventEmitter<any>();
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService) {}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private favoritosService: FavoritosService) {}
 
 
   togglePassword(): void {
@@ -61,6 +62,9 @@ export class LoginComponent {
             next: (response) => {
               if (response != null) {
                 console.log('actual: ', response);
+                console.log('id actualizar:', this.favoritosService.actualizarFavSource.getValue())
+                this.favoritosService.actualizarFavSource.next({ actualizarFavId: null})
+                console.log('id actualizar:', this.favoritosService.actualizarFavSource.getValue())
                 this.tokenService.setCancionActual(null);
                 if (response.cancion != null)  {
                   this.tokenService.setProgresoLocal(response.cancion.progreso);
