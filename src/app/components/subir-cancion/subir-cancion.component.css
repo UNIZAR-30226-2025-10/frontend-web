@@ -229,6 +229,7 @@ button:hover {
   opacity: 1; 
 }
 
+
 /* Compatibilidad con navegadores antiguos */
 .campo input::-webkit-input-placeholder,
 .campo textarea::-webkit-input-placeholder {

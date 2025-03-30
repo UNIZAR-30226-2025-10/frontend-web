@@ -154,9 +154,8 @@ export class AuthService {
     return this.http.put(`${this.apiUrl}/put-cancion-sola`, body, { headers: headers });
   }
 
-  pedirCancionColeccion(id: string): Observable<any> {
+  pedirCancionColeccion(coleccionId: any, modo: string, orden: any[], index: number): Observable<any> {
     const token = this.tokenService.getToken();
-  
     if (!token) {
       console.error('No se encontró el token');
       return of({ error: 'No autorizado' });
@@ -167,8 +166,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
   
-    // Aquí enviamos el 'id' en el cuerpo de la solicitud, no en la URL
-    const body = { id: id };
+    const body = { coleccion: coleccionId, modo: modo, orden: orden, index: index };
   
     return this.http.put(`${this.apiUrl}/put-cancion-coleccion`, body, { headers: headers });
   }

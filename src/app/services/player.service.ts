@@ -25,17 +25,25 @@ export class PlayerService {
   constructor( private tokenService: TokenService) {}
 
   //Para cuando se accede a una canción concreta, ya sea desde buscador, home, mi Perfil o album
-  setTrack(track: any, songList: any[] = []): void {
-    this.esColeccion = false;
-    if (songList != null) {
-      this.esColeccion = true;
+  setTrack(track: any, coleccion:any =null): void {
+    this.esColeccion = coleccion !== null;
+
+    if (coleccion) {
+      console.log('Reproduciendo desde colección:', coleccion);
+      this.songsSonando = coleccion.canciones;
+      this.currentIndex = this.songsSonando.findIndex(song => song.id === track.id);
+      coleccion.canciones= this.songsSonando.map((c: { id: any }) => c.id);
+
+    } else {
+        console.log('Reproduciendo canción individual');
+        this.songsSonando = [track];
+        this.currentIndex = this.songsSonando.findIndex(song => song.id === track.id);
     }
 
-    // Si se pasa una lista de canciones, se establece como el nuevo contexto
-    this.songsSonando = songList.length > 0 ? songList : [track]; // Si se pasa una lista, la usamos, si no solo usamos la canción seleccionada
-    this.currentIndex = this.songsSonando.findIndex(song => song === track); // Establecer el índice correcto
-    
-    this.currentTrackSource.next({ track: this.songsSonando[this.currentIndex], coleccion: this.esColeccion})
+  
+    if (coleccion) coleccion.index = this.currentIndex;
+
+    this.currentTrackSource.next({ track: this.songsSonando[this.currentIndex], coleccion})
     this.isPlayingSubject.next(true);
 
     setTimeout(() => {

@@ -15,9 +15,10 @@
           </div>        
     </div>
     <div class="icons-container">
-        <div class="play-song" >
-          <i class="fas" [ngClass]="isPlaying ? 'fa-pause' : 'fa-play'"></i> 
+        <div class="play-song" (click)="togglePlayPause()">
+          <i class="fas" [ngClass]="isPlaying ? 'fa-pause' : 'fa-play'"></i>
         </div>
+      
         <div class="aleatorio" (click)="toggleShuffle()" [ngClass]="{'active': isShuffle}" >
           <i class="ph-shuffle"></i> 
         </div>

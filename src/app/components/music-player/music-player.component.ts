@@ -76,9 +76,13 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       if (trackData && trackData.track) {
         this.currentTrack = trackData.track; // Actualiza el track actual
         if(!trackData.coleccion) {
+          console.log('cancion sola', trackData.track);
+          console.log('cancion sola2', this.currentTrack.id);
           this.playTrack();
         } else {
-          this.playTrackInCollection();
+          console.log('cancion en coleccion', trackData.coleccion);
+          console.log('cancion en coleccion', trackData.track);
+          this.playTrackInCollection(trackData.coleccion);
         }
       }
     });
@@ -188,9 +192,9 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   }
 
 
-  playTrackInCollection() {
+  playTrackInCollection( coleccion:any) {
     //CON ESTA PETICION SE MANDA AL BAKEND LA CANCION ACTUAL Y QUE ESTA EN UNA COLECCION
-    this.authService.pedirCancionColeccion(this.currentTrack.id)
+    this.authService.pedirCancionColeccion(coleccion.id, coleccion.modo, coleccion.canciones, coleccion.index)
     .subscribe({
       next: (response) => {
         //Esta peticion devuelve el audio, si es fav, y el nombre du user del artista

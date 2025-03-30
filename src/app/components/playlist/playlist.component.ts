@@ -124,7 +124,7 @@ export class PlaylistComponent {
       });
     
       this.playerService.currentTrack$.subscribe(track => {
-        this.isPlaying = !!track; // Si hay una canción, isPlaying será true
+        //this.isPlaying = !!track; // Si hay una canción, isPlaying será true
         this.currentTrack = track;
       });
       this.pedirMisPlaylist(); 
@@ -229,7 +229,33 @@ export class PlaylistComponent {
 
   onTrackClick(track: any) {
     // Llamamos al servicio para establecer la canción seleccionada y el álbum con la lista de canciones
-    this.playerService.setTrack(track, this.playlist?.canciones); // Pasamos la lista de canciones del álbum
+    const coleccion = {
+      id: this.currentPlaylistId, 
+      modo: this.isShuffle ? "aleatorio" : "enOrden", // Modo de reproducción
+      canciones: this.playlist.canciones,
+  };
+
+    console.log("track en playlist",track);
+    this.playerService.setTrack(track, coleccion); // Pasamos la lista de canciones del álbum
+  }
+
+  togglePlayPause(): void {
+    if (this.isPlaying) {
+      //this.playerService.pauseTrack(); 
+    } else {
+      this.onPlayPlaylist();
+    }
+  }
+
+  // cambiar para implementar aleatorio
+  onPlayPlaylist(): void {
+    const coleccion = {
+      id: this.currentPlaylistId,
+      modo: this.isShuffle ? "aleatorio" : "enOrden", // Dependiendo de si el shuffle está habilitado
+      canciones: this.playlist.canciones,
+    };
+  
+    this.playerService.setTrack(this.playlist.canciones[0], coleccion); // Empieza desde la primera canción
   }
   
 
