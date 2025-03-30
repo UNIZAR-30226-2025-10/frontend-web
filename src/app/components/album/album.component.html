@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,112 +9,55 @@
   <div class="container">
       <div class="album-info">
           <div class="album-cover">
-            <img [src]="'no_cancion.png'" alt="foto album">
+            <img [src]="album?.fotoPortada || 'no_cancion.png'" alt="foto album">
           </div>
           <div class="album-text">
-              <h2>{{album}}</h2>
-              <p>Artista • Diciembre 2021</p> <!--artista y fechaPublicacion-->
-              <p>30 minutos 12 segundos</p> <!--duracion y cantidadCanciones-->
-              <p>{{canciones.length}} canciones</p>
+              <h2>{{ album?.nombre }}</h2>
+              <p>{{ album?.artista }} • {{ album?.fechaPublicacion | date: 'MMMM yyyy' }}</p> <!-- Artista y fecha de publicación -->
+              <p>{{ getFormattedDuration(album?.duracion) }}</p> <!-- Duración total -->
+              <p>{{ album?.canciones?.length }} canciones</p> <!-- Cantidad de canciones -->
           </div>
-      </div>
+      </div> 
       <div class="icons-container">
-        <div class="play-song">
-          <i class="fas fa-play"></i>
+        <div class="play-song" (click)="onAlbumClick(album)">
+          <i class="fas" [ngClass]="isPlaying ? 'fa-pause' : 'fa-play'"></i> 
         </div>
-        <i class="ph-shuffle"></i> 
+        <div class="aleatorio" (click)="toggleShuffle()" [ngClass]="{'active': isShuffle}" >
+          <i class="ph-shuffle"></i> 
+        </div>
       </div>
     
-    
+      
       <div class="playlist">
-        <div *ngFor="let cancion of canciones" class="song">
-          <img [src]="cancion.foto ? cancion.foto : 'no_cancion.png'" alt="{{ cancion.nombre }}">
-            <span>{{ cancion.nombre }}</span>
-            <div class="controls">
-              <span>{{ cancion.duracion }}</span>
-              <i class="far fa-heart"></i>
-              <div class="circle-plus">
-                <i class="fas fa-plus"></i>
-              </div>
-              <div class="play-song">
-                <i class="fas fa-play"></i>
-              </div>                           
+        <div *ngFor="let cancion of album?.canciones; let i = index" 
+             class="song" 
+             [ngClass]="{
+              'playing': isPlaying && cancion.id === currentTrack?.id,
+              'current-track': cancion.id === currentTrack?.id
+            }" 
+             (click)="onTrackClick(cancion)">
+             
+          <div class="info">
+            <div class="song-number">{{ i + 1 }}</div>
+            <div class="song-image-wrapper">
+              <img [src]="cancion.fotoPortada || 'no_cancion.png'" alt="{{ cancion.nombre }}">
             </div>
+            <div class="song-details">
+              <span style="font-weight: bold;">{{ cancion.nombre }}</span>
+              <span>{{ album?.artista }}</span>
+            </div> 
+          </div>
+          <div class="repros">reproducciones</div>
+          <div class="controls">
+            <span>{{ cancion.duracion | duration }}</span>
+            <i class="far fa-heart"></i>
+            <div class="circle-plus">
+              <i class="fas fa-plus"></i>
+            </div>                        
+          </div>
         </div>
-    </div>
+      </div>
+
+  </div>
 </body>
 </html>
-=======
-<div class="contenido">
-
-  <div class="barra-superior" [ngStyle]="{ 'display': mostrarBarra ? 'flex' : 'none' }">
-      <h4 style="color: white; padding:7px; margin-left: 15px;"><strong>{{ album.nombre }}</strong></h4>
-  </div>
-  <div class="todo" style="position: relative;">
-      <div class="top-div">
-          <div class="column1">
-              <img [src]="album.fotoPortada && album.fotoPortada !== 'DEFAULT' ? album.fotoPortada : 'no_cancion.png'"  alt="Foto album" class="logo">
-          </div>
-          <div class="column2">   
-            <h1>{{ album.nombre }}</h1>
-            <h2>{{ album.nombreArtisticoArtista}} • {{album.fechaPublicacion}}</h2>
-            <h3>{{ album.canciones.length }} {{ album.canciones.length === 1 ? ' Canción' : ' Canciones' }} • {{ getFormattedDuration(getTotalDuracion()) }}</h3>
-        </div>        
-  </div>
-
-  <div class="icons-container">
-      <div class="play-song" (click)="playAlbum()">
-        <i class="fas" [ngClass]="isPlaying ? 'fa-pause' : 'fa-play'"></i> 
-      </div>
-      <div class="aleatorio" (click)="toggleShuffle()" [ngClass]="{'active': isShuffle}" >
-        <i class="ph-shuffle"></i> 
-      </div>
-  </div>
-
-  <div class="playlist">
-      <div *ngFor="let cancion of album.canciones; let i = index" class="song" [ngClass]="{'playing': isPlaying && cancion.id === currentTrack?.id,'current-track': cancion.id === currentTrack?.id}"  (click)="onTrackClick(cancion)"> 
-        <div class="song-number">{{ i + 1 }}</div>
-        <div class="song-image-wrapper">
-          <img [src]="cancion.fotoPortada || 'no_cancion.png'" alt="{{ cancion.nombre }}">
-        </div>
-        <div class="song-details">
-          <div style="font-weight: bold;">{{ cancion.nombre }}</div>
-          <div style="display:flex; gap: 0px;">
-            <p style="margin:0px;">{{ album.nombreArtisticoArtista }}</p>
-            <p *ngIf="cancion.featuring != ''" style="margin: 0px;"> &nbsp;ft.{{ cancion.featuring }}</p> 
-          </div>
-        </div>
-        <div class="repros">{{ cancion.reproducciones }} {{ cancion.reproducciones === 1 ? ' reproducción' : ' reproducciones' }}</div>
-        <div class="controls">
-          <span>{{ cancion.duracion | duration }}</span>
-          <button class="favorite-btn" (click)="toggleFav(cancion.id)" [ngClass]="{'disabled-btn': !currentTrack}">
-              <i [ngClass]="cancion.fav ? 'fas fa-heart' : 'far fa-heart'"></i>
-            </button>
-            <div class="circle-plus" (click)="toggleDropdown(cancion.id); $event.stopPropagation()">
-              <i class="fas fa-plus"></i>
-            
-              <!-- dropdown menu principal -->
-              <div class="dropdown-menu" *ngIf="showDropdownId === cancion.id" [ngClass]="{ 'show': showDropdownId === cancion.id }">
-                <ul>
-                  <li class="list-option" (click)="toggleListsDropdown($event)">
-                    Añadir a lista
-                    <i class="fas fa-chevron-right"></i>
-    
-                    <!-- dropdown menu listas -->
-                    <div class="lists-dropdown" *ngIf="showListsDropdown">
-                      <ul>
-                        <li>Nueva lista</li>
-                        <ng-template ngFor let-playlist [ngForOf]="misPlaylists">
-                          <li (click)="anadiraPlaylist(playlist.id, cancion.id)">{{ playlist.nombre }} </li>
-                        </ng-template>
-                      </ul>
-                    </div>              
-                </ul>
-              </div>
-            </div>          
-        </div>
-      </div>
-    </div>
-    
-</div>
->>>>>>> Stashed changes

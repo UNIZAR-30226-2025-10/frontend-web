@@ -1,0 +1,31 @@
+<div class="notificaciones-container">
+    <h2>Notificaciones</h2>
+    
+    <div class="notificaciones-scroll">
+      <!-- Notificaciones de invitaciones a listas -->
+      <div *ngIf="misInvitaciones.length > 0" class="notificaciones-lista">
+          <div *ngFor="let invitacion of misInvitaciones" class="notificacion-item">
+              <div class="notificacion-imagen">
+                <img [src]="invitacion.fotoPortada && invitacion.fotoPortada!== 'DEFAULT' ? invitacion.fotoPortada : 'logo_noizz.png'" alt="Portada de playlist" class="playlist-cover">
+              </div>
+              <div class="notificacion-contenido">
+                  <p style="font-weight:bold;margin-top:7px;margin-bottom: 10px;font-size:18px;">
+                      Te han invitado a colaborar en {{ invitacion.nombre }}
+                  </p>
+                  <p class="texto-secundario">
+                      Podrás añadir canciones a esta lista de {{ invitacion.nombreUsuario }}
+                  </p>
+              </div>
+              <div class="notificacion-acciones">
+                  <button class="btn-unirse" (click)="aceptarInvitacion(invitacion.id)">Unirme a la lista</button>
+                  <button class="btn-cancelar" (click)="rechazarInvitacion(invitacion.id)">Rechazar solicitud</button>
+              </div>
+          </div>
+      </div>
+
+      <!-- Mensaje cuando no hay notificaciones -->
+      <div *ngIf="misInvitaciones.length === 0" class="sin-notificaciones">
+          <p>No tienes notificaciones nuevas</p>
+      </div>
+  </div>
+</div>

@@ -1,7 +1,6 @@
 
   /* Div superior que es fijo */
   .top-div {
-    min-height: 30vh; /* Esto hace que el div superior tenga una altura de 100px */
     height: auto;
     background-color: #e9e6e6; /* Fondo de ejemplo */
     position: sticky;
@@ -9,9 +8,8 @@
     z-index: 1;
     overflow: hidden; /* Evita el scroll dentro de este div */
     display: grid;
-    grid-template-columns: 1fr 2fr 3fr 1fr; /* Divide en 3 columnas de igual tamaño */
-    gap: 10px; /* Espacio entre columnas */
-    padding: 0% 1.5% 0% 1%;
+    grid-template-columns: 1fr 4fr 2fr; /* Divide en 3 columnas de igual tamaño */
+    padding: 12px 8px;
   }
 
   .column1 {
@@ -19,24 +17,27 @@
     flex-direction: column; /* Alineación en columna */
     justify-content: center; /* Centra los elementos verticalmente */
     align-items: center; /* Centra los elementos horizontalmente */
-    height: 100%;
+    height: auto;
+    width: auto;
   }
   .column1 img {
-    height: 125px;
-    width: 125px;
+    height: 130px;
+    width: 130px;
     border-radius: 50%;
-    padding: 0% 0% 0% 0%;
   }
 
   .column2 {
     display: flex;
     flex-direction: column; /* Alineación en columna */
     justify-content: center; /* Centra los elementos verticalmente */
+    height: auto;
+    padding: 0px 5px;
   }
 
   .seguidores {
     display: flex;
     gap: 12px;
+    height: auto;
   }
 
   h3 {
@@ -49,7 +50,9 @@
     margin: 0px;
   }
   .botones_opciones {
-    border: none; background-color: transparent;
+    border: none; 
+    background-color: transparent;
+    text-align: right;
   }
 
   .botones_opciones:hover {
@@ -68,6 +71,7 @@
 
   .column3 {
     display: flex;
+    height: auto;
     flex-direction: column; /* Alineación en columna */
     justify-content: flex-start; /* Centra los elementos verticalmente */
     align-items: flex-end ;
@@ -80,26 +84,16 @@
   }
 
   .boton-crear {
-<<<<<<< Updated upstream
-    height: 30px;
-    width: 120px;
-=======
     height: auto;
     width: auto;
     padding: 3px 12px;
     margin-top: 5px;
->>>>>>> Stashed changes
     border-radius: 20px;
-    margin-top: 12%;
     background-color: #8ca5ffe0;
-    border: 2px solid #8ca5ffe0;
-
   }
 
   .boton-crear:hover {
     background-color:#7587c8e0;
-<<<<<<< Updated upstream
-=======
   }
 
   .boton-playlist {
@@ -114,8 +108,6 @@
 
   .boton-playlist:hover {
     background-color:#7587c8e0;
->>>>>>> Stashed changes
-    border: 2px solid #7587c8e0;
   }
 
   /* Div inferior que tiene el scroll */
@@ -123,6 +115,7 @@
     flex: 1; /* Este div ocupará el espacio restante */
     background-color: #dddcdc; /* Fondo de ejemplo */
     overflow-y: auto; /* Habilita el scroll vertical */
+    margin-bottom: 30px;
   }
 
   .titulo {
@@ -332,6 +325,60 @@ input {
   color: white;
 }
 
+.upload-icon-playlist {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 110px;
+  height: 110px;
+  padding: 25px;
+  color: white;
+  font-size: 16px;
+  background-color: rgba(61, 59, 59, 0.5);  /* Fondo semitransparente */
+  border-radius: 5%;
+  cursor: pointer;
+  display: none;  /* Ocultamos el icono por defecto */
+}
+
+.image-upload-container:hover .upload-icon-playlist {
+  display: block;  /* Mostramos el icono al pasar el cursor */
+}
+
+.upload-icon-playlist i {
+  color: white;
+}
+
+a {
+  text-decoration: none; 
+  color: inherit; 
+  all: unset; 
+  display: contents;
+}
+
+a:focus,
+a:active,
+a:hover {
+  outline: none; 
+  text-decoration: none; 
+  color: inherit;
+}
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #000E3B;
+  font-size: 12px;
+}
+
+
 
   
   @media (max-width: 780px)  {
@@ -340,23 +387,13 @@ input {
         gap: 1%; /* Espacio entre columnas */
 
     }
-
-    .seguidores {
-        display: block;
-    }
   }
 
   @media (max-width: 480px)  {
 
-    .top-div {
-        height: 20vh; /* Esto hace que el div superior tenga una altura de 100px */
-    }
-
     .column1 img {
-        height: 100px;
-        width: 100px;
-        border-radius: 50%;
-        padding: 0% 0% 0% 0%;
+      height: 100px;
+      width: 100px;
     }
 
     h3 {
@@ -365,19 +402,23 @@ input {
     }
     
     h4 {
-    font-size: 12px;
-    color: #000e3b;
-    margin: 0px;
+      font-size: 10px;
+      color: #000e3b;
+      margin: 0px;
     }
 
     h5 {
         font-size: 10px;
         color: #000e3b
     }
+    .column3 {
+      align-items: flex-end;
+      text-align: right;
+    }
     
     .boton-crear {
-        height: 30px;
-        width: 100px;  
+      height: auto;
+      width: auto;
     }
 
     .seguidores {

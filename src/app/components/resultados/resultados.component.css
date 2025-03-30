@@ -12,7 +12,7 @@
 }
 
 .filtros.scrolled {
-    box-shadow: 0px 10px 10px 0px rgba(255, 0, 0, 0.2);
+    box-shadow: 0px 6px 6px -2px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -78,6 +78,7 @@ h3 {
 
 .contenido {
     overflow-y: scroll;
+    height: 500px;
 }
 
 .contenido::-webkit-scrollbar {
@@ -104,6 +105,7 @@ h2 {
     overflow-x: auto; /* 🔥 Permite el scroll horizontal */
     white-space: nowrap;
     max-width: 100%; /* 🔥 Se ajusta al ancho del contenedor */
+
 }
 
 .tracks-container::-webkit-scrollbar, .artists-container::-webkit-scrollbar, .albums-container::-webkit-scrollbar, .playlists-container::-webkit-scrollbar  {
@@ -127,6 +129,8 @@ h2 {
     flex: 0 0 auto; /* 🔥 Permite ajuste flexible */
     max-width: 100%; /* 🔥 Evita que se salga del contenedor */
     position: relative;
+
+    
 }
 
 .artist-card strong, .track-card strong, .album-card strong, .playlist-card strong {
@@ -144,6 +148,12 @@ h2 {
     margin: 0;
     font-size: 14px;
     font-weight: 500;
+}
+
+.artist-card {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .artist-card img {
@@ -189,8 +199,51 @@ h2 {
     max-width: 100%; 
 }
 
+.dentro-playlist-card {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos (imagen y texto) en columna */
+    align-items: flex-start; /* Alinea la imagen y el texto horizontalmente */
+    justify-content: center; /* Alinea la imagen y el texto verticalmente */
+    text-align: center;
+    padding: 8px;
+    max-width: 100%;
+}
+
+.dentro-playlist-card a {
+    text-align: left;
+    text-decoration: none; 
+    color: inherit; 
+    display: inline-block; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%; 
+}
+
+.dentro-playlist-card a {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+
 .albums-container a img {
     display: block; 
+}
+
+
+.dentro-playlist-card a:hover {
+    text-decoration: none; 
+}
+
+a {
+    text-decoration: none; 
+    color: inherit; 
+}
+  
+a:focus, a:active, a:hover {
+    outline: none; 
+    text-decoration: none; 
+    color: inherit;
 }
 
 

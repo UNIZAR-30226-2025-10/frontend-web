@@ -7,37 +7,50 @@
         
         <div class="atributos2" style="display: flex; justify-content: space-between;">
             <div class="image-upload-container">
-                <img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="logo" style="border-radius: 12%; width: 110px; height: 110px;">
+                <img [src]="fotoNueva && fotoNueva!== 'DEFAULT' ? fotoNueva : 'nouser.png'" alt="Foto de perfil" class="logo" style="border-radius: 12%; width: 110px; height: 110px;">
                 <label for="file-input" class="upload-icon">
                   <i class="fa fa-upload" aria-hidden="true"></i> Subir nueva foto
                 </label>
                 <input id="file-input" type="file" style="display: none;" (change)="onFileSelected($event)">
               </div>
             <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center;">
-                <input type="text" id="nombre" placeholder="Escriba un nuevo nombre para el álbum">
+                <input type="text" id="nombre"  [(ngModel)]="nombreActual" placeholder="Escriba un nuevo nombre para el álbum">
                 <button class="btn-guardar" (click)="guardarCambios()">Guardar Cambios</button>
             </div>
+        </div>
+    </div>
+</div>
 
+<div *ngIf="isModalEliminarOpen" class="modal-overlay">
+    <div class="modal-content">
+        <div class="cabecera" style="display: flex;justify-content: space-between;">
+            <button (click)="cerrarModalEliminar()" class="btn-cerrar"><i class="fas fa-times"></i></button>
+        </div>
+
+        <p style="margin:0px; color:#000e3b; font-size: 17px; margin-bottom: 5px;"><strong>¿Está seguro de que desea eliminar este álbum?</strong></p>
+        <p style="margin:0px; color:#000e3b; text-align: justify;" >Al hacerlo, desaparecerá completamente del sistema. Se perderán todas sus canciones, con sus reproducciones, 'Me gusta' y cualquier playlist en las que hayan sido añadidas. Esta acción es irreversible.</p>
+        <div class="boton" style="display: flex; justify-content: center;">
+            <button (click)="eliminarAlbum()" class="btn-eliminar">Eliminar Álbum</button>
         </div>
     </div>
 </div>
 
 <div class="top-div">
     <div class="column1">
-        <img src="logo_noizz.png" alt="Foto de perfil" >
+        <img [src]="foto && foto!== 'DEFAULT' ? foto : 'no_cancion.png'" alt="Foto portada" crossOrigin="anonymous">
     </div>
 
     <div class="column2">   
-        <!--<div *ngIf="album.nombre">-->
-            <h1>MOTOMAMI</h1>
-            <h4><strong>10 canciones · 30 minutos 13 segundos</strong></h4>
-            <h4 class ="fecha">Diciembre 2023</h4>
-        <!--</div>-->
+        <div *ngIf="album.nombre">
+            <h1>{{album.nombre}}</h1>
+            <h4><strong>{{album.canciones.length}}{{ album.canciones.length === 1 ? ' Canción' : ' Canciones' }} · {{album.minutos}} minutos {{album.segundos}} segundos</strong></h4>
+            <h4 class ="fecha">{{album.fechaPublicacion}}</h4>
+        </div>
     </div>
 
     <div class="column3">
         <button class="btn-album" (click)="abrirModal()">Editar Álbum</button>
-        <button class="btn-album">Eliminar Álbum</button>
+        <button class="btn-album" (click)="abrirModalEliminar()">Eliminar Álbum</button>
     </div>
 </div>
 

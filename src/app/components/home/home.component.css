@@ -1,8 +1,10 @@
-<<<<<<< Updated upstream
-=======
 
-  .bottom {
-    padding: 0px 0px 20px 0px;
+
+  /* Div inferior que tiene el scroll */
+  .bottom-div {
+    flex: 1; /* Este div ocupará el espacio restante */
+    background-color: #dddcdc; /* Fondo de ejemplo */
+    overflow-y: auto; /* Habilita el scroll vertical */
   }
 
   .titulo {
@@ -24,10 +26,10 @@
  
 .container {
     display: flex;
-    flex-wrap: nowrap; 
-    overflow-x: auto; 
+    flex-wrap: nowrap; /* 🔥 Evita que los elementos pasen a otra línea */
+    overflow-x: auto; /* 🔥 Permite el scroll horizontal */
     white-space: nowrap;
-    max-width: 100%;
+    max-width: 100%; /* 🔥 Se ajusta al ancho del contenedor */
     text-align: center; 
 }
 
@@ -47,11 +49,11 @@
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 150px;
+    width: 150px; /* 🔥 Tamaño base */
     height: 100%;
-    min-width: 140px; 
-    flex: 0 0 auto;
-    max-width: 100%; 
+    min-width: 140px; /* 🔥 Evita que desaparezca en pantallas pequeñas */
+    flex: 0 0 auto; /* 🔥 Permite ajuste flexible */
+    max-width: 100%; /* 🔥 Evita que se salga del contenedor */
     position: relative;
     background-color: transparent;
 }
@@ -74,10 +76,10 @@
 }
 
 .artist-card img {
-    width: 100px; 
+    width: 100px; /* 🔥 Reduce el tamaño para compactar */
     height: 100px;
     object-fit: cover;
-    margin-bottom: 5px; 
+    margin-bottom: 5px; /* 🔥 Menos espacio debajo de la imagen */
 }
 
 .card img {
@@ -89,7 +91,7 @@
 
 .artist-card:hover, .card:hover {
   background: rgb(230, 230, 230);
-  transform: scale(1.03); 
+  transform: scale(1.03); /* 🔥 Efecto más sutil */
 }
 
 .artista-img {
@@ -187,4 +189,3 @@ h5 {
     display: block;
 }
 }
->>>>>>> Stashed changes

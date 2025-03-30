@@ -42,9 +42,13 @@
         <div *ngIf="artists.length > 0">
             <h2 style="margin-bottom: 10px;"><strong>Artistas</strong></h2>
             <div class="artists-container">       
-                <div *ngFor="let artist of artists; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                    <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil : 'nouser.png'" alt="{{ artist.nombreArtistico }}">
-                    <strong>{{ artist.nombreArtistico }}</strong>
+                <div *ngFor="let artist of artists; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }"> 
+                    <div class="dentro-track-card">
+                        <a [routerLink]="['/home/artista', artist.nombreUsuario]">       
+                            <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil : 'nouser.png'" alt="{{ artist.nombreArtistico }}">
+                            <strong>{{ artist.nombreArtistico }}</strong>
+                        </a>
+                    </div>  
                 </div>
             </div>
         </div>
@@ -55,8 +59,8 @@
             <h2><strong>Álbumes</strong></h2>
             <div class="albums-container">   
                 <div *ngFor="let album of albums; let i = index" class="album-card" [ngClass]="{ 'primer-elemento': i === 0 }">       
-                    <div class="dentro-track-card"><a [routerLink]="['/home/album',album.nombre]"> 
-                        <img [src]="album.fotoPortada  ? album.fotoPortada : 'no_cancion.png'" alt="foto">
+                    <div class="dentro-track-card"><a [routerLink]="['/home/album',album.id]"> 
+                        <img [src]="album.fotoPortada  && album.fotoPortada !== 'DEFAULT' ? album.fotoPortada : 'no_cancion.png'" alt="foto">
                         <strong>{{ album.nombre }}</strong>
                         <p>Álbum de {{ album.nombreArtisticoArtista }}</p>
                     </a> 
@@ -66,13 +70,34 @@
         </div>
     </div>
 
-    <div *ngIf="playlists.length > 0">
-        <h2><strong>Playlists</strong></h2>
-        <div class="artists-container">       
-            <div *ngFor="let playlist of playlists; let i = index" class="playlist-card" [ngClass]="{ 'primer-elemento': i === 0 }">  
-                <img [src]="playlist.fotoPortada  ? playlist.fotoPortada : 'no_cancion.png'" alt="{{ playlist.nombre }}">        
-                <strong>{{ playlist.nombre }}</strong>
-                <p>{{ playlist.nombreUsuarioCreador }}</p>
+    <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'perfiles'">
+        <div *ngIf="perfiles.length > 0">
+            <h2 style="margin-bottom: 10px;"><strong>Perfiles</strong></h2>
+            <div class="artists-container">       
+                <div *ngFor="let perfil of perfiles; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }"> 
+                    <div class="dentro-track-card">
+                        <a [routerLink]="['/home/perfil', perfil.nombreUsuario]">          
+                        <img [src]="perfil.fotoPerfil && perfil.fotoPerfil !== 'DEFAULT' ? perfil.fotoPerfil : 'nouser.png'" alt="{{ perfil.nombreUsuario }}">
+                        <strong>{{ perfil.nombreUsuario }}</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'playlists'">
+        <div *ngIf="playlists.length > 0">
+            <h2><strong>Playlists</strong></h2>
+            <div class="artists-container">       
+                <div *ngFor="let playlist of playlists; let i = index" class="playlist-card" [ngClass]="{ 'primer-elemento': i === 0 }">  
+                    <div class="dentro-playlist-card"><a [routerLink]="['/home/playlist',playlist.id]"> 
+                    <img [src]="playlist.fotoPortada  && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" alt="{{ playlist.nombre }}">        
+                    <strong>{{ playlist.nombre }}</strong>
+                    <p>{{ playlist.nombreUsuarioCreador }}</p>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

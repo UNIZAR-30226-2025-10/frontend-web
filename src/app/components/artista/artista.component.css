@@ -113,7 +113,7 @@ h4 {
 }
 
 .seguir:hover {
-    border: 1.5px solid #ffffffe0;
+    background-color: #343c55;
 }
 
 .botones {
@@ -158,12 +158,14 @@ h4 {
 }
 
 .btn-noizz:hover {
-    border: 1.5px solid #ffffffe0;
+    background-color: #343c55;
 }
 .popular-songs {
     color: #000e3b;
     padding: 0px 50px 12px 50px;
-    width: 67%;
+    width: auto;
+    max-width: 800px;
+    overflow: hidden;
 }
 .song {
     display: flex;
@@ -173,12 +175,14 @@ h4 {
     border-radius: 10px;
     padding: 0px 15px;
     font-size: 13px;
-    transition: transform 0.2s ease-in-out, background-color 0.3s ease-in-out; 
+    transition: transform 0.2s ease-in-out, background-color 0.3s ease-in-out;
+    width: auto; 
 }
 .song:hover {
     background-color: white; /* Cambia el color de fondo a blanco */
     transform: scale(1.01); /* Aumenta ligeramente el tamaño de la canción */
 }
+
 .song img {
     width: 44px;
     height: 44px;
@@ -187,9 +191,10 @@ h4 {
 }
 .song-title {
     flex-grow: 1;
+    margin-right: 20px;
     white-space: nowrap; /* Evita que el título se rompa en varias líneas */
-    overflow: hidden; /* Oculta cualquier contenido que no quepa */
     text-overflow: ellipsis; 
+    overflow: hidden;
 }
 .song-plays {
     display: flex;
@@ -243,10 +248,6 @@ h4 {
     margin-top: 10px;
     margin-left: 15px;
 }
-.foto2:hover {
-    transform: scale(1.03);
-}
-
 .numMegustas {
     display: flex;
     flex-direction: column;
@@ -255,7 +256,7 @@ h4 {
 }
 .discografia {
     color: #000e3b;
-    padding: 0px 0px 10px 0px;
+    padding: 0px 0px 20px 0px;
 }
 .opciones {
     display: flex;
@@ -295,10 +296,10 @@ h3 {
 
 .tracks-container {
     display: flex;
-    flex-wrap: nowrap; 
-    overflow-x: auto; 
+    flex-wrap: nowrap; /* 🔥 Evita que los elementos pasen a otra línea */
+    overflow-x: auto; /* 🔥 Permite el scroll horizontal */
     white-space: nowrap;
-    max-width: 100%; 
+    max-width: 100%; /* 🔥 Se ajusta al ancho del contenedor */
 
 }
 
@@ -317,12 +318,14 @@ h3 {
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 150px; /*  Tamaño base */
+    width: 150px; /* 🔥 Tamaño base */
     height: 100%;
-    min-width: 140px; /*  Evita que desaparezca en pantallas pequeñas */
-    flex: 0 0 auto; /*  Permite ajuste flexible */
-    max-width: 100%; /*  Evita que se salga del contenedor */
+    min-width: 140px; /* 🔥 Evita que desaparezca en pantallas pequeñas */
+    flex: 0 0 auto; /* 🔥 Permite ajuste flexible */
+    max-width: 100%; /* 🔥 Evita que se salga del contenedor */
     position: relative;
+    margin-top: 10px;
+    margin-bottom: 10px;
 
     
 }
@@ -370,54 +373,14 @@ h3 {
     max-width: 100%; 
 }
 
-<<<<<<< Updated upstream
-=======
 .track-card:hover {
     background: rgb(230, 230, 230);
-    transform: scale(1.03); /*  Efecto más sutil */
-}
-
-a {
-    text-decoration: none; 
-    color: inherit; 
-    all: unset; 
-    display: contents;
-}
-
-a:focus,
-a:active,
-a:hover {
-    outline: none; 
-    text-decoration: none; 
-    color: inherit;
-}
-
-.dropdown-content {
-    position: absolute; /* Posiciona el desplegable de manera absoluta en relación al contenedor */
-    background-color: white;
-    border: 1px solid #ddd;
-    padding: 4px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 100; /* Asegura que el desplegable esté por encima de otros elementos */
-    display: block;
-    max-width: 200px; /* Ancho máximo del desplegable */
-    font-size: 14px;
-}
-
-.opcion_desplegable {
-    border:none; 
-    background-color: transparent; 
-    color: rgb(76, 75, 75);
-}
-
-.opcion_desplegable:hover {
-    text-decoration: underline;
-}
+    transform: scale(1.03); /* 🔥 Efecto más sutil */
+  }
 
 
->>>>>>> Stashed changes
 @media (max-width: 650px) {
+
     .header h1 {
         font-size: 40px;
     }
@@ -427,6 +390,9 @@ a:hover {
     h5 {
       font-size: 13px;
     }
+    .bio {
+        font-size: 13px;
+    }
     .verificado {
         height:15px;
     }
@@ -435,9 +401,16 @@ a:hover {
       width: 110px;
 
     }
-  }
+}
 
-  @media (max-width: 450px) {
+@media (max-width: 550px) {
+    .repros {
+        display: none;
+    }
+    
+}
+
+ @media (max-width: 450px) {
     .header h1 {
         font-size: 20px;
     }
@@ -447,9 +420,14 @@ a:hover {
     h5 {
       font-size: 8px;
     }
+    .bio {
+        font-size: 8px;
+        margin-bottom: 8px;
+    }
     .verificado {
         height:12px;
     }
+
   }
   
 

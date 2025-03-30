@@ -9,9 +9,11 @@ export class TokenService {
   private userKey = 'userData';
   private tipoKey = 'tipoData';
   private tokenTempKey = 'tempToken';
+  private cancionActual = 'cancionActual';
+  private coleccionActual = 'coleccionActual';
+  private progreso = 'progreso';
 
   constructor() { }
- 
 
   // Guardar token
   setToken(token: string): void {
@@ -50,8 +52,6 @@ export class TokenService {
   }
 
 
-<<<<<<< Updated upstream
-=======
   setCancionActual(cancion: any): void {
     localStorage.setItem(this.cancionActual, JSON.stringify(cancion));
   }
@@ -91,13 +91,14 @@ export class TokenService {
 
 
 
-
->>>>>>> Stashed changes
   // Eliminar token (Logout)
   clearStorage(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
     localStorage.removeItem(this.tipoKey);
+    localStorage.removeItem(this.cancionActual);
+    localStorage.removeItem(this.coleccionActual);
+    localStorage.removeItem(this.progreso);
   }
 
 
@@ -105,9 +106,24 @@ export class TokenService {
     localStorage.removeItem(this.tokenTempKey);
   }
 
+  // Verificar si el usuario está autenticado
+  isAuthenticatedAndOyente(): boolean {
+    return !!this.getToken() && this.getTipo()=="oyente";
+  }
+
+  isAuthenticatedAndArtista(): boolean {
+    return !!this.getToken() && this.getTipo()=="artista";
+  }
+
+  isAuthenticatedAndPendiente(): boolean {
+    return !!this.getToken() && this.getTipo()=="pendiente";
+  }
+
+  isAuthenticatedAndValido(): boolean {
+    return !!this.getToken() && this.getTipo()=="valido";
+  }
 
   hasTempToken(): boolean {
     return !!this.getTempToken();
   }
-
 }

@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap, catchError } from 'rxjs/operators';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-buscador',
@@ -22,17 +23,21 @@ export class BuscadorComponent implements OnInit, OnDestroy{
   searchQuery: string = '';
   sidebarOpen = false;
   previousUrl: string = '';
+  foto: string = '';
+
 
   private searchQuerySubject: Subject<string> = new Subject(); 
   private subscription!: Subscription;
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
-  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService) {}
+  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService) {}
+
 
   ngOnInit() {
 
     this.previousUrl = this.router.url;
+    this.foto = this.tokenService.getUser().fotoPerfil;
 
     this.subscription = this.limpiarBuscadorService.limpiarBuscador$.subscribe(data => {
       if (data === true) {
@@ -88,10 +93,12 @@ export class BuscadorComponent implements OnInit, OnDestroy{
     this.router.navigate(['/home']);
   }
 
-
-
   goPerfil() {
-    this.router.navigate(['/home/miPerfilOyente']);
+    if (this.tokenService.getTipo() === "artista") {
+      this.router.navigate(['/home/miPerfilArtista']);  
+    }else {
+      this.router.navigate(['/home/miPerfilOyente']);
+    }
   }
 
   onSearchInputChange() {

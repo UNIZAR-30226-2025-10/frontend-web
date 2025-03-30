@@ -1,16 +1,12 @@
 import { Component, OnInit, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
 import { Chart, registerables} from 'chart.js';
 import { CommonModule } from '@angular/common';
-<<<<<<< Updated upstream
-=======
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { switchMap } from 'rxjs/operators';
-import { Router } from '@angular/router'; 
-
 
 interface Cancion {
   id: number;
@@ -18,14 +14,12 @@ interface Cancion {
   duracion: number;
   reproducciones: number;
   fotoPortada: string;
-  featuring: any[];
   //AÑADIR LO QUE SEA
 }
->>>>>>> Stashed changes
 
 @Component({
   selector: 'app-estadisticas-album',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './estadisticas-album.component.html',
   styleUrl: './estadisticas-album.component.css'
 })
@@ -39,11 +33,18 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
   verDetalles: boolean=false;
   verMeGustas: boolean=false;
   isModalOpen = false;
+  isModalEliminarOpen: boolean = false;
   openDropdown: number | null = null;
   dropdownTopPosition: number = 0; 
   dropdownLeftPosition: number = 0;
+  currentIdAlbum: string = '';
+  album: any = {};
 
+  //PARA LA EDICION DEL ALBUM
+  nombreActual: string = '';
   foto: string ='';
+  fotoNueva!: string;
+  file!: File;
 
   usuarios = [
     { nombre: "Juan Pérez", foto: "nouser.png" },
@@ -58,19 +59,59 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
     { nombre: "Pedro Sánchez", foto: "nouser.png" }
   ];
 
+  canciones = [
+    {
+      ranking: 1,
+      imagen: "logo_noizz.png",
+      nombre: "GRAN VÍA",
+      reproducciones: "69,698,951",
+      duracion: "3:13",
+      esFavorita: false,
+      nombreArtisticoArtista: "Chiara Oliver"
+    },
+    {
+      ranking: 2,
+      imagen: "logo_noizz.png",
+      nombre: "Mon Amour - Remix",
+      reproducciones: "50,000,000",
+      duracion: "3:25",
+      esFavorita: true,
+      nombreArtisticoArtista: "Chiara Oliver"
+    },
+    {
+      ranking: 3,
+      imagen: "logo_noizz.png",
+      nombre: "Presiento",
+      reproducciones: "45,000,000",
+      duracion: "3:00",
+      esFavorita: false,
+      nombreArtisticoArtista: "Chiara Oliver"
+    },
+    {
+      ranking: 4,
+      imagen: "logo_noizz.png",
+      nombre: "SEGUNDO INTENTO",
+      reproducciones: "30,000,000",
+      duracion: "3:10",
+      esFavorita: true,
+      nombreArtisticoArtista: "Chiara Oliver"
+    },
+    {
+      ranking: 5,
+      imagen: "logo_noizz.png",
+      nombre: "Formentera",
+      reproducciones: "25,000,000",
+      duracion: "3:20",
+      esFavorita: false,
+      nombreArtisticoArtista: "Chiara Oliver"
+    }
+  ];
 
-<<<<<<< Updated upstream
-  constructor() {
-=======
-  constructor( private route: ActivatedRoute, private location: Location, private authService: AuthService, private subirCloudinary: SubirCloudinary, private router: Router) {
->>>>>>> Stashed changes
+  constructor( private route: ActivatedRoute, private location: Location, private authService: AuthService, private subirCloudinary: SubirCloudinary) {
     Chart.register(...registerables);
   }
 
   ngOnInit(): void {
-<<<<<<< Updated upstream
-    this.foto = "logo_noizz.png" //PONER FOTO DEL ALBUM
-=======
 
     const idAlbum = this.route.snapshot.paramMap.get('id'); 
     if (idAlbum) {
@@ -96,8 +137,7 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
         //Ajustar duración canciones
         this.album.canciones = response.album.canciones.map((cancion: Cancion) => ({
           ...cancion,
-          duracion: this.convertirTiempo(cancion.duracion),
-          featuring: cancion.featuring.length ? ` ${cancion.featuring.join(', ')}` : ''
+          duracion: this.convertirTiempo(cancion.duracion)
         }));
       },
       error: (error) => {
@@ -119,7 +159,6 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
     const segundosRestantes = segundos % 60;
     
     return `${minutos}:${segundosRestantes.toString().padStart(2, "0")}`;
->>>>>>> Stashed changes
   }
 
   ngAfterViewChecked() {
@@ -150,25 +189,21 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
       console.error("Los canvas no están disponibles todavía.");
       return;
     }
-  
+
     const ctx = this.canvas.nativeElement.getContext('2d');
     const ctxPie = this.canvasPie.nativeElement.getContext('2d');
-  
-    // Extraer nombres de canciones y reproducciones del álbum
-    const labels = this.album.canciones.map((cancion: { nombre: string }) => cancion.nombre);
-    const data = this.album.canciones.map((cancion: { reproducciones: number }) => cancion.reproducciones);
 
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: labels,
+        labels: ["Canción 1", "Canción 2", "Canción 3", "Canción 4", "Canción 5", "Canción 6", "Canción 7", "Canción 8", "Canción 9", "Canción 10"],
         datasets: [{
           label: "Reproducciones",
-          data: data,
+          data: [1050000, 870000, 650000, 920000, 780000, 1050000, 870000, 650000, 920000, 780000],
           backgroundColor: [
             "#34495E", "#2C3E50", "#7F8C8D", "#95A5A6", "#BDC3C7",
             "#ECF0F1", "#1ABC9C", "#16A085", "#8E44AD", "#2980B9"
-          ].slice(0, labels.length),
+          ],
           borderWidth: 1
         }]
       },
@@ -177,28 +212,27 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: true,
+            display: true, // Mantén el texto visible
             labels: {
-              usePointStyle: true,
-              boxWidth: 0
+              usePointStyle: true,  // Usar estilo de punto en lugar del cuadro
+              boxWidth: 0  // Elimina el cuadro de color
             }
           }
         }
       }
     });
-  
 
     this.chartPie = new Chart(ctxPie, {
       type: 'pie', // Tipo 'pie' para gráfico de pastel
       data: {
-        labels: labels,
+        labels: ["Canción 1", "Canción 2", "Canción 3", "Canción 4", "Canción 5", "Canción 6", "Canción 7", "Canción 8", "Canción 9", "Canción 10"],
         datasets: [{
           label: "Reproducciones",
-          data: data,
+          data: [1050000, 870000, 650000, 920000, 780000, 1050000, 870000, 650000, 920000, 780000],
           backgroundColor: [
             "#34495E", "#2C3E50", "#7F8C8D", "#95A5A6", "#BDC3C7",
             "#ECF0F1", "#1ABC9C", "#16A085", "#8E44AD", "#2980B9"
-          ].slice(0, labels.length),
+          ],
           borderWidth: 1
         }]
       },
@@ -230,19 +264,72 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
     this.isModalOpen = true;
   }
 
+  abrirModalEliminar() {
+    this.isModalEliminarOpen = true;
+  }
+
   cerrarModal() {
+    this.nombreActual = this.album.nombre;
+    this.fotoNueva = this.foto;
     this.isModalOpen = false;
   }
 
-  guardarCambios() {
-
+  cerrarModalEliminar() {
+    this.isModalEliminarOpen = false;
   }
 
+  guardarCambios() {
+    if (this.fotoNueva !== this.foto) {
+      this.subirCloudinary.uploadFile(this.file, 'albumes').pipe(
+        switchMap((url) => {
+          console.log('Imagen subida:', url);
+          this.fotoNueva = url;
+          return this.authService.cambiarDatosAlbum(this.currentIdAlbum, this.nombreActual, this.fotoNueva);
+        })
+      ).subscribe({
+        next: () => {
+          this.album.nombre = this.nombreActual;
+          this.foto = this.fotoNueva;
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error("Error al guardar los nuevos datos:", error);
+          this.nombreActual = this.album.nombre;
+          this.fotoNueva = this.foto;
+        },
+        complete: () => {
+          console.log("Datos guardados con éxito");
+        }
+      });
+    } else {
+      // Si la foto no cambió, solo actualizamos los datos del álbum
+      this.authService.cambiarDatosAlbum(this.currentIdAlbum, this.nombreActual, this.fotoNueva).subscribe({
+        next: () => {
+          this.album.nombre = this.nombreActual;
+          this.foto = this.fotoNueva;
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error("Error al guardar los nuevos datos:", error);
+          this.nombreActual = this.album.nombre;
+          this.fotoNueva = this.foto;
+        },
+        complete: () => {
+          console.log("Datos guardados con éxito");
+        }
+      });
+    }
+  }
+  
+
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      console.log("Archivo seleccionado:", file);
-      // Aquí puedes procesar el archivo o cargarlo a un servidor
+    this.file = event.target.files[0];
+    if (this.file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.fotoNueva = e.target.result;
+      };
+      reader.readAsDataURL(this.file);
     }
   }
 
@@ -261,8 +348,6 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
     this.dropdownTopPosition = rect.bottom + window.scrollY;  // Calcula la posición top
     this.dropdownLeftPosition = rect.left + window.scrollX -105;  // Calcula la posición left
   }
-<<<<<<< Updated upstream
-=======
 
   eliminarAlbum() {
     this.authService.eliminarAlbum(this.currentIdAlbum)
@@ -278,10 +363,6 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
         console.log("Álbum eliminado con éxito");
       }
     });
-  }
 
-  verEstadisticas(id: any) {
-    this.router.navigate(['/home/estadisticasCancion', id]);
   }
->>>>>>> Stashed changes
 }

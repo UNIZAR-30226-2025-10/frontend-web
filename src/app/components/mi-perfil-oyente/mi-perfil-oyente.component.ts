@@ -1,19 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
-<<<<<<< Updated upstream
-=======
 import { forkJoin } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
 import { ProgressService } from '../../services/progress.service';
 import { switchMap } from 'rxjs/operators';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
-import { ChangeDetectorRef } from '@angular/core';
->>>>>>> Stashed changes
+
 
 interface misDatos {
   nombre: string;
@@ -30,33 +27,23 @@ interface misDatos {
 export class MiPerfilOyenteComponent implements OnInit {
 
   isModalOpen = false;
+  isModalContrasenaOpen = false;
+  isModalEliminarOpen = false;
+  isModalPlaylistOpen = false;
 
-  nombreActual: string = "martaRata2004"; // ESTO ES OYENTE.NOMBRE
 
-  oyente! : misDatos;
+
+  oyente: misDatos = { nombre: '', nSeguidores: 0, nSeguidos: 0 };
   ultimosArtistas: any[] = [];
-  miPlaylists: any[] = [];
+  misPlaylists: any[] = [];
   ultimasCanciones: any[] = [];
   seguidos: any[] = [];
-<<<<<<< Updated upstream
   isAuthenticated: boolean = false;
-
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router){}
-
-  ngOnInit(): void {
-
-    if(!this.tokenService.isAuthenticatedAndOyente()) {
-      this.router.navigate(['/login'])
-      return;
-    }
-
-    this.isAuthenticated = true;
-=======
   mensajeError = '';
   credentials= {contrasenya:''};
-  fotoPortada: File | null = null;
+  fotoPortada!: string;
+  fileP!: File;
   nombrePlaylist: string = '';
-  previewFoto: string | null = null;
 
   //para editar perfil
   nombreActual: string = '';
@@ -71,10 +58,16 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   @Output() trackClicked = new EventEmitter<any>();
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private subirCloudinary: SubirCloudinary, private changeDetectorRef: ChangeDetectorRef){}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private subirCloudinary: SubirCloudinary){}
 
   ngOnInit(): void {
 
+    if(!this.tokenService.isAuthenticatedAndOyente()) {
+      this.router.navigate(['/login'])
+      return;
+    }
+
+    this.isAuthenticated = true;
     this.foto = this.tokenService.getUser().fotoPerfil;
     this.fotoNueva = this.foto;
 
@@ -128,7 +121,6 @@ export class MiPerfilOyenteComponent implements OnInit {
   
   abrirModalPlaylist() {
     this.isModalPlaylistOpen = true;
-    this.previewFoto = null;
     console.log('Modal abierto:', this.isModalPlaylistOpen);
   }
 
@@ -150,7 +142,7 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   cerrarModalPlaylist() {
     this.isModalPlaylistOpen = false;
-    this.previewFoto = null;
+    this.fotoPortada = '';
   }
 
 
@@ -179,7 +171,6 @@ export class MiPerfilOyenteComponent implements OnInit {
             user.fotoPerfil = this.foto;
             this.tokenService.setUser(user);
           }
-          console.log('FOTO PERFIL DESPUES', this.tokenService.getUser().fotoPerfil);
           this.cerrarModal();
         },
         error: (error) => {
@@ -192,15 +183,21 @@ export class MiPerfilOyenteComponent implements OnInit {
         }
       });
     } else {
-      this.authService.cambiarDatosOyente(this.nombreActual, this.fotoNueva)
-      .subscribe({
+      this.authService.cambiarDatosOyente(this.nombreActual, this.fotoNueva).subscribe({
         next: () => {
           this.oyente.nombre = this.nombreActual;
+          this.foto = this.fotoNueva;
+          if (this.foto !== this.tokenService.getUser().fotoPerfil) {
+            const user = this.tokenService.getUser();
+            user.fotoPerfil = this.foto;
+            this.tokenService.setUser(user);
+          }
           this.cerrarModal();
         },
         error: (error) => {
           console.error("Error al guardar los nuevos datos:", error);
           this.nombreActual = this.oyente.nombre;
+          this.fotoNueva = this.foto;
         },
         complete: () => {
           console.log("Datos guardados con éxito");
@@ -218,44 +215,84 @@ export class MiPerfilOyenteComponent implements OnInit {
       this.mensajeError = '*Debes introducir la contraseña actual.';
       return;
     }
->>>>>>> Stashed changes
     
-    this.authService.pedirMisDatosOyente()
+    if (nuevaContrasena.length < 10) {
+      this.mensajeError = '*La nueva contraseña debe tener al menos 10 caracteres.';
+      return;
+    }
+
+    const tieneLetra = /[a-zA-Z]/.test(nuevaContrasena);
+    if (!tieneLetra) {
+      this.mensajeError = '*La nueva contraseña debe contener al menos una letra.';
+      return;
+    }
+
+    const tieneNumero = /\d/.test(nuevaContrasena);
+    const tieneCaracterEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(nuevaContrasena);
+
+    if (!(tieneNumero || tieneCaracterEspecial)) {
+      this.mensajeError = '*La nueva contraseña debe contener al menos un número o carácter especial.';
+      return;
+    }
+
+    this.mensajeError = '';
+    this.authService.cambiarContrasenyaOyente(viejaContrasena, nuevaContrasena)
     .subscribe({
-      next: (response) => {
-        console.log('UQE RECIBO: ', response);
-        this.oyente.nombre = response.oyente.nombreUsuario;
-        this.oyente.nSeguidores= response.oyente.seguidores;
-        this.oyente.nSeguidos = response.oyente.seguidos;       
+      next: () => {   
+        this.cerrarModalContrasena();
       },
       error: (error) => {
-        console.error('Error al pedir los datos:', error);
+        console.error("Error al cambiar la contraseña:", error);
+      },
+      complete: () => {
+        console.log("Contraseña guardada con éxito");
+      }
+    });
 
-<<<<<<< Updated upstream
-=======
   }
 
   guardarCambiosPlaylist() {
-    if (!this.nombrePlaylist) {
-      alert("Por favor, ingresa un nombre para la playlist.");
-      return;
+    if (this.fileP) { // Verifica si hay un archivo seleccionado
+        this.subirCloudinary.uploadFile(this.fileP, 'playlist').pipe(
+            switchMap((url) => {
+                console.log('Imagen subida:', url);
+                this.fotoPortada = url;
+                return this.authService.crearPlaylist(this.fotoPortada, this.nombrePlaylist);
+            })
+        ).subscribe({
+            next: () => {
+                this.cerrarModalPlaylist();
+                console.log("Playlist creada con éxito");
+            },
+            error: (error) => {
+                console.error("Error al crear la playlist", error);
+            }
+        });
+    } else {
+        const foto = this.fotoPortada ? this.fotoPortada : "DEFAULT"; // Imagen predeterminada
+        this.authService.crearPlaylist(foto, this.nombrePlaylist)
+        .subscribe({
+            next: () => {   
+                this.cerrarModalPlaylist();
+                console.log("Playlist creada con éxito");
+            },
+            error: (error) => {
+                console.error("Error al crear la playlist:", error);
+            }
+        });
     }
-  
-    const foto = this.fotoPortada ? this.fotoPortada : "logo_noizz.png"; // Imagen predeterminada
-  
-    this.authService.crearPlaylist(foto, this.nombrePlaylist)
-    .subscribe({
-      next: () => {   
-        this.cerrarModalPlaylist();
-      },
-      error: (error) => {
-        console.error("Error al crear la playlist:", error);
-      },
-      complete: () => {
-        console.log("Playlist creada con éxito");
-      }
-    });
-  }
+}
+
+onFileSelectedPlaylist(event:any) {
+    this.fileP = event.target.files[0];
+    if (this.fileP) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+            this.fotoPortada = e.target.result; // Asigna la URL base64 de la imagen a la variable fotoPortada
+        };
+        reader.readAsDataURL(this.fileP);
+    }
+}
   
 
   onFileSelected(event: any) {
@@ -269,15 +306,6 @@ export class MiPerfilOyenteComponent implements OnInit {
     }
   }
 
-  onFileSelectedPlaylist(event: Event) {
-    const fileInput = event.target as HTMLInputElement;
-    
-    if (fileInput.files && fileInput.files.length > 0) {
-      const file = fileInput.files[0];
-      this.fotoPortada = file;
-      
-    }
-  }
   
   
 
@@ -312,7 +340,6 @@ export class MiPerfilOyenteComponent implements OnInit {
       )
       .subscribe({
         next: () => {   
-          console.log('lo que envio:', this.tokenService.getCancionActual());
           this.tokenService.clearStorage();
           this.router.navigate(['/login']);
         },
@@ -336,103 +363,20 @@ export class MiPerfilOyenteComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al eliminar la cuenta:', error);
->>>>>>> Stashed changes
       },
       complete: () => {
         console.log('Petición completada');
       }
     });
-
-    this.authService.pedirTopArtistas()
-    .subscribe({
-      next: (response) => {
-        this.ultimosArtistas = response.artistas;
-      },
-      error: (error) => {
-        console.error('Error al pedir los datos:', error);
-
-      },
-      complete: () => {
-        console.log('Petición completada');
-      }
-    });
-
-    this.authService.pedirHistorialCanciones()
-    .subscribe({
-      next: (response) => {
-        this.ultimasCanciones = response.canciones;
-      },
-      error: (error) => {
-        console.error('Error al pedir los datos:', error);
-
-      },
-      complete: () => {
-        console.log('Petición completada');
-      }
-    });
-
-    this.authService.pedirMisPlaylists()
-    .subscribe({
-      next: (response) => {
-        this.miPlaylists = response.playlists;
-      },
-      error: (error) => {
-        console.error('Error al pedir los datos:', error);
-
-      },
-      complete: () => {
-        console.log('Petición completada');
-      }
-    });
-
-    //PREGUNTAR POR MIRAR LO Q DEVUELVE
-    this.authService.pedirMisSeguidos()
-    .subscribe({
-      next: (response) => {
-        this.seguidos = response.seguidos;
-      },
-      error: (error) => {
-        console.error('Error al pedir los datos:', error);
-
-      },
-      complete: () => {
-        console.log('Petición completada');
-      }
-    });
-  }
-
-  artistas = [
-    { name: 'Usuario 1', img: 'https://randomuser.me/api/portraits/men/16.jpg', status: 'status-red' },
-    { name: 'Usuario 2', img: 'https://randomuser.me/api/portraits/women/2.jpg', status: 'status-red' },
-    { name: 'Usuario 3', img: 'https://randomuser.me/api/portraits/men/3.jpg', status: 'status-red' },
-    { name: 'Usuario 4', img: 'https://randomuser.me/api/portraits/men/4.jpg', status: 'status-red' },
-    { name: 'Usuario 5', img: 'https://randomuser.me/api/portraits/men/5.jpg', status: 'status-red' },
-    { name: 'Usuario 6', img: 'https://randomuser.me/api/portraits/women/92.jpg', status: 'status-red' },
-    { name: 'Usuario 7', img: 'https://randomuser.me/api/portraits/men/6.jpg', status: 'status-red' },
-    { name: 'Usuario 8', img: 'https://randomuser.me/api/portraits/women/4.jpg', status: 'status-red' },
-    { name: 'Usuario 9', img: 'https://randomuser.me/api/portraits/men/8.jpg', status: 'status-red' },
-    { name: 'Usuario 10', img: 'https://randomuser.me/api/portraits/men/23.jpg', status: 'status-red' }
-  ];
-
-  abrirModal() {
-    this.isModalOpen = true;
-    console.log('hola')
-  }
-
-  cerrarModal() {
-    this.isModalOpen = false;
-  }
-
-  guardarCambios() {
 
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      console.log("Archivo seleccionado:", file);
-      // Aquí puedes procesar el archivo o cargarlo a un servidor
-    }
+  togglePasswordVieja(): void {
+    this.isPasswordViejaVisible = !this.isPasswordViejaVisible;
+  }
+
+  togglePasswordNueva(): void {
+    this.isPasswordNuevaVisible = !this.isPasswordNuevaVisible;
   }
   
 
