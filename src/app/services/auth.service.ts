@@ -992,6 +992,37 @@ export class AuthService {
      return this.http.get(`${this.apiUrl}/search-invitados?termino=${termino}&playlist=${playlistId}`, { headers });
   }
 
-  
+  pedirEtiquetas(): Observable<any> {
+    const token = this.tokenService.getToken();
 
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-tags`, { headers: headers } );
+  }
+
+  crearCancion(nombre: string, album_id: number, duracion: number, audio_url: string, tags: string[], artistasFt: string[]): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = { nombre: nombre, album_id: album_id, duracion: duracion, audio_url: audio_url, tags: tags , artistasFt: artistasFt};
+
+    return this.http.post(`${this.apiUrl}/create-cancion`, body,{ headers: headers } );
+  }
 }

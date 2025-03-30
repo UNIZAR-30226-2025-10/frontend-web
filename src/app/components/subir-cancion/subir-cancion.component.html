@@ -1,0 +1,101 @@
+<div class="subir-cancion-container">
+  <h2>Subir canción</h2>
+  <div class="custom-dropdown">
+    <!-- Elemento seleccionado -->
+    <div class="selected-option" (click)="toggleDropdown()">
+      <img *ngIf="selectedAlbumImage" [src]="selectedAlbumImage" alt="{{ selectedAlbum }}" width="50" height="50" />
+      <div class="album-text">
+        <span>{{ selectedAlbum }}</span>
+      </div>
+      <span class="dropdown-toggle" [class.open]="isDropdownOpen">&#9662;</span>
+    </div>
+
+    <!-- Opciones del menú -->
+    <ul *ngIf="isDropdownOpen" class="options">
+      <!-- Opción fija para crear un álbum -->
+      <li (click)="abrirPopupCrearAlbum()" data-value="crear">
+        <span class="icon-cross">+</span> Crear Álbum
+      </li>
+
+      <!-- Opciones dinámicas para los álbumes -->
+      <li *ngFor="let album of albumes" (click)="selectAlbum(album)" [attr.data-value]="album.id">
+        <img [src]="album.fotoPortada" alt="{{ album.nombre }}" width="50" height="50" />
+        <span>{{ album.nombre }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Subsecciones -->
+  <div *ngIf="selectedAlbumId > 0">
+    <div class="campo">
+      <input id="titulo" type="text" placeholder="Introduce el título de la canción" #tituloCancion/>
+    </div>
+    <div class="campo">
+      <div class="custom-dropdown2">
+        <div class="selected-option" (click)="toggleEtiquetaDropdown()">
+          <span>
+            {{ getTextoEtiquetasSeleccionadas() }}
+          </span>
+          <span class="dropdown-toggle" [class.open]="isEtiquetaDropdownOpen">
+            &#9662;
+          </span>
+        </div>
+        <ul *ngIf="isEtiquetaDropdownOpen" class="options etiquetas-options">
+          <li
+            *ngFor="let etiqueta of etiquetas"
+            (click)="selectEtiqueta(etiqueta)"
+            [ngClass]="{ 'etiqueta-seleccionada': isEtiquetaSeleccionada(etiqueta) }"
+          >
+            {{ etiqueta.nombre }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="campo">
+      <input id="artistas" type="text" placeholder="Introduce los nombres de usuario de los artistas participantes (.ft) separados por comas" #artistasFt/>
+    </div>
+    <div class="campo" [ngClass]="{ 'campo-con-boton': archivoSeleccionado }">
+      <div
+        class="file-upload"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+      >
+        <span *ngIf="!archivoSeleccionado">Arrastra y suelta el archivo aquí para añadir la canción</span>
+        <span *ngIf="archivoSeleccionado">{{ archivoSeleccionado.name }}</span>
+      </div>
+      <button *ngIf="archivoSeleccionado" class="eliminar-archivo" (click)="eliminarArchivo()">Eliminar archivo</button>
+    </div>
+    <button type="submit" (click)="agregarCancion(tituloCancion.value, artistasFt.value)">Añadir canción</button>
+  </div>
+
+  <!-- Popup para crear un álbum -->
+  <div class="popup-overlay" *ngIf="mostrarPopup">
+    <div class="popup">
+      <h3>Crear Álbum</h3>
+      <div class="campo">
+        <label for="nombreAlbum">Nombre del álbum:</label>
+        <input
+          id="nombreAlbum"
+          type="text"
+          (input)="onNombreAlbumInput($event)"
+          placeholder="Introduce el nombre del álbum"
+        />
+      </div>
+      <div class="campo">
+        <label for="descripcionAlbum">Descripción:</label>
+        <textarea
+          id="descripcionAlbum"
+          (input)="onDescripcionAlbumInput($event)"
+          placeholder="Introduce una descripción"
+        ></textarea>
+      </div>
+      <div class="campo">
+        <label for="imagenAlbum">Subir imagen:</label>
+        <input id="imagenAlbum" type="file" (change)="onFileSelected($event)" />
+      </div>
+      <button (click)="crearAlbum()">Crear</button>
+      <button (click)="cerrarPopup()">Cancelar</button>
+    </div>
+  </div>
+</div>

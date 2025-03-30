@@ -36,5 +36,38 @@ export class SubirCloudinary {
     );
   }
 
+
+  uploadSong(file: File, folder: any): Observable<{ url: string, duration: number }> {
+    return this.authService.pedirFirma(folder).pipe(
+      switchMap(signatureData => {
+        console.log('debug 2');
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('api_key', signatureData.api_key);
+        formData.append('timestamp', signatureData.timestamp.toString());
+        formData.append('signature', signatureData.signature);
+        formData.append('folder', folder);
+  
+        const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${signatureData.cloud_name}/video/upload`;
+        console.log('url devuelta:', cloudinaryUrl);
+  
+        return this.http.post<any>(cloudinaryUrl, formData).pipe(
+          map(response => {
+            // Extraer duración y URL desde la respuesta
+            return {
+              url: response.secure_url,
+              duration: response.duration // Esto depende de la configuración de Cloudinary
+            };
+          })
+        );
+      }),
+      catchError(error => {
+        console.error('Error al subir la canción:', error);
+        return throwError(() => new Error('Error al subir la canción'));
+      })
+    );
+  }
+  
+
   
 }

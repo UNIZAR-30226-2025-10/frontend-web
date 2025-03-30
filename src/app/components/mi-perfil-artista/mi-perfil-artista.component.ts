@@ -356,4 +356,9 @@ export class MiPerfilArtistaComponent implements OnInit {
     this.isPasswordNuevaVisible = !this.isPasswordNuevaVisible;
   }
 
+  navigateToSubirCancion() {
+    this.router.navigate(['/home/subir-cancion']);
+  }
+  
+
 }

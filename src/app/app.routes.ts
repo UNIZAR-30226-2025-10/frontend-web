@@ -24,6 +24,8 @@ import { EstadisticasAlbumComponent } from './components/estadisticas-album/esta
 import { PlaylistComponent } from './components/playlist/playlist.component';
 import { EstadisticasCancionComponent} from './components/estadisticas-cancion/estadisticas-cancion.component';
 import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
+import { SubirCancionComponent } from './components/subir-cancion/subir-cancion.component';
+
 
 
 export const routes: Routes = [
@@ -55,6 +57,7 @@ export const routes: Routes = [
       { path: 'estadisticasAlbum/:id', component: EstadisticasAlbumComponent},
       { path: 'seguidos/:nombreUsuario', component: SeguidosComponent},
       { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent},
+      { path: 'subir-cancion', component: SubirCancionComponent },
       { path: 'notificaciones', component: NotificacionesComponent}
 
     ]
