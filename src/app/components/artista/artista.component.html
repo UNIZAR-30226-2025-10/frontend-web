@@ -44,9 +44,13 @@
                 <h2 style="font-size: 20px;"><strong>Populares</strong></h2>
                 <div *ngFor="let song of cancionesPopulares; let i = index">
                     <div class="song" (mouseenter)="hoverIndex = i+1"  (mouseleave)="hoverIndex = null">
-                        <p class="song-index" style="margin-right:12px; margin-top: 12px; opacity: 0.8; width: 10px;"><strong *ngIf="!hoverIndex || hoverIndex !== i+1">{{ i + 1 }}</strong><button style="border:none; background-color: transparent; margin: 0px; padding: 0px; color:#000e3b; opacity: 0.8;" *ngIf="hoverIndex === i+1" (click)="playSong(song.id)"> &#9654;</button> </p>
+                        <p class="song-index" style="margin-right:12px; margin-top: 12px; opacity: 0.8; width: 10px;"><strong *ngIf="!hoverIndex || hoverIndex !== i+1">{{ i + 1 }}</strong><button style="border:none; background-color: transparent; margin: 0px; padding: 0px; color:#000e3b; opacity: 0.8; font-size: 11px;" *ngIf="hoverIndex === i+1" (click)="playSong(song.id)"><i class="fas fa-play"></i></button> </p>
                         <img [src]="song.fotoPortada ? song.fotoPortada : 'no_cancion.png'" alt="{{ song.nombre }}">
-                        <div class="song-title"><strong>{{song.nombre}}</strong></div>
+                        <div style="display: flex; flex-direction: column;">
+                            <div class="song-title"><strong>{{song.nombre}}</strong></div>
+                            <p *ngIf="song.featuring" style="margin: 0px;"> ft. {{ song.featuring }}</p>
+                        </div>
+                        
                         <div class="song-plays" style="color:rgb(76, 75, 75);">
                             <p class ="repros" style="margin-bottom: 0px;  white-space: nowrap;">{{song.reproducciones}} {{ song.reproducciones === 1 ? ' Reproducción' : ' Reproducciones' }}</p>
                             <button class="favorite-btn" (click)="toggleFav(song.id)">
@@ -60,10 +64,12 @@
             <div class="meGustan">
                 <h2 style="font-size: 20px; margin-top: 15px;"><strong>Canciones que te gustan</strong></h2>
                 <div class="seccion1">
-                    <div class="fotosJuntas">
-                        <button style = "border: none; background-color: transparent; padding:0px; margin:0;"><img class="foto2" [src]="artista.foto && artista.foto!== 'DEFAULT' ? artista.foto : 'nouser.png'" alt="Foto de perfil"> </button>
-                        <img class="foto3" style="height: 20px; width: 20px; margin-left: -15px; margin-top:67px;" src="corazon.png" alt="Foto corazon">              
-                    </div>
+                    <a [routerLink]="['/home/cancionesFavs', currentUser]" [queryParams]="{ nombreArtistico: artista.nombreArtistico }">
+                        <div class="fotosJuntas">
+                            <button style = "border: none; background-color: transparent; padding:0px; margin:0;"><img class="foto2" [src]="artista.foto && artista.foto!== 'DEFAULT' ? artista.foto : 'nouser.png'" alt="Foto de perfil"> </button>
+                            <img class="foto3" style="height: 20px; width: 20px; margin-left: -15px; margin-top:67px; z-index: 1000;" src="corazon.png" alt="Foto corazon">              
+                        </div>
+                    </a>
                     <div class="numMegustas" tyle="margin-bottom: 0px; ">
                         <p style="font-size: 14px; margin-bottom: 1px;"><strong>Te {{ numeroFavs === 1 ? ' gusta' : ' gustan' }} {{numeroFavs}} {{ numeroFavs === 1 ? ' canción' : ' canciones' }}</strong></p>
                         <p style=" font-size: 12px; margin-bottom: 0px; color: rgb(88, 88, 88);"> De {{artista.nombreArtistico}}</p> 
@@ -98,9 +104,11 @@
                         <div class="tracks-container">       
                             <div *ngFor="let album of albumes; let i = index" class="track-card" [ngClass]="{ 'primer-elemento': i === 0 }">
                                 <div class="dentro-track-card">
-                                    <img [src]="album.fotoPortada ? album.fotoPortada : 'no_cancion.png'" alt="{{ album.nombre}}">
-                                    <strong>{{ album.nombre }}</strong>
-                                    <p>{{ currentUser}}</p> 
+                                    <a [routerLink]="['/home/album', album.id]"> 
+                                        <img [src]="album.fotoPortada ? album.fotoPortada : 'no_cancion.png'" alt="{{ album.nombre}}">
+                                        <strong>{{ album.nombre }}</strong>
+                                        <p>{{ currentUser}}</p> 
+                                    </a>
                                 </div>          
                             </div>
                         </div>

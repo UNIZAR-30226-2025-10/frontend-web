@@ -14,6 +14,7 @@ export class TokenService {
   private progreso = 'progreso';
 
   constructor() { }
+ 
 
   // Guardar token
   setToken(token: string): void {
@@ -91,6 +92,7 @@ export class TokenService {
 
 
 
+
   // Eliminar token (Logout)
   clearStorage(): void {
     localStorage.removeItem(this.tokenKey);
@@ -106,22 +108,6 @@ export class TokenService {
     localStorage.removeItem(this.tokenTempKey);
   }
 
-  // Verificar si el usuario está autenticado
-  isAuthenticatedAndOyente(): boolean {
-    return !!this.getToken() && this.getTipo()=="oyente";
-  }
-
-  isAuthenticatedAndArtista(): boolean {
-    return !!this.getToken() && this.getTipo()=="artista";
-  }
-
-  isAuthenticatedAndPendiente(): boolean {
-    return !!this.getToken() && this.getTipo()=="pendiente";
-  }
-
-  isAuthenticatedAndValido(): boolean {
-    return !!this.getToken() && this.getTipo()=="valido";
-  }
 
   hasTempToken(): boolean {
     return !!this.getTempToken();

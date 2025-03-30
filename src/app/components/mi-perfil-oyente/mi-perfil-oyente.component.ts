@@ -10,7 +10,7 @@ import { PlayerService } from '../../services/player.service';
 import { ProgressService } from '../../services/progress.service';
 import { switchMap } from 'rxjs/operators';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
-
+import { ChangeDetectorRef } from '@angular/core';
 
 interface misDatos {
   nombre: string;
@@ -38,7 +38,6 @@ export class MiPerfilOyenteComponent implements OnInit {
   misPlaylists: any[] = [];
   ultimasCanciones: any[] = [];
   seguidos: any[] = [];
-  isAuthenticated: boolean = false;
   mensajeError = '';
   credentials= {contrasenya:''};
   fotoPortada!: string;
@@ -58,16 +57,10 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   @Output() trackClicked = new EventEmitter<any>();
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private subirCloudinary: SubirCloudinary){}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private subirCloudinary: SubirCloudinary, private changeDetectorRef: ChangeDetectorRef){}
 
   ngOnInit(): void {
 
-    if(!this.tokenService.isAuthenticatedAndOyente()) {
-      this.router.navigate(['/login'])
-      return;
-    }
-
-    this.isAuthenticated = true;
     this.foto = this.tokenService.getUser().fotoPerfil;
     this.fotoNueva = this.foto;
 
@@ -171,6 +164,7 @@ export class MiPerfilOyenteComponent implements OnInit {
             user.fotoPerfil = this.foto;
             this.tokenService.setUser(user);
           }
+          console.log('FOTO PERFIL DESPUES', this.tokenService.getUser().fotoPerfil);
           this.cerrarModal();
         },
         error: (error) => {
@@ -183,21 +177,15 @@ export class MiPerfilOyenteComponent implements OnInit {
         }
       });
     } else {
-      this.authService.cambiarDatosOyente(this.nombreActual, this.fotoNueva).subscribe({
+      this.authService.cambiarDatosOyente(this.nombreActual, this.fotoNueva)
+      .subscribe({
         next: () => {
           this.oyente.nombre = this.nombreActual;
-          this.foto = this.fotoNueva;
-          if (this.foto !== this.tokenService.getUser().fotoPerfil) {
-            const user = this.tokenService.getUser();
-            user.fotoPerfil = this.foto;
-            this.tokenService.setUser(user);
-          }
           this.cerrarModal();
         },
         error: (error) => {
           console.error("Error al guardar los nuevos datos:", error);
           this.nombreActual = this.oyente.nombre;
-          this.fotoNueva = this.foto;
         },
         complete: () => {
           console.log("Datos guardados con éxito");
@@ -340,6 +328,7 @@ onFileSelectedPlaylist(event:any) {
       )
       .subscribe({
         next: () => {   
+          console.log('lo que envio:', this.tokenService.getCancionActual());
           this.tokenService.clearStorage();
           this.router.navigate(['/login']);
         },

@@ -31,7 +31,6 @@ export class MiPerfilArtistaComponent implements OnInit {
   isModalContrasenaOpen = false;
   isModalEliminarOpen = false;
 
-  isAuthenticated: boolean = false;
   oyente: misDatos = { nombreUsuario: '', nombreArtistico: '', biografia: '', nSeguidores: 0, nSeguidos: 0 };
   misCanciones: any[] = [];
   misAlbumes: any[] = [];
@@ -55,30 +54,9 @@ export class MiPerfilArtistaComponent implements OnInit {
   isPasswordViejaVisible: boolean = false;
   isPasswordNuevaVisible: boolean = false;
 
-
-  artistas = [
-    { name: 'Usuario 1', img: 'https://randomuser.me/api/portraits/men/16.jpg', status: 'status-red' },
-    { name: 'Usuario 2', img: 'https://randomuser.me/api/portraits/women/2.jpg', status: 'status-red' },
-    { name: 'Usuario 3', img: 'https://randomuser.me/api/portraits/men/3.jpg', status: 'status-red' },
-    { name: 'Usuario 4', img: 'https://randomuser.me/api/portraits/men/4.jpg', status: 'status-red' },
-    { name: 'Usuario 5', img: 'https://randomuser.me/api/portraits/men/5.jpg', status: 'status-red' },
-    { name: 'Usuario 6', img: 'https://randomuser.me/api/portraits/women/92.jpg', status: 'status-red' },
-    { name: 'Usuario 7', img: 'https://randomuser.me/api/portraits/men/6.jpg', status: 'status-red' },
-    { name: 'Usuario 8', img: 'https://randomuser.me/api/portraits/women/4.jpg', status: 'status-red' },
-    { name: 'Usuario 9', img: 'https://randomuser.me/api/portraits/men/8.jpg', status: 'status-red' },
-    { name: 'Usuario 10', img: 'https://randomuser.me/api/portraits/men/23.jpg', status: 'status-red' }
-  ];
-
   constructor(private authService: AuthService, private tokenService: TokenService,  private router: Router, private playerService: PlayerService, private subirCloudinary: SubirCloudinary){}
 
   ngOnInit(): void {
-
-    if(!this.tokenService.isAuthenticatedAndArtista()) {
-      this.router.navigate(['/login'])
-      return;
-    }
-
-    this.isAuthenticated = true;
 
     this.foto = this.tokenService.getUser().fotoPerfil;
     this.fotoNueva = this.foto;
