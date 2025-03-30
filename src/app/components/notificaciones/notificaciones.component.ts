@@ -46,7 +46,7 @@ export class NotificacionesComponent {
     this.authService.aceptarInvitacion(playlistId)
     .subscribe({
       next: (response) => {   
-        
+        this.misInvitaciones = this.misInvitaciones.filter(invitacion => invitacion.id !== playlistId);
       },
       error: (error) => {
         console.error("Error al aceptar la invitación", error);
@@ -61,7 +61,7 @@ export class NotificacionesComponent {
     this.authService.rechazarInvitacion(playlistId)
     .subscribe({
       next: (response) => {   
-        
+        this.misInvitaciones = this.misInvitaciones.filter(invitacion => invitacion.id !== playlistId);
       },
       error: (error) => {
         console.error("Error al rechazar la invitación", error);

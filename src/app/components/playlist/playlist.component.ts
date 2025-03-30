@@ -32,7 +32,34 @@ export class PlaylistComponent {
     esMiPlaylist: boolean = false;
     soyColaborador: boolean = false; 
     usuarioActual: string = ''; 
+<<<<<<< Updated upstream
     
+=======
+    isModalEditarOpen= false;
+    mensajeError = '';
+
+    nombreActual: string = '';
+    fotoNueva!: string;
+    file!: File;
+
+    //buscador de mis playlists (para añadir canción a una playlist)
+    filteredPlaylists: any[] = [];
+    searchPlaylistTerm: string = '';
+
+    //buscador para invitados
+    searchInvitadosTerm: string = '';
+    searchedInvitados: any[] = [];
+
+    //buscador para playlist vacia
+    searchSongTerm: string = '';
+    searchResults: any[] = [];
+
+    // modal crear playlist
+    isModalPlaylistOpen = false;
+    cancionActual: any;
+    NuevaPlaylist: any;
+
+>>>>>>> Stashed changes
     @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
 
     constructor(private el: ElementRef, private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private route: ActivatedRoute){}
@@ -71,6 +98,30 @@ export class PlaylistComponent {
       this.pedirMisPlaylist(); 
   }
 
+<<<<<<< Updated upstream
+=======
+  abrirModalEditar() {
+    this.isModalEditarOpen = true;
+  }
+
+  cerrarModalEditar() {
+    this.isModalEditarOpen = false;
+    this.fotoNueva = '';
+  }
+
+  abrirModalPlaylist(cancion:any) {
+    this.isModalPlaylistOpen = true;
+    this.cancionActual=cancion;
+    console.log('Modal abierto:', this.isModalPlaylistOpen);
+  }
+
+  cerrarModalPlaylist() {
+    this.isModalPlaylistOpen = false;
+    this.fotoNueva = '';
+  }
+
+
+>>>>>>> Stashed changes
 
   toggleDropdown(cancionId: number): void {
     console.log(`Toggling dropdown for cancionId: ${cancionId}`);
@@ -120,7 +171,12 @@ export class PlaylistComponent {
 
     this.authService.favoritos(id, this.playlist.canciones[cancionIndex].fav)
     .subscribe({
-      next: () => {},
+      next: () => {
+        if (this.playlist.playlist.nombrePlaylist === 'Favoritos') {
+          console.log('Canción eliminada de favoritos:', id);
+          this.playlist.canciones = this.playlist.canciones.filter((c: { id: string; }) => c.id !== id);
+        }
+      },
       error: (error) => {
         console.error("Error al guardar en favoritos:", error);
       },
@@ -148,14 +204,19 @@ export class PlaylistComponent {
   }
   
 
-  getPlaylist(playlistId: string): void {
+  getPlaylist(playlistId: any): void {
     this.authService.pedirDatosPlaylist(playlistId)
     .subscribe({
       next: (response) => {   
         this.playlist = response;
         console.log('Playlist:', this.playlist);
+<<<<<<< Updated upstream
         this.esMiPlaylist = this.playlist?.playlist?.creador === this.usuarioActual;
         this.soyColaborador = this.playlist?.playlist?.colaboradores?.includes(this.usuarioActual);
+=======
+        this.esMiPlaylist = this.playlist?.rol==="creador";
+        this.soyColaborador = this.playlist?.rol==="participante";
+>>>>>>> Stashed changes
         console.log('Es mi playlist?:', this.esMiPlaylist);
         console.log('Soy colaborador?:', this.soyColaborador);
         console.log('usuario', this.usuarioActual);
@@ -170,6 +231,7 @@ export class PlaylistComponent {
     });
   }
 
+<<<<<<< Updated upstream
   getMiNombre(): void {
     this.authService.pedirMiNombre()
     .subscribe({
@@ -187,6 +249,9 @@ export class PlaylistComponent {
   }
 
   anadiraPlaylist(playlistId: string,cancionId:string): void {
+=======
+  anadiraPlaylist(playlistId: any,cancionId:string): void {
+>>>>>>> Stashed changes
     this.authService.addToPlaylist(cancionId,playlistId)
     .subscribe({
       next: (response) => {   
@@ -279,4 +344,204 @@ export class PlaylistComponent {
       });
   }
 
+<<<<<<< Updated upstream
+=======
+  eliminarPlaylist(playlist: any): void {
+    this.authService.deletePlaylist(playlist)
+      .subscribe({
+        next: (response) => {
+          this.location.back();
+        },
+        error: (error) => {
+          console.error("Error al eliminar la playlist");
+        },
+        complete: () => {
+          console.log("Playlist eliminada con éxito");
+        }
+      });
+  }
+
+  cambiarPrivacidad(playlist: any,privacidad:boolean): void {
+    privacidad=!privacidad;
+    this.authService.cambiarPrivacidadPlaylist(playlist,privacidad)
+      .subscribe({
+        next: (response) => {
+        },
+        error: (error) => {
+          console.error("Error al cambiar la privacidad de la playlist");
+        },
+        complete: () => {
+          console.log("Privacidad cambiada con éxito");
+        }
+      });
+  }
+
+  abandonarPlaylist(playlistId: any): void {
+    this.authService.abandonarPlaylist(playlistId)
+    .subscribe({
+      next: (response) => { 
+        this.location.back();
+      },
+      error: (error) => {
+        console.error("Error al abandonar la playlist:", error);
+      },
+      complete: () => {
+        console.log("Playlist abandonada con éxito");
+      }
+    });
+  }
+
+  onFileSelectedPlaylist(event:any) {
+    this.file = event.target.files[0];
+    if (this.file) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+            this.fotoNueva = e.target.result; // Asigna la URL base64 de la imagen a la variable fotoPortada
+        };
+        reader.readAsDataURL(this.file);
+    }
+  }
+
+  guardarCambiosPlaylist() {
+      if (this.file) {
+        this.subirCloudinary.uploadFile(this.file, 'playlist').pipe(
+          switchMap((url) => {
+            console.log('Imagen subida:', url);
+            this.fotoNueva = url;
+            return this.authService.cambiarDatosPlaylist(this.currentPlaylistId,this.nombreActual, this.fotoNueva);
+          })
+        ).subscribe({
+          next: () => {
+            this.playlist.playlist.nombrePlaylist = this.nombreActual;
+            this.playlist.playlist.fotoPortada= this.fotoNueva;
+            this.cerrarModalEditar();
+          },
+          error: (error) => {
+            console.error("Error al guardar los nuevos datos:", error);
+            this.nombreActual = this.playlist.playlist.nombrePlaylist
+          },
+          complete: () => {
+            console.log("Datos guardados con éxito");
+          }
+        });
+      } else {
+        const foto = this.fotoNueva ? this.fotoNueva : "DEFAULT";
+        this.authService.cambiarDatosPlaylist(this.currentPlaylistId,this.nombreActual, foto).subscribe({
+          next: () => {
+            this.playlist.playlist.nombrePlaylist = this.nombreActual;
+            this.cerrarModalEditar();
+          },
+          error: (error) => {
+            console.error("Error al guardar los nuevos datos:", error);
+            this.nombreActual = this.playlist.playlist.nombrePlaylist;
+          },
+          complete: () => {
+            console.log("Datos guardados con éxito");
+          }
+        });
+      }
+    }
+
+    filterPlaylists() {
+      if (!this.searchPlaylistTerm) {
+        this.filteredPlaylists = this.misPlaylists;
+      } else {
+        this.filteredPlaylists = this.misPlaylists.filter(playlist => 
+          playlist.nombre.toLowerCase().includes(this.searchPlaylistTerm.toLowerCase())
+        );
+      }
+    }
+
+    preventDropdownClose(event: Event) {
+      event.stopPropagation();
+    }
+
+    buscarInvitados() {
+      if (!this.searchInvitadosTerm.trim()) {
+        this.searchedInvitados = [];
+        return;
+      }
+
+      this.authService.buscarInvitados(this.searchInvitadosTerm, this.currentPlaylistId)
+        .subscribe({
+          next: (response) => {
+            this.searchedInvitados = response.perfiles || [];
+            console.log('Resultados de búsqueda:', response);
+          },
+          error: (error) => {
+            console.error("Error al buscar invitados:", error);
+            this.searchedInvitados = [];
+          }
+        });
+    }
+
+    searchSongsForPlaylist() {
+      if (!this.searchSongTerm || this.searchSongTerm.trim().length === 0) {
+        this.searchResults = [];
+        return;
+      }
+    
+      if (!this.currentPlaylistId) {
+        console.error('No playlist ID available');
+        return;
+      }
+    
+      this.authService.buscadorPlaylist(this.searchSongTerm,this.currentPlaylistId)
+        .subscribe({
+          next: (response) => {
+            this.searchResults = response.canciones || [];
+            console.log('Resultados de búsqueda:', response);
+          },
+          error: (error) => {
+            console.error("Error al buscar canciones:", error);
+            this.searchResults = [];
+          }
+        });
+      
+    }
+
+    crearPlaylist(cancionId:any): void {
+      if (this.file) {
+        this.subirCloudinary.uploadFile(this.file, 'playlist').pipe(
+          switchMap((url) => {
+            console.log('Imagen subida:', url);
+            this.fotoNueva = url;
+            return this.authService.crearPlaylist(this.fotoNueva,this.nombre);
+          })
+        ).subscribe({
+          next: (response) => {
+            this.NuevaPlaylist=response.id;
+            this.anadiraPlaylist(this.NuevaPlaylist,cancionId);
+            this.cerrarModalPlaylist();
+            console.log("Playlist creada con éxito");
+            this.pedirMisPlaylist(); 
+          },
+          error: (error) => {
+            console.error("Error al crear la playlist", error);
+          },
+          complete: () => {
+            console.log("Playlist creada con éxito");
+          }
+        });
+      } else {
+        const foto = this.fotoNueva ? this.fotoNueva : "DEFAULT";
+        this.authService.crearPlaylist(foto, this.nombre).subscribe({
+          next: (response) => {
+            this.NuevaPlaylist=response.id;
+            this.anadiraPlaylist(this.NuevaPlaylist,cancionId);
+            this.cerrarModalPlaylist();
+            console.log("Playlist creada con éxito");
+            this.pedirMisPlaylist(); 
+          },
+          error: (error) => {
+            console.error("Error al crear la playlist:", error);
+          },
+          complete: () => {
+            console.log("Playlist creada con éxito");
+          }
+        });
+      }
+    }
+
+>>>>>>> Stashed changes
 }
