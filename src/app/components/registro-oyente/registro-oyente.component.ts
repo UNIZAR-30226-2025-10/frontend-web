@@ -43,7 +43,7 @@ export class RegistroOyenteComponent {
     this.isLetterValid = /[A-Za-z]/.test(value);
     this.isNumberValid = /[0-9#?!&]/.test(value);
     this.isLengthValid = value.length >= 10;
-    this.nombreUserCorrecto = !value2.includes("@") && value2 != "";
+    this.nombreUserCorrecto = !value2.includes("@") && !value2.includes(",") && value2 != "";
     this.correoCorrecto = value3.includes("@") &&  value3 !="";
 
     this.isFormValid = this.correoCorrecto && this.nombreUserCorrecto && this.isLetterValid && this.isNumberValid && this.isLengthValid;

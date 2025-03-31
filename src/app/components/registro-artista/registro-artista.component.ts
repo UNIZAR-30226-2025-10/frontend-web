@@ -44,7 +44,7 @@ export class RegistroArtistaComponent {
     this.isLetterValid = /[A-Za-z]/.test(value);
     this.isNumberValid = /[0-9#?!&]/.test(value);
     this.isLengthValid = value.length >= 10;
-    this.nombreUserCorrecto = !value2.includes("@") && value2 != "";
+    this.nombreUserCorrecto = !value2.includes("@") && !value2.includes(",") && value2 != "";
     this.correoCorrecto = value3.includes("@") &&  value3 !="";
     this.nombreArtisticoCorrecto = value4 !="";
 
@@ -71,8 +71,7 @@ export class RegistroArtistaComponent {
         console.error('Error al autenticar:', error);
 
         if (error.status === 400) {
-          const errorResponse = error.error;  // Asumiendo que el mensaje de error está dentro de `error.error`
-
+          const errorResponse = error.error;
 
           if (errorResponse.error.includes('correo')) {
             this.correoError = errorResponse.error; 

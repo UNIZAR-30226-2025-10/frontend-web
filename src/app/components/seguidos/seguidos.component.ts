@@ -19,11 +19,11 @@ export class SeguidosComponent {
   
 
   ngOnInit() {
+
     this.authService.pedirMisSeguidos()
     .subscribe({
       next: (response) => {   
         this.seguidos = response.seguidos;
-        console.log('segudis:', this.seguidos);
         this.filterFollows(this.activeFilter);
       },
       error: (error) => {

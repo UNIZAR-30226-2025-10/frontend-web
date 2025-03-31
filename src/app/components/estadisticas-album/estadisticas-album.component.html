@@ -58,8 +58,8 @@
     <div class="estadisticas">
         <div class="partesMegusta">
             <div class="partes1">
-                <p class="titulo_megustas"><strong>451.862 Me Gustas</strong></p>
-                <div *ngIf="!verMeGustas"><button class="btn-detalles" (click)="abrirMeGustas()">Ver a quién le gusta</button></div>
+                <p class="titulo_megustas"><strong>{{album.favs}}{{ album.favs === 1 ? ' Me Gusta' : ' Me Gustas' }}</strong></p>
+                <div *ngIf="!verMeGustas && album.favs != 0"><button class="btn-detalles" (click)="abrirMeGustas()">Ver a quién le gusta</button></div>
                 <div *ngIf="verMeGustas"><button class="btn-detalles" (click)="cerrarMeGustas()">Ocultar</button></div>
             </div>
             <div class="mostrar" *ngIf="verMeGustas">
@@ -70,15 +70,15 @@
             <div *ngIf="usuarios.length > 0">
                 <div class="container">       
                     <div *ngFor="let usuario of usuarios; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                        <img [src]="usuario.foto && usuario.foto !== 'DEFAULT' ? usuario.foto  : 'nouser.png'" [alt]="usuario.nombre">
-                        <strong>{{ usuario.nombre }}</strong>
+                        <img [src]="usuario.fotoPerfil && usuario.fotoPerfil !== 'DEFAULT' ? usuario.fotoPerfil  : 'nouser.png'" [alt]="usuario.nombreUsuario">
+                        <strong>{{ usuario.nombreUsuario }}</strong>
                     </div>
                 </div>
             </div>
         </div>
         <div class="partes">
             <p class="titulo_repros"><strong>{{album.reproducciones}} {{ album.reproducciones === 1 ? ' Reproducción' : ' Reproducciones' }}</strong></p>
-            <div *ngIf="!verDetalles"><button class="btn-detalles" (click)="abrirDetalles()">Ver detalles</button></div>
+            <div *ngIf="!verDetalles && album.reproducciones != 0"><button class="btn-detalles" (click)="abrirDetalles()">Ver detalles</button></div>
             <div *ngIf="verDetalles"><button class="btn-detalles" (click)="cerrarDetalles()">Ocultar detalles</button></div>
         </div>
         <div *ngIf="verDetalles" class="graficos">

@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { forkJoin, switchMap, tap } from 'rxjs';
 
 interface datosOyente {
   nombre: string;
@@ -32,11 +33,14 @@ interface Noizzy {
 })
 export class PerfilComponent implements OnInit{
 
-  foto: string ='';
   mostrarBarra: boolean = false;
   currentUser: string =  '';
   oyente: datosOyente = { nombre: '', foto:'', nSeguidores: 0, nSeguidos: 0, listasPublicas:0, siguiendo: false};
   ultimoNoizzy: Noizzy = { texto: '', id: 0, fecha: '', like: false};
+  susSeguidos: any[] = [];
+  susSeguidores: any[] = [];
+  susPlaylistsPublicas: any[] = [];
+  suNumeroPlaylistsPublicas: number = 0;
 
 
   @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
@@ -98,7 +102,6 @@ export class PerfilComponent implements OnInit{
   ];
 
   ngOnInit(): void {
-    this.foto = this.tokenService.getUser().fotoPerfil;
     this.mostrarBarra =  false;
 
     const nombreUsuario = this.route.snapshot.paramMap.get('nombreUsuario'); 
@@ -120,30 +123,42 @@ export class PerfilComponent implements OnInit{
       observer.observe(topDiv);
     }
 
-    this.authService.pedirDatosOtroOyente(this.currentUser)
-    .subscribe({
-      next: (response) => {   
+    this.authService.pedirDatosOtroOyente(this.currentUser).pipe(
+      tap((response) => {
         console.log('perfil:', response);
         this.oyente.nombre = response.oyente.nombreUsuario;
         this.oyente.foto = response.oyente.fotoPerfil;
         this.oyente.nSeguidores = response.oyente.numSeguidores;
         this.oyente.nSeguidos = response.oyente.numSeguidos;
-        //this.oyente.listasPublicas = response.oyente.listasPublicas;
         this.oyente.siguiendo = response.oyente.siguiendo;
-        if(response.ultimoNoizzy != null) {
+        
+        if (response.ultimoNoizzy != null) {
           this.ultimoNoizzy.id = response.ultimoNoizzy.id;
           this.ultimoNoizzy.fecha = response.ultimoNoizzy.fecha;
           this.ultimoNoizzy.like = response.ultimoNoizzy.like;
           this.ultimoNoizzy.texto = response.ultimoNoizzy.texto;
         }
+      }),
+      switchMap(() => forkJoin({
+        susSeguidos: this.authService.pedirSeguidosOtro(this.oyente.nombre),
+        susSeguidores: this.authService.pedirSeguidoresOtro(this.oyente.nombre),
+        susPlaylistsPublicas: this.authService.pedirPlaylistsPublicasOtro(this.oyente.nombre)
+      }))
+    ).subscribe({
+      next: (response) => {   
+        this.susSeguidos = response.susSeguidos.seguidos;
+        this.susSeguidores = response.susSeguidores.seguidores;
+        this.susPlaylistsPublicas = response.susPlaylistsPublicas.playlists;
+        this.suNumeroPlaylistsPublicas = response.susPlaylistsPublicas.n_playlists;
       },
       error: (error) => {
-        console.error("Error al guardar los nuevos datos:", error);
+        console.error('Error en alguna de las peticiones:', error);
       },
       complete: () => {
-        console.log("Datos guardados con éxito");
+        console.log('Todas las peticiones completadas');
       }
     });
+    
   }
 
   toggleSeguir() {

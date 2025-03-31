@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SeguidoresComponent {
   
-  seguidos: any[] = [];
+  seguidores: any[] = [];
   filteredSeguidos: any[] = [];
   activeFilter: string = 'all';
 
@@ -19,10 +19,11 @@ export class SeguidoresComponent {
   
 
   ngOnInit() {
-    this.authService.pedirMisSeguidores() // NO EXISTE DE MOMENTO
+
+    this.authService.pedirMisSeguidores()
     .subscribe({
       next: (response) => {   
-        this.seguidos = response.seguidos;
+        this.seguidores = response.seguidores;
         this.filterFollows(this.activeFilter);
       },
       error: (error) => {
@@ -39,9 +40,9 @@ export class SeguidoresComponent {
     this.activeFilter = filter;
 
     if (filter === 'all') {
-      this.filteredSeguidos = this.seguidos;
+      this.filteredSeguidos = this.seguidores;
     } else if (filter === 'artists') {
-      this.filteredSeguidos = this.seguidos.filter(seguido=> seguido.tipo === 'artista');
+      this.filteredSeguidos = this.seguidores.filter(seguido=> seguido.tipo === 'artista');
     }
   }
 

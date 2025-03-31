@@ -9,6 +9,19 @@ import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router'; 
 
+interface Album {
+  nombre: string;
+  fotoPortada: string;
+  nombreArtisticoArtista: string;
+  fechaPublicacion: string;
+  duracion: number;
+  reproducciones: number;
+  nPlaylists: number;
+  favs: number;
+  canciones: any[];
+  minutos: number;
+  segundos: string;
+}
 
 interface Cancion {
   id: number;
@@ -41,7 +54,8 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
   dropdownTopPosition: number = 0; 
   dropdownLeftPosition: number = 0;
   currentIdAlbum: string = '';
-  album: any = {};
+
+  album: Album = { nombre: '', fotoPortada: '', nombreArtisticoArtista: '', fechaPublicacion: '', duracion: 0, reproducciones: 0, nPlaylists:0, favs: 0, canciones: [], minutos:0, segundos:''};
 
   //PARA LA EDICION DEL ALBUM
   nombreActual: string = '';
@@ -49,19 +63,7 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
   fotoNueva!: string;
   file!: File;
 
-  usuarios = [
-    { nombre: "Juan Pérez", foto: "nouser.png" },
-    { nombre: "Ana Gómez", foto: "nouser.png" },
-    { nombre: "Carlos López", foto: "nouser.png" },
-    { nombre: "Maria Rodríguez", foto: "nouser.png" },
-    { nombre: "Pedro Sánchez", foto: "nouser.png" },
-    { nombre: "Juan Pérez", foto: "nouser.png" },
-    { nombre: "Ana Gómez", foto: "nouser.png" },
-    { nombre: "Carlos López", foto: "nouser.png" },
-    { nombre: "Maria Rodríguez", foto: "nouser.png" },
-    { nombre: "Pedro Sánchez", foto: "nouser.png" }
-  ];
-
+  usuarios: any[]= [];
 
   constructor( private route: ActivatedRoute, private location: Location, private authService: AuthService, private subirCloudinary: SubirCloudinary, private router: Router) {
     Chart.register(...registerables);
@@ -74,28 +76,37 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
       this.currentIdAlbum = idAlbum;
     }
 
-    this.authService.datosAlbum(this.currentIdAlbum)
+    this.authService.pedirEstadisticasAlbum(this.currentIdAlbum)
     .subscribe({
       next: (response) => {   
-        this.album = response.album;
+        this.album.nombre = response.nombre;
+        this.album.fotoPortada = response.fotoPortada;
         this.nombreActual = this.album.nombre;
         this.foto = this.album.fotoPortada;
         this.fotoNueva = this.foto;
+        this.album.nombreArtisticoArtista = response.nombreArtisticoArtista
+        this.album.duracion = response.duracion
+        this.album.reproducciones = response.reproducciones
+        this.album.favs = response.favs
+        this.album.nPlaylists = response.nPlaylists
+        this.album.fechaPublicacion = this.formatearFecha(response.fechaPublicacion)
 
         //Ajustar duración album
-        this.album.minutos = Math.floor(response.album.duracion / 60);
-        const segundosRestantes = response.album.duracion % 60;
+        this.album.minutos = Math.floor(response.duracion / 60);
+        const segundosRestantes = response.duracion % 60;
         this.album.segundos = segundosRestantes.toString().padStart(2, "0");
 
         //Ajustar formato de la fecha del album
-        this.album.fechaPublicacion = this.formatearFecha(response.album.fechaPublicacion);
+        this.album.fechaPublicacion = this.formatearFecha(response.fechaPublicacion);
 
         //Ajustar duración canciones
-        this.album.canciones = response.album.canciones.map((cancion: Cancion) => ({
+        this.album.canciones = response.canciones.map((cancion: Cancion) => ({
           ...cancion,
-          duracion: this.convertirTiempo(cancion.duracion),
-          featuring: cancion.featuring.length ? ` ${cancion.featuring.join(', ')}` : ''
+          
+          duracion: this.convertirTiempo(cancion.duracion)
+          //featuring: cancion.featuring.length ? ` ${cancion.featuring.join(', ')}` : ''
         }));
+
       },
       error: (error) => {
         console.error("Error al recibir los datos del álbum:", error);
@@ -215,7 +226,23 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
   }
 
   abrirMeGustas() {
-    this.verMeGustas=true;
+    if (this.usuarios.length === 0) {
+      this.authService.pedirMeGustasAlbum(this.currentIdAlbum)
+      .subscribe({
+        next: (response) => { 
+          this.usuarios = response.oyentes_favs;
+          this.verMeGustas=true;
+        },
+        error: (error) => {
+          console.error("Error al recibir los perfiles que han dado me gusta a la cancion:", error);
+        },
+        complete: () => {
+          console.log("Perfiles recibidos con éxito");
+        }
+      });
+    } else {
+      this.verMeGustas=true;
+    }
   }
 
   cerrarMeGustas() {

@@ -20,6 +20,9 @@
             <div *ngIf="credentials.nombreUsuario.includes(' ')" class="error">
                 El nombre de usuario no puede contener espacios.
             </div>
+            <div *ngIf="credentials.nombreUsuario.includes(',')" class="error">
+                El nombre de usuario no puede contener el carácter ",".
+            </div>
             <div *ngIf="nombreError" class="error">
                 {{ nombreError }}
             </div>

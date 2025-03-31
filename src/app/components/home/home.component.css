@@ -110,14 +110,6 @@
   background-color: transparent;
 }
 
-.dentro-artistcard {
-  display: flex;
-  flex-direction: column; 
-  padding: 8px;
-  max-width: 100%;
-  background-color: transparent;
-  align-items: flex-start;
-}
 
 a {
     text-decoration: none; 

@@ -10,7 +10,7 @@
         </div>
         <div class="song-plays" style="margin-right: 15px;">
             <p class="titulo_album" style="margin-bottom: 0px; width: 120px;">Álbum</p>
-            <p class="titulo_duracion" style="margin-bottom: 0px; width: 140px;">Fecha en la que se añadió</p>
+            <p class="titulo_duracion" style="margin-bottom: 0px; width: 160px;">Fecha en la que se añadió</p>
             <p class="titulo_estats" style="margin-bottom: 0px; width: 120px;">Duración</p>
         </div>
     </div>
@@ -28,10 +28,10 @@
                     <p *ngIf="song.featuring" style="margin: 0px;"> &nbsp;ft.{{ song.featuring }}</p> 
                 </div>
             </div>
-            <div style="display:flex; gap: 0px;">
+            <div style="display:flex; gap: 0px; align-items: center;">
                 <div class="song-plays" style="color:rgb(76, 75, 75);">
                     <p class="albumcancion" style="margin-bottom: 0px; width: 120px;">{{song.album}}</p>     
-                    <p class="fechaanadido" style="margin-bottom: 0px; width: 140px;">{{song.fecha}}</p>         
+                    <p class="fechaanadido" style="margin-bottom: 0px; width: 160px;">{{song.fecha}}</p>         
                     <p class="duracion" style="margin-bottom: 0px; width: 120px;">{{song.duracion}}</p>
                 </div>
                 <div class="tres_puntos">

@@ -91,10 +91,12 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     this.favSubscription = this.favoritosService.actualizarFav$
     .subscribe(favData => {
       if (favData && favData.actualizarFavId) {
-       if(favData.actualizarFavId === this.tokenService.getCancionActual().id) {
-        console.log('dentro evento fav', favData.actualizarFavId);
-        this.actualizarFavMarco()
-       }
+        if (this.tokenService.getCancionActual() != null) {
+          if(favData.actualizarFavId === this.tokenService.getCancionActual().id) {
+            console.log('dentro evento fav', favData.actualizarFavId);
+            this.actualizarFavMarco()
+          }
+        }
       }
     });
     

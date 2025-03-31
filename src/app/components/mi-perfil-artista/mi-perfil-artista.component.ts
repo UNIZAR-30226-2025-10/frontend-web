@@ -146,6 +146,16 @@ export class MiPerfilArtistaComponent implements OnInit {
       return;
     }
 
+    if (this.nombreActual.includes(","))  {
+      this.mensajeError = '*El nombre de usuario no puede contener el carácter ",".';
+      return;
+    }
+
+    if (this.nombreActual.includes("@"))  {
+      this.mensajeError = '*El nombre de usuario no puede contener el carácter "@".';
+      return;
+    }
+
     this.mensajeError = '';
 
     if (this.fotoNueva !== this.foto) {

@@ -7,6 +7,16 @@ import { AuthService } from '../../services/auth.service';
 import { DurationPipe } from '../../pipes/duration.pipe';
 import { FavoritosService } from '../../services/favoritos.service';
 
+interface Album {
+  nombre: string;
+  fotoPortada: string;
+  nombreArtisticoArtista: string;
+  fechaPublicacion: string;
+  duracion: number;
+  reproducciones: number;
+  favs: number;
+  canciones: any[];
+}
 
 interface Cancion {
   id: number;
@@ -27,8 +37,6 @@ interface Cancion {
   styleUrls: ['./album.component.css']  
 })
 export class AlbumComponent implements OnInit {
-  album: any = null;
-  canciones: any[] = [];
 
   currentIndex: number = 0;
   isShuffle: boolean = false;
@@ -40,6 +48,8 @@ export class AlbumComponent implements OnInit {
   showListsDropdown: boolean = false;
   DropdownSeguidores: boolean = false;
   misPlaylists: any[] = [];
+
+  album: Album = { nombre: '', fotoPortada: '', nombreArtisticoArtista: '', fechaPublicacion: '', duracion: 0, reproducciones: 0, favs: 0, canciones: []};
 
 
   @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
@@ -71,11 +81,18 @@ export class AlbumComponent implements OnInit {
   getAlbum(albumId: string): void {
     this.authService.datosAlbum(albumId).subscribe({
       next: (data) => {
-        this.album = data.album; 
-        this.album.fechaPublicacion = this.formatearFecha(data.album.fechaPublicacion)
-        this.canciones = data.album.canciones.map((cancion: Cancion) => ({
+        console.log('recibo1:', data);
+        this.album.nombre = data.nombre; 
+        this.album.fotoPortada = data.fotoPortada
+        this.album.nombreArtisticoArtista = data.nombreArtisticoArtista
+        this.album.duracion = data.duracion
+        this.album.reproducciones = data.reproducciones
+        this.album.favs = data.favs
+        this.album.fechaPublicacion = this.formatearFecha(data.fechaPublicacion)
+
+        this.album.canciones = data.canciones.map((cancion: Cancion) => ({
           ...cancion,
-          featuring: cancion.featuring.length ? ` ${cancion.featuring.join(', ')}` : '',
+          //featuring: cancion.featuring.length ? ` ${cancion.featuring.join(', ')}` : '',
           fechaPublicacion: this.formatearFecha(cancion.fechaPublicacion)
         }));
         console.log('recibo:', this.album);
@@ -129,15 +146,15 @@ export class AlbumComponent implements OnInit {
   }
 
   toggleFav(id: any) {
-    const cancionIndex = this.canciones.findIndex(c => c.id === id);
+    const cancionIndex = this.album.canciones.findIndex(c => c.id === id);
       
     if (cancionIndex !== -1) {
     
-      this.authService.favoritos(id, !this.canciones[cancionIndex].fav)
+      this.authService.favoritos(id, !this.album.canciones[cancionIndex].fav)
       .subscribe({
         next: () => {
-          this.canciones[cancionIndex].fav = !this.canciones[cancionIndex].fav;
-          this.canciones = [...this.canciones];
+          this.album.canciones[cancionIndex].fav = !this.album.canciones[cancionIndex].fav;
+          this.album.canciones = [...this.album.canciones];
   
           //ACTUALIZAR MARCO SI ES LA QUE ESTÁ SONANDO
           this.favoritosService.actualizarFavMarco(id);

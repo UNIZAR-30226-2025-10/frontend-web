@@ -50,7 +50,6 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
   @ViewChild('parteAbajo', { static: false }) parteAbajo!: ElementRef<HTMLElement>;
 
 
-  foto: string = '';
   private headerHeight = 240;
   private dominantColor: string = 'rgb(100, 100, 100)';
   filtroActivo: string = 'canciones';
@@ -71,7 +70,6 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
   constructor(private tokenService: TokenService, private authService: AuthService, private route: ActivatedRoute, private favoritosService: FavoritosService) {}
 
   ngOnInit() {
-    this.foto = this.tokenService.getUser().fotoPerfil;
 
     const nombreUsuario = this.route.snapshot.paramMap.get('nombreUsuario'); 
     if (nombreUsuario) {
