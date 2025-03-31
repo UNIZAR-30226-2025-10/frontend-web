@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Importante para que funcione ngIf, ngFor, etc.
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para trabajar con ngModel
 import { Router } from '@angular/router'; 
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
+import { PlayerService } from '../../services/player.service';
+import { ProgressService } from '../../services/progress.service';
+import { FavoritosService } from '../../services/favoritos.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +24,9 @@ export class LoginComponent {
   errorMessage: string = '';
   errorType: string = '';
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router) {}
+  @Output() trackClicked = new EventEmitter<any>();
+
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private favoritosService: FavoritosService) {}
 
 
   togglePassword(): void {
@@ -38,16 +43,48 @@ export class LoginComponent {
     this.authService.login(this.credentials)
     .subscribe({
       next: (response) => {
+        this.tokenService.clearStorage();
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.usuario);
-        if (response.usuario.tipo === "pendiente") {
+        console.log('soy:', response.usuario)
+        this.tokenService.setTipo(response.tipo);
+
+        if (response.tipo === "pendiente") {
           this.router.navigate(['/pendiente']);
-        } else if (response.usuario.tipo === "valido") {
+        } else if (response.tipo === "valido") {
           this.router.navigate(['/introducirCodigo']);
-        } else if (response.usuario.tipo === "admin") {
+        } else if (response.tipo === "admin") {
           this.router.navigate(['/admin']);
         } else {
-          this.router.navigate(['/home/home']);
+          
+        /*this.authService.pedirCancionActual()
+          .subscribe({
+            next: (response) => {
+              if (response != null) {
+                console.log('actual: ', response);
+                console.log('id actualizar:', this.favoritosService.actualizarFavSource.getValue())
+                this.favoritosService.actualizarFavSource.next({ actualizarFavId: null})
+                console.log('id actualizar:', this.favoritosService.actualizarFavSource.getValue())
+                this.tokenService.setCancionActual(null);
+                if (response.cancion != null)  {
+                  this.tokenService.setProgresoLocal(response.cancion.progreso);
+                  if(response.coleccion != null) {
+                    this.tokenService.setCancionActual(response.cancion);
+                    this.tokenService.setColeccionActual(response.coleccion);
+                  } else {
+                    this.tokenService.setCancionActual(response.cancion);
+                  }
+                } 
+              }            
+            },
+            error: (error) => {
+              console.error('Error al pedir cancion actual:', error);
+            },
+            complete: () => {
+              console.log('Petición completada');
+              this.router.navigate(['/home/home']);
+            }
+          })*/
         }
       },
       error: (error) => {

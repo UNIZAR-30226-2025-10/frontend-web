@@ -44,7 +44,7 @@ export class RegistroArtistaComponent {
     this.isLetterValid = /[A-Za-z]/.test(value);
     this.isNumberValid = /[0-9#?!&]/.test(value);
     this.isLengthValid = value.length >= 10;
-    this.nombreUserCorrecto = !value2.includes("@") && value2 != "";
+    this.nombreUserCorrecto = !value2.includes("@") && !value2.includes(",") && value2 != "";
     this.correoCorrecto = value3.includes("@") &&  value3 !="";
     this.nombreArtisticoCorrecto = value4 !="";
 
@@ -58,40 +58,40 @@ export class RegistroArtistaComponent {
 
 
   onSubmit(): void {
-
     this.authService.registerArtista(this.credentials)
     .subscribe({
       next: (response) => {
+        this.tokenService.clearStorage();
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.pendiente);
+        this.tokenService.setTipo(response.tipo);
         this.router.navigate(['/pendiente']);
       },
       error: (error) => {
         console.error('Error al autenticar:', error);
 
-        if (error.status === 409) {
-          const errorResponse = error.error;  // Asumiendo que el mensaje de error está dentro de `error.error`
+        if (error.status === 400) {
+          const errorResponse = error.error;
 
-          // Si el error contiene un mensaje específico de correo ya en uso
           if (errorResponse.error.includes('correo')) {
-            this.correoError = errorResponse.error; // Muestra el mensaje específico de correo
-            this.errorMessage = ''; // Limpiar el mensaje genérico
+            this.correoError = errorResponse.error; 
+            this.errorMessage = ''; 
           } else {
-            this.correoError = ''; // Limpiar el mensaje de correo
+            this.correoError = ''; 
           }
 
-          // Si el error contiene un mensaje específico de nombre de usuario ya en uso
+
           if (errorResponse.error.includes('nombre')) {
-            this.nombreError = errorResponse.error; // Muestra el mensaje específico de nombre de usuario
-            this.errorMessage = ''; // Limpiar el mensaje genérico
+            this.nombreError = errorResponse.error;
+            this.errorMessage = '';
           } else {
-            this.nombreError = ''; // Limpiar el mensaje de nombre de usuario
+            this.nombreError = ''; 
           }
 
         } else {
           this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
-          this.correoError = '';  // Limpiar error de correo
-          this.nombreError = '';  // Limpiar error de nombre
+          this.correoError = ''; 
+          this.nombreError = '';  
         }
 
 

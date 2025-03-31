@@ -27,6 +27,19 @@ body {
     flex-grow: 1.8;
 }
 
+.btn-artista {
+    border: none;
+    background-color: transparent;
+    padding: 0px;
+    margin: 0px;
+}
+
+.btn-artista:hover {
+    text-decoration: underline;
+}
+
+
+
 /* Barra de progreso */
 .progress-container {
     width: 100%;
@@ -53,7 +66,7 @@ body {
     appearance: none;
     width: 10px;
     height: 10px;
-    border-radius: 50%;
+    border-radius: 20%;
     background-color: #8ca4ff;
     cursor: pointer;
   }
@@ -97,6 +110,7 @@ body {
     display: flex;
     flex-direction: column;
     max-width: 100%; /* Asegura que el texto no se desborde */
+    align-items: flex-start;
 }
 
 .track-info h3,
@@ -107,6 +121,7 @@ body {
     overflow: hidden;
     font-size: 13px;
     max-width: 200px; /* Ajusta esto al tamaño deseado */
+    color: #000E3B;
 }
 
 .favorite-btn {
@@ -197,10 +212,11 @@ body {
     height: 4px;
     cursor: pointer;
     appearance: none;
+    border-radius: 5px;
+    background: #000E3B;
 }
 
-.volume-control input::-webkit-slider-runnable-track {
-    background: #000E3B;  /* Color de la barra */
+.volume-control input::-webkit-slider-runnable-track {  
     height: 4px; /* Grosor de la barra */
     border-radius: 5px;
 }
@@ -253,6 +269,14 @@ body {
     .time-left, .time-right {
         font-size: 10px;
     }
+    .time-left {
+        margin-right: 5px;
+    }
+      
+    .time-right {
+        margin-left: 5px;
+    }
+    
 
     .track-info {
         max-width: 30%; /* Reducido en pantallas pequeñas */

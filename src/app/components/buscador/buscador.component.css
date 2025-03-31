@@ -66,13 +66,13 @@ button {
     color: white;
 }
 
-<<<<<<< Updated upstream
-=======
+
 .foto {
     width: 30px;
     height: 30px;
     border-radius: 50%;
 }
+
 
 .notis-btn a {
     color: inherit !important; 
@@ -84,7 +84,6 @@ color: white !important;
 }
   
 
->>>>>>> Stashed changes
 @media (max-width: 768px) {
     .logo {
         width: 20px;

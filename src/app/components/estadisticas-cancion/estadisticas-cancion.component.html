@@ -1,0 +1,84 @@
+<div *ngIf="eliminarModalIsOpen" class="modal-overlay">
+    <div class="modal-content">
+        <div class="cabecera" style="display: flex;justify-content: space-between;">
+            <button (click)="cerrarComprobacionEliminar()" class="btn-cerrar"><i class="fas fa-times"></i></button>
+        </div>
+
+        <p style="margin:0px; color:#000e3b; font-size: 17px; margin-bottom: 5px;"><strong>¿Está seguro de que desea eliminar esta canción?</strong></p>
+        <p style="margin:0px; color:#000e3b; text-align: justify;" >Al hacerlo, desaparecerá completamente del sistema. Se perderán todas sus reproducciones, 'Me gusta' y cualquier playlist en la que haya sido añadida. Esta acción es irreversible.</p>
+        <div class="boton" style="display: flex; justify-content: center;">
+            <button (click)="eliminarCancion()" class="btn-eliminar">Eliminar Canción</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="top-div">
+    <div class="column1">
+        <img [src]="cancion.fotoPortada && cancion.fotoPortada!== 'DEFAULT' ? cancion.fotoPortada : 'no_cancion.png'" alt="Foto portada" crossOrigin="anonymous">
+    </div>
+
+    <div class="column2">   
+        <div *ngIf="cancion.nombre">
+            <h1>{{cancion.nombre}}</h1>
+            <h4><strong>De {{cancion.album}}</strong></h4>
+            <h4 class ="fecha">{{cancion.minutos}} minutos {{cancion.segundos}} segundos</h4>
+            <h4 class ="fecha">{{cancion.fechaPublicacion}}</h4>
+        </div>
+    </div>
+
+    <div class="column3">
+        <button class="btn-album" (click)="abrirComprobacionEliminar()">Eliminar Canción</button>
+    </div>
+</div>
+
+<div class="bottom-div">
+    <div class="estadisticas">
+        <p class="titulo_repros"><strong> {{cancion.reproducciones}}{{ cancion.reproducciones === 1 ? ' Reproducción' : ' Reproducciones' }}</strong></p>
+        <div class="partesMegusta">
+            <div class="partes1">
+                <p class="titulo_megustas"><strong>{{cancion.favs}}{{ cancion.favs === 1 ? ' Me Gusta' : ' Me Gustas' }}</strong></p>
+                <div *ngIf="!verMeGustas && cancion.favs != 0"><button class="btn-detalles" (click)="abrirMeGustas()">Ver a quién le gusta</button></div>
+                <div *ngIf="verMeGustas"><button class="btn-detalles" (click)="cerrarMeGustas()">Ocultar</button></div>
+            </div>
+            <div class="mostrar" *ngIf="verMeGustas">
+                <button class="btn-detalles" style="margin:0px;">Mostrar todos</button>
+            </div>
+        </div>
+        <div *ngIf="verMeGustas">
+            <div *ngIf="usuarios.length > 0">
+                <div class="container">       
+                    <div *ngFor="let usuario of usuarios; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                        <img [src]="usuario.fotoPerfil && usuario.fotoPerfil !== 'DEFAULT' ? usuario.fotoPerfil  : 'nouser.png'" [alt]="usuario.nombreUsuario">
+                        <strong>{{ usuario.nombreUsuario }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="partesMegusta">
+            <div class="partes1">
+                <p class="titulo_megustas"><strong>Añadida a {{cancion.nPlaylists}}{{ cancion.nPlaylists === 1 ? ' Playlist' : ' Playlists' }}</strong></p>
+                <div *ngIf="!verPlaylists && cancion.nPlaylists != 0"><button class="btn-detalles" (click)="abrirPlaylists()">Ver playlists</button></div>
+                <div *ngIf="verPlaylists"><button class="btn-detalles" (click)="cerrarPlaylists()">Ocultar</button></div>
+            </div>
+            <div class="mostrar" *ngIf="verPlaylists">
+                <button class="btn-detalles" style="margin:0px;">Mostrar todas</button>
+            </div>
+        </div>
+        <div *ngIf="verPlaylists">
+            <div *ngIf="privadas != 0"> <p style="margin:0px; margin-left: 30px; font-size: 13px;">+ {{privadas}} {{ privadas === 1 ? ' playlist privada' : ' playlists privadas' }}</p></div>
+            <div *ngIf="playlists.length > 0">
+                <div class="container">       
+                    <div *ngFor="let playlist of playlists; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                        <div class="dentro-card">
+                            <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
+                            <strong>{{ playlist.nombre }}</strong>
+                            <p style="margin:0px;">{{ playlist.creador }}</p>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

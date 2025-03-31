@@ -24,7 +24,7 @@ export class OlvidoContrasena1Component {
     this.authService.enviarCorreo(this.credentials)
     .subscribe({
       next: () => {
-        this.router.navigate(['/olvidoContrasena2', this.credentials.correo]);
+        this.router.navigate(['/olvidoContrasena2'], {state: { correo: this.credentials.correo }} );
       },
       error: (error) => {
         console.error('Error al verificar el correo:', error);

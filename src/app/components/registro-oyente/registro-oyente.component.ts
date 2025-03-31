@@ -43,7 +43,7 @@ export class RegistroOyenteComponent {
     this.isLetterValid = /[A-Za-z]/.test(value);
     this.isNumberValid = /[0-9#?!&]/.test(value);
     this.isLengthValid = value.length >= 10;
-    this.nombreUserCorrecto = !value2.includes("@") && value2 != "";
+    this.nombreUserCorrecto = !value2.includes("@") && !value2.includes(",") && value2 != "";
     this.correoCorrecto = value3.includes("@") &&  value3 !="";
 
     this.isFormValid = this.correoCorrecto && this.nombreUserCorrecto && this.isLetterValid && this.isNumberValid && this.isLengthValid;
@@ -58,14 +58,16 @@ export class RegistroOyenteComponent {
     this.authService.registerOyente(this.credentials)
     .subscribe({
       next: (response) => {
+        this.tokenService.clearStorage();
         this.tokenService.setToken(response.token);
         this.tokenService.setUser(response.oyente);
+        this.tokenService.setTipo(response.tipo);
         this.router.navigate(['/home/home']);
       },
       error: (error) => {
         console.error('Error al autenticar:', error);
 
-        if (error.status === 409) {
+        if (error.status === 400) {
           const errorResponse = error.error;  // Asumiendo que el mensaje de error está dentro de `error.error`
 
           // Si el error contiene un mensaje específico de correo ya en uso

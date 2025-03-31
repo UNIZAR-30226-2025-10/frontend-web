@@ -1,0 +1,475 @@
+body {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    background-color: #dddcdc;
+}
+.todo {
+    width: 100%;
+    height: 100vh;/* Altura fija para permitir el scroll interno */
+    overflow-y: auto; /* Habilita el scroll vertical */
+    position: relative;
+}
+.todo::-webkit-scrollbar {
+    display: none;
+}
+.top-bar {
+    display: none;
+    height: 55px;
+    position: sticky;
+    gap: 3px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    z-index: 1000;
+}
+.play-btn2 {
+    font-size: 25px;
+    color: white;
+    background-color: transparent; 
+    border-radius: 50%; /* Hace el botón circular */
+    cursor: pointer;
+    border: none; /* Eliminar el borde */
+    outline: none; /* Eliminar el círculo de enfoque (outline) */
+}
+  
+h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 1000;
+}
+h5 {
+    font-size: 16px;
+    margin-right: 5px; 
+    margin-left: 7px; 
+    font-weight: 520;
+}
+.header {
+    height: auto;
+    background-color: #e9e6e6; /* Fondo de ejemplo */
+    top: 0;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 4fr; /* Divide en 3 columnas de igual tamaño */
+    flex-wrap: wrap; /* Permite que el contenido fluya a la siguiente línea */
+    text-align: flex-start; /* Centra el texto */
+    word-break: break-word;
+    padding: 5px;
+}
+.header h1 {
+    font-size: 80px;
+    margin-bottom: 0px;
+}
+.foto {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    height: auto;
+}
+.foto img {
+    height: 200px;
+    border-radius: 50%;
+    margin: 20px 15px 20px 20px;
+}
+.datos {
+    height: auto;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Centra los elementos horizontalmente */
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: left; /* Alinea el texto a la izquierda */
+    word-break: break-word;
+}
+.stats {
+    display: flex;
+    font-size: 16px;
+    align-items: center;
+}
+.verificado {
+    height:22px;
+    margin-right: 3px;
+}
+h4 {
+    font-size: 14px;
+    margin-top: 3px;
+}
+
+.seguir {
+    margin-left: 20px;
+    padding: 3px;
+    height: auto;
+    width: auto;
+    border-radius: 20px;
+    background-color: #000e3b;
+    border: 2px solid #000e3b;
+    color: white;
+    text-align: center;
+}
+
+.seguir:hover {
+    background-color: #343c55;
+}
+
+.botones {
+    padding: 10px 0px 10px 30px;
+    margin-left: 15px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-items: center;
+    width: auto;
+    height: 100px;
+}
+
+.play-btn {
+    font-size: 55px;
+    color: #000e3b;
+    background-color: transparent; 
+    border-radius: 50%; /* Hace el botón circular */
+    cursor: pointer;
+    border: none; /* Eliminar el borde */
+    outline: none; /* Eliminar el círculo de enfoque (outline) */
+}
+
+.shuffle-btn {
+    font-size: 35px;
+    color: #000e3b;
+    background-color: transparent; 
+    margin-top: 12px;
+    cursor: pointer;
+    border: none; 
+    outline: none;
+}
+.btn-noizz {
+    height: 30px;
+    width: 130px;
+    margin-left: 4px;
+    border-radius: 20px;
+    background-color: #000e3b;
+    border: 1.5px solid #000e3b;
+    color: white;
+    text-align: center;
+}
+
+.btn-noizz:hover {
+    background-color: #343c55;
+}
+.popular-songs {
+    color: #000e3b;
+    padding: 0px 50px 12px 50px;
+    width: auto;
+    max-width: 800px;
+    overflow: hidden;
+}
+.song {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding: 0px 15px;
+    font-size: 13px;
+    transition: transform 0.2s ease-in-out, background-color 0.3s ease-in-out;
+    width: auto; 
+}
+.song:hover {
+    background-color: white; /* Cambia el color de fondo a blanco */
+    transform: scale(1.01); /* Aumenta ligeramente el tamaño de la canción */
+}
+
+.song img {
+    width: 44px;
+    height: 44px;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+.song-title {
+    flex-grow: 1;
+    margin-right: 20px;
+    white-space: nowrap; /* Evita que el título se rompa en varias líneas */
+    text-overflow: ellipsis; 
+    overflow: hidden;
+}
+.song-plays {
+    display: flex;
+    gap: 20px;
+    text-align: center;
+    align-items: center;
+    margin-left: auto;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    color:rgb(76, 75, 75); /* Color del corazón */
+    font-size: 20px;
+    cursor: pointer;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.favorite-btn:hover {
+    opacity: 0.9;
+}
+
+.favorite-btn i {
+    transition: color 0.2s ease;
+}
+
+.favorite-btn .fas {
+    color:rgb(76, 75, 75); /* Corazón relleno */
+}
+
+.favorite-btn .far {
+    color:rgb(76, 75, 75); /* Corazón vacío */
+}
+
+.meGustan {
+    color: #000e3b;
+    padding: 0px 50px 10px 50px;
+}
+.seccion1 {
+    display: flex;
+
+}
+.fotosJuntas {
+    display: flex;
+}
+.seccion1 img{
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    margin-top: 10px;
+    margin-left: 15px;
+}
+.foto2:hover {
+    transform: scale(1.03);
+}
+
+.numMegustas {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    justify-content: center;
+}
+.discografia {
+    color: #000e3b;
+    padding: 0px 0px 20px 0px;
+}
+.opciones {
+    display: flex;
+    gap:13px;
+    padding: 5px 50px;
+}
+.boton-filtro {
+    padding: 1px 8px;
+    height: 25px;
+    border-radius: 15px;
+    border: 1.7px solid #000e3b;
+}
+.boton-filtro.activo {
+    background-color: #000e3b;
+
+}
+
+.boton-filtro.activo h3 {
+    color:white;
+}
+
+.boton-filtro:hover {
+    background-color: #afb6d0;
+}
+
+.boton-filtro.activo:hover {
+    background-color: #000e3b;
+}
+h3 {
+    font-size: 12px;
+    color: #000e3b;
+    margin: 0px;
+}
+.primer-elemento {
+    margin-left: 30px; /* O el margen que necesites */
+}
+
+.tracks-container {
+    display: flex;
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
+    white-space: nowrap;
+    max-width: 100%; 
+
+}
+
+.tracks-container::-webkit-scrollbar {
+    display: none;
+}
+
+.track-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color:#000e3b ;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 150px; /*  Tamaño base */
+    height: 100%;
+    min-width: 140px; /*  Evita que desaparezca en pantallas pequeñas */
+    flex: 0 0 auto; /*  Permite ajuste flexible */
+    max-width: 100%; /*  Evita que se salga del contenedor */
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    
+}
+
+.track-card strong {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.track-card p {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+.track-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.dentro-track-card {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos (imagen y texto) en columna */
+    align-items: flex-start; /* Alinea la imagen y el texto horizontalmente */
+    justify-content: center; /* Alinea la imagen y el texto verticalmente */
+    text-align: center;
+    padding: 8px;
+    max-width: 100%;
+}
+
+.dentro-track-card a {
+    text-align: left;
+    text-decoration: none; 
+    color: inherit; 
+    display: inline-block; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%; 
+}
+
+.track-card:hover {
+    background: rgb(230, 230, 230);
+    transform: scale(1.03); /*  Efecto más sutil */
+}
+
+a {
+    text-decoration: none; 
+    color: inherit; 
+    all: unset; 
+    display: contents;
+}
+
+a:focus,
+a:active,
+a:hover {
+    outline: none; 
+    text-decoration: none; 
+    color: inherit;
+}
+
+.dropdown-content {
+    position: absolute; /* Posiciona el desplegable de manera absoluta en relación al contenedor */
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 4px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100; /* Asegura que el desplegable esté por encima de otros elementos */
+    display: block;
+    max-width: 200px; /* Ancho máximo del desplegable */
+    font-size: 14px;
+}
+
+.opcion_desplegable {
+    border:none; 
+    background-color: transparent; 
+    color: rgb(76, 75, 75);
+}
+
+.opcion_desplegable:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 650px) {
+
+    .header h1 {
+        font-size: 40px;
+    }
+    h4 {
+        font-size: 10px;
+      }
+    h5 {
+      font-size: 13px;
+    }
+    .bio {
+        font-size: 13px;
+    }
+    .verificado {
+        height:15px;
+    }
+    .foto img {
+      height: 110px;
+      width: 110px;
+
+    }
+}
+
+@media (max-width: 550px) {
+    .repros {
+        display: none;
+    }
+    
+}
+
+ @media (max-width: 450px) {
+    .header h1 {
+        font-size: 20px;
+    }
+    h4 {
+        font-size: 8px;
+      }
+    h5 {
+      font-size: 8px;
+    }
+    .bio {
+        font-size: 8px;
+        margin-bottom: 8px;
+    }
+    .verificado {
+        height:12px;
+    }
+
+  }
+  
+

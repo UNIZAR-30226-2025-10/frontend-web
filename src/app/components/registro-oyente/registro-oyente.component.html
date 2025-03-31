@@ -5,7 +5,7 @@
         <form (ngSubmit)="onSubmit()">
             <label for="email">Dirección de correo electrónico</label>
             <input type="email" id="email" [(ngModel)]="credentials.correo" name="email" placeholder="Correo electrónico" required (input)="onPasswordChange()">
-            <div *ngIf="!credentials.correo.includes('@')" class="error">
+            <div *ngIf="credentials.correo && !credentials.correo.includes('@')" class="error">
                 La dirección de correo electrónico es inválida.
             </div>
             <div *ngIf="correoError" class="error">
@@ -19,6 +19,9 @@
             </div>
             <div *ngIf="credentials.nombreUsuario.includes(' ')" class="error">
                 El nombre de usuario no puede contener espacios.
+            </div>
+            <div *ngIf="credentials.nombreUsuario.includes(',')" class="error">
+                El nombre de usuario no puede contener el carácter ",".
             </div>
             <div *ngIf="nombreError" class="error">
                 {{ nombreError }}

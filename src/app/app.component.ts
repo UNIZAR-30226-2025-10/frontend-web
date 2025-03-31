@@ -1,9 +1,10 @@
+import {Component, OnInit} from '@angular/core'
 import {RouterOutlet} from '@angular/router'
 import { Router } from '@angular/router';
 import { TokenService } from './services/token.service';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
-import { Component, LOCALE_ID, OnInit } from '@angular/core';
+import { LOCALE_ID } from '@angular/core';
 
 registerLocaleData(localeEs);
 
@@ -13,7 +14,7 @@ selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [
-    { provide: LOCALE_ID, useValue: 'es' } // Establecer idioma por defecto como español
+    { provide: LOCALE_ID, useValue: 'es' } 
   ]
 
 })

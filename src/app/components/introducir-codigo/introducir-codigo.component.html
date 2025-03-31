@@ -1,7 +1,13 @@
 <body>
     <section class="container">
         <form (ngSubmit)="onSubmit()">
-            <input type="text" id="code" [(ngModel)]="code" name="code" placeholder="Introduce el código" required>
+            <div class="password-container">
+                <input [type]="isPasswordVisible ? 'text' : 'password'" id="codigo" [(ngModel)]="credentials.codigo" name="codigo" placeholder="Introduce el código" required />
+                <i [ngClass]="isPasswordVisible ? 'fas fa-eye' : 'fas fa-eye-slash'" (click)="togglePassword()" class="toggle-password"></i>
+            </div>
+            <div *ngIf="errorMessage" class="error-message">
+                <p>{{ errorMessage }}</p>
+            </div>
             
             <button type="submit" class="btn">Crear Cuenta de Artista</button>
         </form>

@@ -1,5 +1,7 @@
 body {
-    background-color: #8ca4ff;
+    background: linear-gradient(270deg, #f4a8e6, #b3c7f9, #accff2, #89a7f7, #bf95c6);
+    background-size: 400% 400%;
+    animation: animacionFondo 10s ease infinite; 
     color: white;
     font-family: 'Inter', sans-serif;
     display: flex;
@@ -7,6 +9,25 @@ body {
     align-items: center;
     min-height: 100vh;
 }
+
+@keyframes animacionFondo {
+    0% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 80% 20%;
+    }
+    50% {
+      background-position: 20% 80%;
+    }
+    75% {
+      background-position: 100% 40%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+}
+
 .container {
     background-color: #000e3b;
     padding: 50px;
@@ -108,7 +129,8 @@ a:hover strong {
 }
 @media (max-width: 576px) {
     body {
-        background-color: #000e3b;
+        background: #000e3b !important;
+        animation: none !important; 
     }
     .container {
         padding: 20px;

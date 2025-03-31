@@ -6,11 +6,12 @@ import { PlayerService } from '../../services/player.service';
 import { LimpiarBuscadorService } from '../../services/limpiar-buscador.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-resultados',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './resultados.component.html',
   styleUrls: ['./resultados.component.css']
 })
@@ -20,6 +21,7 @@ export class ResultadosComponent implements OnInit {
   tracks: any[] = [];
   albums: any[] = [];
   playlists: any[] = [];
+  perfiles: any[] = [];
   filtroActivo: string = 'todo';
 
   @Output() trackClicked = new EventEmitter<any>();
@@ -34,15 +36,21 @@ export class ResultadosComponent implements OnInit {
     });
 
     // Suscribirse al servicio para obtener los resultados
-    this.resultadosService.resultados$.subscribe(data => {
-      if (data) {
+    this.resultadosService.resultados$
+    .subscribe({
+      next: (data) => {
         // Guardar los valores en las variables correspondientes
-        this.artists = data.artists ?? [];
-        this.tracks = data.tracks ?? [];
-        this.albums = data.albums ?? [];
+        this.artists = data.artistas ?? [];
+        this.tracks = data.canciones ?? [];
+        this.albums = data.albumes ?? [];
         this.playlists = data.playlists ?? [];
-      } else {
-        console.warn('No hay resultados disponibles.');
+        this.perfiles = data.perfiles ?? [];
+      },
+      error: (error) => {
+        console.error('Error al autenticar:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
       }
     });
   }
@@ -78,6 +86,19 @@ export class ResultadosComponent implements OnInit {
 
   cambiarFiltro(filtro: string) {
     this.filtroActivo = filtro;
+  }
+
+  onScroll(event: Event): void {
+    const scrollTop = (event.target as HTMLElement).scrollTop; 
+    const filtros = document.querySelector('.filtros'); 
+    
+    if (filtros) {
+      if (scrollTop > 10) {
+          filtros.classList.add('scrolled'); 
+      } else {
+          filtros.classList.remove('scrolled'); 
+      }
+    }
   }
 
 }

@@ -3,13 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlayerService } from '../../services/player.service';
 import { Subscription } from 'rxjs';
-
-declare global {
-  interface Window {
-    onSpotifyWebPlaybackSDKReady: () => void;
-    Spotify: any;
-  }
-}
+import { AuthService } from '../../services/auth.service';
+import { TokenService } from '../../services/token.service';
+import { ProgressService } from '../../services/progress.service';
+import { FavoritosService } from '../../services/favoritos.service';
+import { Router } from '@angular/router';
 
 
 
@@ -20,35 +18,127 @@ declare global {
   standalone: true,
   imports: [CommonModule, FormsModule]
 })
+
+
 export class MusicPlayerComponent implements OnInit, OnDestroy {
+
+  songData: any;
 
   @ViewChild('audioElement') audioElementRef!: ElementRef<HTMLAudioElement>; 
   currentTrack: any = null;
+
+
   isPlaying: boolean = false;
   private trackSubscription!: Subscription;
+  private progressSubscription!: Subscription;
+  private favSubscription!: Subscription;
+
   currentTime: number = 0; // Tiempo actual de la canción
   duration: number = 0;
-  volume: number = 50;
-  player: any;  
+
+  volume: number = 50; //LUEGO SE COGE EL VOLUMEN QUE ME DEN AL INICIAR SESION
+   
   isFavorite = false;
   screenWidth: number = window.innerWidth;
+
+  //PARA MANEJAR CUANTO TIEMPO DE LA CANCION SE HA REPRODUCIDO
+  secondsListened: number = 0;  // Segundos reales escuchados
+  lastTime: number = 0;         // Último tiempo registrado para detectar adelantos
+  hasCalledAPI: boolean = false;  // Para evitar llamadas duplicadas a la API
+
+
+
+  constructor(private playerService: PlayerService, private authService:AuthService, private tokenService : TokenService, private progressService: ProgressService, private favoritosService: FavoritosService, private router: Router){}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
     this.screenWidth = (event.target as Window).innerWidth; 
   }
 
-  constructor(private playerService: PlayerService) {}
 
   ngOnInit() {
+    
+    if(this.tokenService.getCancionActual() != null) {
+      console.log('q tengo en local: ', this.tokenService.getCancionActual());
+      this.currentTrack = this.tokenService.getCancionActual();
+      this.isPlaying = false;
+      this.playerService.isPlayingSubject.next(false);
+      this.isFavorite = this.tokenService.getCancionActual().fav;
+      console.log('isFavorite:', this.isFavorite);
+    }
+
+    console.log("Valor inicial de currentTrack$:", this.playerService.currentTrackSource.getValue());
+
+
+
     // Nos suscribimos al observable para recibir el track actualizado
-    this.trackSubscription = this.playerService.currentTrack$.subscribe(track => {
-      if (track) {
-        this.playTrack(track);
-      } else {
-        this.stopTrack();
+    this.trackSubscription = this.playerService.currentTrack$.subscribe(trackData => {
+      if (trackData && trackData.track) {
+        this.currentTrack = trackData.track; // Actualiza el track actual
+        if(!trackData.coleccion) {
+          console.log('cancion sola', trackData.track);
+          console.log('cancion sola2', this.currentTrack.id);
+          this.playTrack();
+        } else {
+          console.log('cancion en coleccion', trackData.coleccion);
+          console.log('cancion en coleccion', trackData.track);
+          this.playTrackInCollection(trackData.coleccion);
+        }
       }
     });
+
+    // Nos suscribimos al observable para recibir si hay que actualizar el fav del marco.
+    this.favSubscription = this.favoritosService.actualizarFav$
+    .subscribe(favData => {
+      if (favData && favData.actualizarFavId) {
+        if (this.tokenService.getCancionActual() != null) {
+          if(favData.actualizarFavId === this.tokenService.getCancionActual().id) {
+            console.log('dentro evento fav', favData.actualizarFavId);
+            this.actualizarFavMarco()
+          }
+        }
+      }
+    });
+    
+    
+    this.setInitialVolumeProgress();
+
+    setInterval(() => {
+      this.updateDuration();
+    }, 500);
+
+  }
+
+  ngAfterViewInit() {
+    if(this.currentTrack != null) {
+      if (this.audioElementRef && this.audioElementRef.nativeElement) {
+        const audioElement = this.audioElementRef.nativeElement;
+  
+    
+      if (audioElement.src !== this.tokenService.getCancionActual().audio) {
+        audioElement.src = this.tokenService.getCancionActual().audio;
+      }
+  
+      audioElement.currentTime = this.tokenService.getProgresoLocal();
+      
+      audioElement.addEventListener('ended', () => {
+        this.onSongEnd();
+      });
+        
+      }
+    }
+  }
+  
+
+  updateDuration() {
+    const audio = this.audioElementRef.nativeElement;
+  
+    // Verificamos si la duración es válida
+    if (audio && !isNaN(audio.duration) && audio.duration > 0) {
+      this.duration = audio.duration;
+    }else {
+      this.duration = 0; // O cualquier otro valor por defecto
+    }
   }
 
   ngOnDestroy() {
@@ -56,14 +146,15 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     if (this.trackSubscription) {
       this.trackSubscription.unsubscribe();
     }
-  }
+    if (this.progressSubscription) {
+      this.progressSubscription.unsubscribe();
+    }
 
-  playTrack(track: any) {
-    console.log('Reproduciendo: ' + track.name);
-    this.currentTrack = track;
-    this.isPlaying = true;
-    // Aquí agregarías la lógica de reproducción, usando la API de Spotify Web Playback SDK u otro sistema
+    if (this.favSubscription) {
+      this.favSubscription.unsubscribe();
+    }
   }
+  
 
   stopTrack() {
     this.isPlaying = false;
@@ -71,70 +162,242 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     // Aquí agregarías la lógica para detener la reproducción
   }
 
-  toggleFavorite() {
-    this.isFavorite = !this.isFavorite; // Cambiar entre favorito y no favorito
+
+  //PETICION PARA COGER EL AUDIO DE LA NUEVA CANCION CUANDO SE PULSA EN ELLA Y MANDARLE AL BACKEND QUE SE ESTA ESCUCHANDO ESA CACNION
+  playTrack() {
+    //CON ESTA PETICION SE MANDA AL BAKEND LA CANCION ACTUAL Y QUE ESTA SOLA, NO EN COLECCION
+    this.authService.pedirCancionSola(this.currentTrack.id)
+    .subscribe({
+      next: (response) => {
+        //Esta peticion devuelve el audio, si es fav, y el nombre du user del artista
+        if (response && response.audio) {
+          this.audioElementRef.nativeElement.src = response.audio;
+          this.currentTrack.audio = this.audioElementRef.nativeElement.src;
+          this.currentTrack.fav = response.fav;
+          this.tokenService.setCancionActual(this.currentTrack);
+          console.log('que guardo', this.currentTrack );
+          this.audioElementRef.nativeElement.play();
+          this.isPlaying = true;
+          this.isFavorite = response.fav;
+          console.log('Reproduciendo:', this.currentTrack.nombre);
+      } else {
+        console.error('No se pudo obtener el audio de la canción');
+      }
+      },
+      error: (error) => {
+        console.error('Error en la petición:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
   }
 
+
+  playTrackInCollection( coleccion:any) {
+    //CON ESTA PETICION SE MANDA AL BAKEND LA CANCION ACTUAL Y QUE ESTA EN UNA COLECCION
+    this.authService.pedirCancionColeccion(coleccion.id, coleccion.modo, coleccion.canciones, coleccion.index)
+    .subscribe({
+      next: (response) => {
+        //Esta peticion devuelve el audio, si es fav, y el nombre du user del artista
+        if (response && response.audio) {
+        this.audioElementRef.nativeElement.src = response.audio;
+        this.audioElementRef.nativeElement.play();
+        this.isPlaying = true;
+        this.isFavorite = response.fav;
+        console.log('Reproduciendo:', this.currentTrack.nombre);
+      } else {
+        console.error('No se pudo obtener el audio de la canción');
+      }
+      },
+      error: (error) => {
+        console.error('Error en la petición:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
+  }
+
+  //Para boton de PLAY/PAUSE
+  togglePlay() {
+
+    if(this.audioElementRef.nativeElement.src && this.audioElementRef.nativeElement.src !== '') {
+      const audio = this.audioElementRef.nativeElement;
+      if (audio.paused) {
+        audio.play();
+        this.isPlaying = true;
+        this.playerService.isPlayingSubject.next(true);
+      } else {
+        audio.pause();
+        this.isPlaying = false;
+        this.playerService.isPlayingSubject.next(false);
+      }
+    } 
+  }
+
+  prevTrack(): void {
+    this.playerService.prevSong();  
+  }
+
+  nextTrack(): void {
+    this.playerService.nextSong();  
+  }
+
+  //PARA PONER BIEN EL VOLUMEN ANTES DE TOCAR LA BARRA
+  setInitialVolumeProgress() {
+    this.volume = this.tokenService.getUser().volumen;
+    const volumeControl = document.querySelector('.barra_volumen') as HTMLInputElement;
+    if (volumeControl) {
+      const progressPercent = (this.volume / 100) * 100;
+      volumeControl.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000E3B ${progressPercent}%)`;
+    }
+  }
+
+  //PARA PROGRESO DE LA BARRA Y EL TIEMPO
   updateProgress() {
     const audioElement = this.audioElementRef.nativeElement;
-    if (audioElement) {
-      audioElement.addEventListener('timeupdate', () => {
-        this.currentTime = audioElement.currentTime;
-        this.duration = audioElement.duration || 1;
-        const progressPercent = (this.currentTime / this.duration) * 100;
-        // Actualiza el valor de la variable --progress en CSS
-        document.documentElement.style.setProperty('--progress', `${progressPercent}%`);
-      });
-    }
+  if (audioElement) {
+    audioElement.addEventListener('loadedmetadata', () => {
+      this.duration = !isNaN(audioElement.duration) ? audioElement.duration : 0;  // Se actualiza cuando el audio carga
+    });
+
+    audioElement.addEventListener('timeupdate', () => {
+      this.currentTime = audioElement.currentTime;
+      this.duration = !isNaN(audioElement.duration) ? audioElement.duration : 0; // Asegurar que siempre tenga valor
+
+      // Verifica si se ha adelantado la canción (comparando con el último tiempo)
+      if (this.currentTime < this.lastTime) {
+        // Si el tiempo actual es menor que el anterior, significa que el usuario ha adelantado
+        this.secondsListened = 0; // Reiniciar el contador de tiempo escuchado
+        this.hasCalledAPI = false; // Reiniciar la flag para evitar llamadas duplicadas
+      }
+      // Actualizar el último tiempo
+      this.lastTime = this.currentTime;
+
+      const progressPercent = (this.currentTime / this.duration) * 100;
+      const progressBar = document.querySelector('.progress-bar') as HTMLElement;
+      if (progressBar) {
+        progressBar.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000e3b ${progressPercent}%)`;
+      }
+
+      // Si el usuario ha escuchado 20 segundos completos, llamamos a la API
+      if (this.currentTime >= 20 && !this.hasCalledAPI) {
+        this.hasCalledAPI = true;
+        this.incrementSongPlayCount();
+      }
+
+    });
+  }
   }
 
-  changeVolume() {
-    if (this.player) {
-      this.player.setVolume(this.volume / 100);
-    }
+  incrementSongPlayCount() {
+    this.authService.incrementarReproduccionesCancion()
+    .subscribe({
+      next: () => {
+        console.log('Reproducción registrada');
+      },
+      error: (error) => {
+        console.error('Error al registrar la reproducción:', error);
+      }
+    });
   }
+  
 
-
-  prevTrack() {
-    if (this.player) {
-      this.player.previousTrack();
-    }
-  }
-
-  nextTrack() {
-    if (this.player) {
-      this.player.nextTrack();
-    }
-  }
-
-  // Aquí se agrega el método onTimeUpdate() que maneja el evento timeupdate del audio
+  //PARA PROGRESO DE LA BARRA Y EL TIEMPO
   onTimeUpdate() {
     const audioElement = this.audioElementRef.nativeElement;
     if (audioElement) {
       this.currentTime = audioElement.currentTime;
-      this.duration = audioElement.duration;
+      this.tokenService.setProgresoLocal(this.currentTime);
     }
   }
 
-  togglePlay() {
-    if (this.player) {
-      this.player.togglePlay().then(() => {
-        this.isPlaying = !this.isPlaying;  // Alternar el estado de la canción
-        console.log(this.isPlaying ? 'Reproduciendo' : 'Pausado');
-      }).catch((error: any) => {
-        console.error('Error al alternar la canción', error);
-      });
-    }
-  }
-
+  //PARA CUANDO DE MUEVE EL TIEMPO DE LA CACNION MANUALMENTE
   seekTrack(event: any) {
     const newTime = event.target.value;
     if (this.audioElementRef && this.audioElementRef.nativeElement) {
       this.audioElementRef.nativeElement.currentTime = newTime;
       this.currentTime = newTime;
     }
+
+    
+  } 
+
+  //PASAR TIEMPO A FORMATO MINUTO:SEGUNDO
+  formatTime(seconds: number): string {
+    if (isNaN(seconds) || seconds <= 0) return "0:00";
+    const minutes = Math.floor(seconds / 60); // Obtener minutos
+    const remainingSeconds = Math.floor(seconds % 60); // Obtener segundos restantes
+    return `${minutes}:${remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}`;
   }
 
-  
 
+  changeVolume() {
+    const audio = this.audioElementRef.nativeElement;
+    if (audio) {
+      audio.volume = this.volume / 100;
+
+      const volumeControl = document.querySelector('.barra_volumen') as HTMLInputElement;
+      if (volumeControl) {
+        const progressPercent = (this.volume / 100) * 100;
+        volumeControl.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000E3B ${progressPercent}%)`;
+      }
+
+      //Actualizamos el volumen en local storage
+      const user = this.tokenService.getUser();
+      user.volumen = this.volume; 
+      this.tokenService.setUser(user);
+
+      //Actualizamos el volumen en la bd
+      this.authService.actualizarVolumen(this.volume)
+      .subscribe({
+        next: () => {
+        },
+        error: (error) => {
+          console.error('Error al actualizar el volumen:', error);
+        },
+        complete: () => {
+          console.log('Volumen actualizado con éxito');
+        }
+      });
+    }
+  }
+
+  toggleFavorite() {
+    
+    this.authService.favoritos(this.tokenService.getCancionActual().id, !this.isFavorite)
+    .subscribe({
+      next: () => {
+        this.isFavorite = !this.isFavorite;
+        const cancionActual = this.tokenService.getCancionActual();
+        cancionActual.fav = this.isFavorite;
+        this.tokenService.setCancionActual(cancionActual);
+        console.log('fav:', this.tokenService.getCancionActual().fav);
+      },
+      error: (error) => {
+        console.error('Error en la petición:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
+  }
+
+  actualizarFavMarco() {
+    const cancionActual = this.tokenService.getCancionActual();
+    this.isFavorite = !cancionActual.fav;
+    console.log('dentro funcion:', this.isFavorite)
+    cancionActual.fav = this.isFavorite;
+    this.tokenService.setCancionActual(cancionActual);
+  }
+
+  onSongEnd(): void {
+    console.log("Canción terminada, pasando a la siguiente...");
+    this.playerService.nextSong();
+  }
+
+  goPantallaArtista() {
+    this.router.navigate(['/home/artista', this.currentTrack.nombreUsuarioArtista]);
+  }
 }

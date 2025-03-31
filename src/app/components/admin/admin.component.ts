@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { TokenService } from '../../services/token.service';
+import { Router } from '@angular/router'; 
 
 @Component({
   selector: 'app-admin',
@@ -8,21 +11,80 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit{
 
-  solicitudes = [
-    { name: 'Usuario 1', img: 'https://randomuser.me/api/portraits/men/16.jpg', status: 'status-red' },
-    { name: 'Usuario 2', img: 'https://randomuser.me/api/portraits/women/2.jpg', status: 'status-red' },
-    { name: 'Usuario 3', img: 'https://randomuser.me/api/portraits/men/3.jpg', status: 'status-red' },
-    { name: 'Usuario 4', img: 'https://randomuser.me/api/portraits/men/4.jpg', status: 'status-red' },
-    { name: 'Usuario 5', img: 'https://randomuser.me/api/portraits/men/5.jpg', status: 'status-red' },
-    { name: 'Usuario 6', img: 'https://randomuser.me/api/portraits/women/92.jpg', status: 'status-red' },
-    { name: 'Usuario 7', img: 'https://randomuser.me/api/portraits/men/6.jpg', status: 'status-red' },
-    { name: 'Usuario 8', img: 'https://randomuser.me/api/portraits/women/4.jpg', status: 'status-red' },
-    { name: 'Usuario 9', img: 'https://randomuser.me/api/portraits/men/8.jpg', status: 'status-red' },
-    { name: 'Usuario 10', img: 'https://randomuser.me/api/portraits/men/23.jpg', status: 'status-red' }
-  ];
+  solicitudes: any[] = [];
+  credentials= { correo:'', valido:false}
 
-  aceptarSolicitud():void{}
-  rechazarSolicitud():void{}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router) {}
+
+  ngOnInit() {
+    this.obtenerSolicitudes();
+  }
+
+  obtenerSolicitudes() {
+    this.authService.pedirSolicitudes().subscribe({
+      next: (response) => {
+        this.solicitudes = response.pendientes;
+      },
+      error: (error) => {
+        console.log('Error en la solicitud', error);
+
+
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
+  }
+
+
+
+  aceptarSolicitud(correo:string):void{
+    this.solicitudes = this.solicitudes.filter(solicitud => solicitud.correo !== correo);
+    this.credentials.valido=true;
+    this.credentials.correo=correo;
+    this.authService.validarSolicitudes(this.credentials).subscribe({
+      next: (response) => {
+        //IR A METER CODIGO
+      },
+      error: (error) => {
+        console.log('Error al aceptar la solicitud', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
+  }
+  rechazarSolicitud(correo:string):void{
+    this.solicitudes = this.solicitudes.filter(solicitud => solicitud.correo !== correo);
+    this.credentials.valido=false;
+    this.credentials.correo=correo;
+    this.authService.validarSolicitudes(this.credentials).subscribe({
+      next: (response) => {
+        //IR A METER CODIGO
+      },
+      error: (error) => {
+        console.log('Error al aceptar la solicitud', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
+  }
+  cerrarSesion(): void {
+    this.authService.logout()
+    .subscribe({
+      next: () => {
+        this.tokenService.clearStorage();
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error('Error al cerrar la sesión:', error);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
+  }
 }

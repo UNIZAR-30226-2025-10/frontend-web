@@ -6,6 +6,7 @@
     </div>
 
     <section class="container">
+        <h1>Recuperación de contraseña</h1>
         <form (ngSubmit)="onSubmit()">
             <div class="password-container">
                 <input [type]="isPasswordVisible ? 'text' : 'password'" id="password" [(ngModel)]="credentials.nueva_contrasenya" name="password" placeholder="Introduce la nueva contraseña" required (input)="onPasswordChange()" />

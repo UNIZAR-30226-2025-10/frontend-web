@@ -7,6 +7,7 @@ import { ResultadosComponent } from '../resultados/resultados.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { SidebarService } from '../../services/sidebar.service';
 
+
 @Component({
   selector: 'app-marco',
   standalone: true,
@@ -16,6 +17,7 @@ import { SidebarService } from '../../services/sidebar.service';
 })
 export class MarcoComponent implements OnInit {
   sidebarOpen: boolean = false;
+  messageReceived: string = '';
 
   constructor(private sidebarService: SidebarService) {}
 
@@ -28,9 +30,4 @@ export class MarcoComponent implements OnInit {
   toggleSidebar() {
     this.sidebarService.toggleSidebar();
   }
-
-  /*mostrarResultados(resultados: any) {
-    console.log('Resultados de la búsqueda:', resultados);
-  }*/
-  
 }

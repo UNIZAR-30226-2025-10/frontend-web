@@ -1,7 +1,85 @@
+<div class="bottom">
+    <!--RECIENTES-->
+    <div *ngIf="recientes.length > 0">
+        <div class="titulo">
+            <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Escuchado recientemente</strong></h2>
+        </div>
+        
+        <div class="container">       
+            <div *ngFor="let artist of recientes; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                <ng-container *ngIf="artist.type === 'reciente'">
+                    <div class="dentro-card">
+                        <img [src]="artist.fotoPortada && artist.fotoPortada !== 'DEFAULT' ? artist.fotoPortada : 'no_cancion.png'" [alt]="artist.nombre" [ngClass]="{'coleccion-img': artist.type === 'reciente'}">
+                        <strong style="display: block; text-align: left;">{{ artist.nombre}}</strong>
+                        <p>{{ artist.autor }}</p>
+                    </div>
+                </ng-container>
 
-<h2>Lista de Usuarios</h2>
-<ul>
-  <li *ngFor="let usuario of usuarios">
-    {{ usuario.nombreUsuario }} - {{ usuario.correo }}
-  </li>
-</ul>
+                <ng-container *ngIf="artist.type === 'artista'">
+                    <!-- Mostrar el contenido para los artistas -->
+                    <a [routerLink]="['/home/artista', artist.nombreUsuario]"> 
+                        <div class="dentro-card" >
+                            <img [src]="artist.fotoPerfil && artist.fotoPerfil !== 'DEFAULT' ? artist.fotoPerfil : 'nouser.png'" [alt]="artist.nombreArtistico" [ngClass]="{'artista-img': artist.type === 'artista'}">
+                            <strong>{{ artist.nombreArtistico}}</strong>
+                            <span>Artista</span>
+                        </div>
+                    </a>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <!--ULTIMAS 5O ESCUCHADAS-->
+    <div *ngIf="ultimasCanciones.length > 0">
+        <div class="titulo">
+            <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Últimas escuchas</strong></h2>
+        </div>
+
+        <div class="container">       
+            <div *ngFor="let cancion of ultimasCanciones; let i = index" class="card" (click)="onTrackClick(cancion)" [ngClass]="{ 'primer-elemento': i === 0 }">
+                <div class="dentro-card">
+                    <img [src]="cancion.fotoPortada" [alt]="cancion.nombre"> 
+                    <strong>{{ cancion.nombre }}</strong>
+                    <p>{{ cancion.nombreArtisticoArtista }}</p> 
+                </div>          
+            </div>
+        </div>
+    </div>
+
+    <!--MIS PLAYLISTS-->
+    <div *ngIf="misPlaylists.length > 0">
+        <div class="titulo">
+            <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Tus playlists</strong></h2>
+        </div>
+
+        <div class="container">       
+            <div *ngFor="let playlist of misPlaylists; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                <div class="dentro-card">
+                    <a [routerLink]="['/home/playlist', playlist.id]"> 
+                        <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
+                        <strong>{{ playlist.nombre }}</strong>
+                    </a>
+                </div>          
+            </div>
+        </div>            
+    </div>
+
+    <!--RECOMENDADOS-->
+    <div *ngIf="recomendados.length > 0">
+        <div class="titulo">
+            <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Recomendado para ti</strong></h2>
+        </div>
+
+        <div class="container">       
+            <div *ngFor="let recomendado of recomendados; let i = index" class="card" (click)="onTrackClick(recomendado)"  [ngClass]="{ 'primer-elemento': i === 0 }">          
+                <div class="dentro-card">
+                    <img [src]="recomendado.fotoPortada" [alt]="recomendado.nombre">
+                    <strong>{{ recomendado.nombre }}</strong>
+                    <p>{{ recomendado.nombreArtisticoArtista }}</p> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
