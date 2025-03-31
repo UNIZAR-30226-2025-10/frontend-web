@@ -1154,4 +1154,21 @@ export class AuthService {
 
     return this.http.get(`${this.apiUrl}/get-playlists?nombreUsuario=${nombreUsuario}`, { headers: headers } );
   }
+
+  crearAlbum(nombreAlbum: string, foto_url: string): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = { nombre_album: nombreAlbum, fotoPortada: foto_url }
+    return this.http.post(`${this.apiUrl}/create-album"`, body,{ headers: headers } );
+  }
 }

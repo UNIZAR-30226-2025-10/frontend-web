@@ -13,7 +13,7 @@
     <!-- Opciones del menú -->
     <ul *ngIf="isDropdownOpen" class="options">
       <!-- Opción fija para crear un álbum -->
-      <li (click)="abrirPopupCrearAlbum()" data-value="crear">
+      <li (click)="abrirModalAlbum()" data-value="crear">
         <span class="icon-cross">+</span> Crear Álbum
       </li>
 
@@ -70,32 +70,38 @@
   </div>
 
   <!-- Popup para crear un álbum -->
-  <div class="popup-overlay" *ngIf="mostrarPopup">
-    <div class="popup">
-      <h3>Crear Álbum</h3>
-      <div class="campo">
-        <label for="nombreAlbum">Nombre del álbum:</label>
-        <input
-          id="nombreAlbum"
-          type="text"
-          (input)="onNombreAlbumInput($event)"
-          placeholder="Introduce el nombre del álbum"
-        />
+  <div *ngIf="isModalAlbumOpen" class="modal-overlay">
+    <div class="modal-content">
+      <div class="cabecera">
+        <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Crear Álbum</p>
+        <button (click)="cerrarModalAlbum()" class="btn-cerrar"><i class="fas fa-times"></i></button>
       </div>
-      <div class="campo">
-        <label for="descripcionAlbum">Descripción:</label>
-        <textarea
-          id="descripcionAlbum"
-          (input)="onDescripcionAlbumInput($event)"
-          placeholder="Introduce una descripción"
-        ></textarea>
+  
+      <div class="atributos" style="display: flex; flex-direction: column; gap: 15px;">
+        <div class="campo">
+          <input
+            id="nombreAlbum"
+            type="text"
+            (input)="onNombreAlbumInput($event)"
+            placeholder="Introduce el nombre del álbum"
+          />
+        </div>
+        <div class="campo">
+          <div
+            class="file-upload2"
+            (dragover)="onDragOverImagen($event)"
+            (dragleave)="onDragLeaveImagen($event)"
+            (drop)="onDropImagen($event)"
+          >
+            <span *ngIf="!nuevoAlbum.imagen">Arrastra y suelta la imagen aquí para añadir la portada del álbum</span>
+            <span *ngIf="nuevoAlbum.imagen">{{ nombreArchivo }}</span>
+          </div>
+          <p *ngIf="mensajeError" class="error">{{ mensajeError }}</p>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <button (click)="guardarAlbum()" class="btn-guardar">Guardar</button>
+        </div>
       </div>
-      <div class="campo">
-        <label for="imagenAlbum">Subir imagen:</label>
-        <input id="imagenAlbum" type="file" (change)="onFileSelected($event)" />
-      </div>
-      <button (click)="crearAlbum()">Crear</button>
-      <button (click)="cerrarPopup()">Cancelar</button>
     </div>
   </div>
 </div>

@@ -58,9 +58,9 @@ export const routes: Routes = [
       { path: 'estadisticasAlbum/:id', component: EstadisticasAlbumComponent,  canActivate: [authGuard], data: { roles: 'artista' }},
       { path: 'seguidos/:nombreUsuario', component: SeguidosComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
-      { path: 'subir-cancion', component: SubirCancionComponent },
+      { path: 'subir-cancion', component: SubirCancionComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'notificaciones', component: NotificacionesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
-      { path: 'cancionesFavs/:nombreUsuario', component: CancionesFavsComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } }
+      { path: 'cancionesFavs/:nombreUsuario', component: CancionesFavsComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
 
     ]
   }

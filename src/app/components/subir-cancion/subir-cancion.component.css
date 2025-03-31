@@ -157,15 +157,18 @@ select {
 }
 
 .options li img {
+  margin-left: 10px;
   margin-right: 15px; 
   border-radius: 4px; 
 }
 
 .icon-cross {
+  margin-left: 10px;
   margin-right: 10px; 
-  font-size: 16px; 
+  font-size: 20px; 
   color: #007bff; 
   display: inline-block; 
+  font-weight: bold;
 }
 
 .detalles-cancion {
@@ -256,6 +259,22 @@ button:hover {
   transition: background-color 0.3s ease;
 }
 
+.file-upload2 {
+  border: 2px dashed #6f6f6f;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  color: black;
+  background-color: #aaa7a7;
+  transition: background-color 0.3s ease;
+}
+
+.file-upload2.drag-over {
+  background-color: #e0f7fa; 
+  border-color: #007bff; 
+  color: #007bff; 
+}
+
 .file-upload.drag-over {
   background-color: #e0f7fa; 
   border-color: #007bff; 
@@ -328,23 +347,23 @@ button.eliminar-archivo {
 
 /* Estilo específico para las opciones del desplegable de etiquetas */
 .etiquetas-options {
-  max-height: 150px; /* Limita la altura máxima del contenedor */
-  overflow-y: auto; /* Habilita el scroll vertical */
-  list-style: none; /* Elimina los marcadores de lista */
-  padding: 5px 0; /* Espaciado interno */
-  margin: 0; /* Sin margen */
-  border: 1px solid #ccc; /* Opcional: Agrega un borde para diferenciar el contenedor */
-  border-radius: 4px; /* Bordes redondeados */
-  background-color: #fff; /* Fondo blanco */
+  max-height: 150px;
+  overflow-y: auto; 
+  list-style: none; 
+  padding: 5px 0; 
+  margin: 0; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  background-color: #fff; 
 }
 
 /* Estilo para las opciones individuales */
 .etiquetas-options li {
-  padding: 5px 10px; /* Espaciado interno */
-  margin: 2px 0; /* Espaciado entre las opciones */
-  cursor: pointer; /* Cambia el cursor al pasar sobre las opciones */
-  font-size: 14px; /* Ajusta el tamaño de la fuente */
-  white-space: nowrap; /* Evita que el texto se corte en varias líneas */
+  padding: 5px 10px; 
+  margin: 2px 0; 
+  cursor: pointer; 
+  font-size: 14px; 
+  white-space: nowrap; 
 }
 
 /* Efecto hover para las opciones */
@@ -368,4 +387,89 @@ button.eliminar-archivo {
 
 .campo-con-boton {
   padding-bottom: 2px; /* Agrega espacio adicional en la parte inferior */
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  margin-top: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  width: 600px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cabecera {
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.cabecera p {
+  margin-top: 0; 
+  font-size: 20px;
+  font-weight: bold;
+  color: #000e3b;
+}
+
+.btn-cerrar {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: black;
+}
+
+.btn-cerrar:hover {
+  background: none; /* Elimina cualquier cambio de fondo */
+  color: black; /* Mantén el color del texto igual */
+  cursor: pointer; /* Mantén el cursor como puntero */
+}
+
+.atributos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.campo label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.campo input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn-guardar {
+  display: block; /* Asegura que el botón sea un bloque */
+  margin: 0 auto; /* Centra el botón horizontalmente */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+  text-align: center; /* Asegura que el texto esté centrado */
+}
+
+.btn-guardar:hover {
+  background-color: #0056b3;
 }
