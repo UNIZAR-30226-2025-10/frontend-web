@@ -1,11 +1,10 @@
-/* Contenedor principal que establece el contexto para el posicionamiento */
 .contenido {
   position: relative;
   padding: 0 0 20px 0;
 }
 
 .barra-superior {
-  display: none;  /* Inicialmente la ocultas */
+  display: none;  
   position: sticky;
   height: 55px;
   top: 0;
@@ -15,17 +14,15 @@
   padding: 10px;
   text-align: center;
   font-size: 18px;
-  z-index: 1000;  /* Asegúrate de que esté encima de otros elementos */
+  z-index: 1000;  
 }
 
 .barra-superior.mostrar {
-  transform: translateY(0); /* Cuando se activa, vuelve a su posición original */
-  visibility: visible; /* Se hace visible */
-  opacity: 1; /* Se vuelve completamente opaca */
-  pointer-events: auto; /* Permite la interacción cuando está visible */
+  transform: translateY(0); 
+  visibility: visible;
+  opacity: 1; 
+  pointer-events: auto;
 }
-
-
 
 .barra-superior.mostrar {
   opacity: 1;
@@ -33,16 +30,14 @@
   pointer-events: auto;
 }
 
-/* Todo mantiene su posición con z-index menor */
 .todo {
   width: 100%;
   min-height: 100vh;
   overflow-y: auto;
   position: relative;
-  z-index: 1; /* Menor que la barra superior */
+  z-index: 1; 
 }
 
-/* Top-div mantiene su posición */
 .top-div {
   position: relative; 
   height: auto;
@@ -50,7 +45,7 @@
   color: #000e3b;
   top: 0;
   position: relative;
-  z-index: 0; /* Menor que la barra superior */
+  z-index: 0; 
   display: grid;
   grid-template-columns: 1fr 4fr auto;
   text-align: flex-start;
@@ -62,16 +57,12 @@
   display: none;
 }
 
-
-
-/* Títulos principales */
 h1 {
   font-family: 'Poppins', sans-serif;
   font-weight: 1000;
   font-size: 50px;
 }
 
-/* Estilos para columnas dentro de la parte superior */
 .column1 {
   display: flex;
   flex-direction: column;
@@ -95,9 +86,6 @@ h1 {
   align-items: flex-start;
 }
 
-
-
-/* Subtítulos */
 h2, h3 {
   font-size: 20px;
 }
@@ -106,7 +94,6 @@ h2, h3 {
   font-size: 30px;
 }
 
-/* Contenedor de iconos */
 .icons-container {
   display: flex;
   align-items: center;
@@ -115,7 +102,6 @@ h2, h3 {
   margin-top: 20px;
 }
 
-/* Estilos generales para la playlist */
 .playlist {
   margin-top: 20px;
   padding: 0px 40px;
@@ -126,20 +112,17 @@ h2, h3 {
   font-weight: bold;
 }
 
-/* Estilo general para las canciones */
 .info {
   display: flex;
   align-items: center;
 }
 
-/* Número de canción */
 .song-number {
   font-size: 18px;
   text-align: right;  
   margin-right: 10px;
 }
 
-/* Estilos para la imagen de la canción */
 .song-image-wrapper {
   grid-column: 2;
   display: flex;
@@ -177,11 +160,11 @@ h2, h3 {
 
 .song {
   display: grid;
-  grid-template-columns: 30px 50px 1fr 1fr 0.75fr 150px; /* Definición de las columnas */
+  grid-template-columns: 30px 50px 1fr 1fr 0.75fr 150px; 
   width: 100%;
   align-items: center;
   gap: 20px;
-  padding: 10px 0; /* Reducimos el padding horizontal a 0 */
+  padding: 10px 0; 
   border-radius: 10px;
   transition: background-color 0.3s ease;
   cursor: pointer;
@@ -198,7 +181,6 @@ h2, h3 {
   border-radius: 5px;
 }
 
-/* Controles de la canción */
 .controls {
   display: flex;
   gap: 12px;
@@ -214,8 +196,6 @@ h2, h3 {
   cursor: pointer;
   font-size: 16px;
 }
-
-
 
 .far.fa-heart {
   font-size: 23px;
@@ -245,7 +225,6 @@ h2, h3 {
   color: #000E3B;
 }
 
-/* Estilo para el botón de reproducir canción */
 .play-song {
   margin-left:50px;
   font-size: 30px;
@@ -295,13 +274,12 @@ h2, h3 {
   width: 200px;
   z-index: 10;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  display: none; /* Ocultamos el menú inicialmente */
+  display: none; 
 }
 
 .dropdown-menu.show {
-  display: block;  /* Se muestra cuando la clase "show" está activa */
+  display: block;  
 }
-
 
 .dropdown-menu ul {
   list-style: none;
@@ -324,33 +302,31 @@ h2, h3 {
 
 .list-option {
   position: relative;
-  display: flex; /* Usamos flexbox */
-  justify-content: space-between; /* Esto distribuye el espacio entre el texto y el icono */
-  align-items: center; /* Centra verticalmente el contenido */
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
   padding: 12px 16px;
   cursor: pointer;
 }
 
 .list-option i {
-  margin-left: 70px; /* Agregamos un margen al icono para separarlo del texto */
+  margin-left: 70px;
 }
-
 
 .lists-dropdown {
   position: absolute;
-  right: 100%;  /* Lo coloca a la derecha del elemento contenedor */
-  top: 0;  /* Aparece al mismo nivel que el item "Añadir a lista" */
+  right: 100%;  
+  top: 0;  
   background-color: white;
   border-radius: 5px;
   width: 200px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  display: none; /* Inicialmente oculto */
-  z-index: 100; /* Asegura que esté por encima del dropdown principal */
+  display: none; 
+  z-index: 100; 
 }
 
-
 .list-option:hover .lists-dropdown {
-  display: block; /* Se muestra cuando el mouse pasa por encima del "Añadir a lista" */
+  display: block; 
 }
 
 .lists-dropdown li .btn-nueva-lista {
@@ -394,7 +370,6 @@ h2, h3 {
   color: gray;
 }
 
-
 .btn-remove-playlist{
   padding:0px;
   text-align: left;
@@ -421,7 +396,6 @@ h2, h3 {
   max-height: 150px;
   overflow-y: auto;
 }
-
 
 .seguidores-dropdown ul::-webkit-scrollbar {
   display: none;
@@ -474,7 +448,6 @@ h2, h3 {
   overflow-y: auto;
 }
 
-
 .menu-dropdown ul::-webkit-scrollbar {
   display: none;
 }
@@ -521,7 +494,6 @@ h2, h3 {
   color: white;
 }
 
-/* Botones dentro del modal */
 .btn-cerrar {
   background-color: transparent;
   color: #000e3b;
@@ -589,21 +561,20 @@ input {
   padding: 25px;
   color: white;
   font-size: 16px;
-  background-color: rgba(61, 59, 59, 0.5);  /* Fondo semitransparente */
+  background-color: rgba(61, 59, 59, 0.5); 
   border-radius: 5%;
   cursor: pointer;
-  display: none;  /* Ocultamos el icono por defecto */
+  display: none;  
 }
 
 .image-upload-container:hover .upload-icon-playlist {
-  display: block;  /* Mostramos el icono al pasar el cursor */
+  display: block;  
 }
 
 .upload-icon-playlist i {
   color: white;
 }
 
-/* Playlist vacia, con buscador */
 .empty-playlist-container {
   display: flex;
   flex-direction: column;
@@ -657,7 +628,7 @@ input {
 }
 
 .search-results-container {
-  position: relative; /* Asegura que el contenedor relativo maneje los resultados */
+  position: relative; 
   width: 100%;
   max-width: 1200px;
   border-radius: 10px;
