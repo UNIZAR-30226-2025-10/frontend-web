@@ -2,13 +2,20 @@ import {Component, OnInit} from '@angular/core'
 import {RouterOutlet} from '@angular/router'
 import { Router } from '@angular/router';
 import { TokenService } from './services/token.service';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import { LOCALE_ID } from '@angular/core';
+
+registerLocaleData(localeEs);
 
 @Component ({
 selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
-
+  styleUrl: './app.component.css',
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es' } // Establecer idioma por defecto como español
+  ]
 
 })
 export class AppComponent implements OnInit {

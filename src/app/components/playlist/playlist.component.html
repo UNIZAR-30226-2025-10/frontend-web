@@ -192,6 +192,7 @@
             <div class="artist-name">{{ cancion?.nombreArtisticoArtista }}</div>
           </div>
           <div class="repros">{{ cancion?.reproducciones }} reproducciones</div>
+          <div class="fecha">{{ convertirFecha(cancion?.fecha) | date:'d MMMM yyyy' }}</div>
           <div class="controls">
             <span>{{ cancion.duracion | duration }}</span>
             <button class="favorite-btn" (click)="toggleFavorite(cancion.id);$event.stopPropagation()" [ngClass]="{'disabled-btn': !currentTrack}">

@@ -166,13 +166,21 @@ h2, h3 {
   width: 100%;
 }
 
+.fecha {
+  grid-column: 5;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
 
 .song {
   display: grid;
-  grid-template-columns: 30px 50px 0.75fr 1fr 150px; /* Definición de las columnas */
+  grid-template-columns: 30px 50px 1fr 1fr 0.75fr 150px; /* Definición de las columnas */
   width: 100%;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
   padding: 10px 0; /* Reducimos el padding horizontal a 0 */
   border-radius: 10px;
   transition: background-color 0.3s ease;
@@ -196,7 +204,7 @@ h2, h3 {
   gap: 12px;
   justify-content: flex-end;
   align-items: center;
-  grid-column: 5;
+  grid-column: 6;
   margin-right:15px
 }
 
