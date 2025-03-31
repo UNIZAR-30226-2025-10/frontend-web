@@ -9,10 +9,49 @@
                 <img [src]="playlist?.playlist?.fotoPortada && playlist?.playlist?.fotoPortada !== 'DEFAULT' ? playlist.playlist.fotoPortada : 'logo_noizz.png'"  alt="Foto playlist" class="logo">
             </div>
             <div class="column2">   
+                    <h3 *ngIf="playlist?.playlist?.privacidad===false" style="font-size: 15px;">Lista publica</h3>
                     <h1>{{ playlist?.playlist?.nombrePlaylist }}</h1>
-                    <h2>{{ playlist?.playlist?.creador}} • {{ playlist?.canciones?.length }} canciones</h2>
-                    <h3>{{ getFormattedDuration(getTotalDuracion()) }}</h3>
-          </div>        
+                    <h2 style="display: flex; align-items: center; gap: 10px;">
+                      <!-- Si no hay colaboradores, muestra solo el creador -->
+                      <span *ngIf="!playlist?.playlist?.colaboradores?.length">{{ playlist?.playlist?.creador }}</span>
+                    
+                      <!-- Si hay colaboradores, muestra al creador y a los colaboradores -->
+                      <div *ngIf="playlist?.playlist?.colaboradores?.length" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <span>{{ playlist?.playlist?.creador }}</span>
+                    
+                        <!-- Muestra el primer colaborador -->
+                        <ng-container *ngIf="playlist?.playlist?.colaboradores.length > 0">
+                          <span>{{ playlist?.playlist?.colaboradores[0] }}</span>
+                        </ng-container>
+                    
+                        <!-- Muestra "y más" si hay más de un colaborador -->
+                        <span *ngIf="playlist?.playlist?.colaboradores.length > 1">
+                          y {{ playlist?.playlist?.colaboradores.length - 1 }} más
+                        </span>
+                      </div>
+                    
+                      <!-- Muestra siempre el número de canciones en la misma línea -->
+                      • {{ playlist?.canciones?.length }} canciones
+                    </h2> 
+                    <h3 style="font-size: 18px;">{{ getFormattedDuration(getTotalDuracion()) }}</h3>
+                    <h3 *ngIf="playlist?.playlist?.privacidad"><i class="fas fa-lock"></i> </h3>
+          </div>         
+          <div class="column3">
+            <div class="sort-container">
+              <div class="sort-icon" (click)="toggleSortMenu()">
+                <i class="fas fa-exchange-alt vertical-icon"></i>
+              </div>
+            
+              <div class="sort-dropdown" *ngIf="showSortMenu">
+                <h4>Ordenar por</h4>
+                <ul>
+                  <li *ngFor="let option of sortOptions" (click)="sortSongs(option.value)">
+                    {{ option.label }}
+                  </li>
+                </ul>
+              </div>
+            </div>    
+          </div>
     </div>
     <div class="icons-container">
         <div class="play-song" (click)="togglePlayPause()">
@@ -64,8 +103,11 @@
                   <li *ngIf="soyColaborador"(click)="abandonarPlaylist(currentPlaylistId)">
                     Abandonar lista
                   </li>
-                  <li *ngIf="esMiPlaylist" (click)="cambiarPrivacidad(currentPlaylistId,playlist.privacidad)">
+                  <li *ngIf="esMiPlaylist && playlist?.playlist?.privacidad === false" (click)="cambiarPrivacidad(currentPlaylistId,playlist.playlist.privacidad)">
                     Hacer privada
+                  </li>
+                  <li *ngIf="esMiPlaylist && playlist?.playlist?.privacidad === true" (click)="cambiarPrivacidad(currentPlaylistId,playlist.playlist.privacidad)">
+                    Hacer publica
                   </li>
               </ul>
             </div>
@@ -177,8 +219,8 @@
                           >
                       </div>
                       <ul>
-                        <li>
-                          <button (click)="abrirModalPlaylist(cancion.id)" class="btn-nueva-lista">Nueva lista</button>
+                        <li (click)="abrirModalPlaylist(cancion.id)">
+                          <button class="btn-nueva-lista">Nueva lista</button>
                         </li>
                       
                         <ng-container *ngFor="let playlist of filteredPlaylists">
@@ -190,13 +232,13 @@
                       </div>
                       
                                           
-                    <li *ngIf="currentPlaylistId && (esMiPlaylist || soyColaborador) && playlist?.playlist?.nombrePlaylist !== 'Favoritos'">
-                        <button class="btn-remove-playlist" (click)="eliminarDePlaylist(currentPlaylistId.toString(), cancion.id)">
+                    <li *ngIf="currentPlaylistId && (esMiPlaylist || soyColaborador) && playlist?.playlist?.nombrePlaylist !== 'Favoritos'" (click)="eliminarDePlaylist(currentPlaylistId.toString(), cancion.id)">
+                        <button class="btn-remove-playlist">
                           Quitar de la Playlist
                         </button>
                     </li>   
-                    <li *ngIf="currentPlaylistId && (esMiPlaylist || soyColaborador) && playlist?.playlist?.nombrePlaylist == 'Favoritos'">
-                      <button class="btn-remove-playlist" (click)="toggleFavorite(cancion.id);">
+                    <li *ngIf="currentPlaylistId && (esMiPlaylist || soyColaborador) && playlist?.playlist?.nombrePlaylist == 'Favoritos'" (click)="toggleFavorite(cancion.id);">
+                      <button class="btn-remove-playlist">
                         Quitar de canciones que te gustan
                       </button>
                     </li>                 

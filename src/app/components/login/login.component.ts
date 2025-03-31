@@ -57,7 +57,7 @@ export class LoginComponent {
           this.router.navigate(['/admin']);
         } else {
           
-        this.authService.pedirCancionActual()
+        /*this.authService.pedirCancionActual()
           .subscribe({
             next: (response) => {
               if (response != null) {
@@ -84,7 +84,7 @@ export class LoginComponent {
               console.log('Petición completada');
               this.router.navigate(['/home/home']);
             }
-          })
+          })*/
         }
       },
       error: (error) => {

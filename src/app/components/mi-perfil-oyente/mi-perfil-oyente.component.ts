@@ -11,6 +11,7 @@ import { ProgressService } from '../../services/progress.service';
 import { switchMap } from 'rxjs/operators';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { NotificationService } from '../../services/notification.service';
 
 interface misDatos {
   nombre: string;
@@ -57,7 +58,7 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   @Output() trackClicked = new EventEmitter<any>();
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private subirCloudinary: SubirCloudinary, private changeDetectorRef: ChangeDetectorRef){}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private subirCloudinary: SubirCloudinary, private changeDetectorRef: ChangeDetectorRef,private notificationService: NotificationService){}
 
   ngOnInit(): void {
 
@@ -259,6 +260,24 @@ export class MiPerfilOyenteComponent implements OnInit {
             })
         ).subscribe({
             next: () => {
+                this.authService.pedirMisPlaylists()
+                .subscribe({
+                  next: (response) => {
+                    console.log("RES",response)
+                    this.misPlaylists = response.playlists;
+                  },
+                  error: (error) => {
+                    console.error("Error al obtener las playlists:", error);
+                  },
+                  complete: () => {
+                    console.log("Playlists recuperadas con éxito");
+                  }
+                });
+                const imagenHtml = this.fotoPortada && this.fotoPortada !== "DEFAULT"
+                ? `<img src="${this.fotoPortada}" width="30" style="border-radius:5px;" />`
+                : `<img src="no_cancion.png" width="30" style="border-radius:5px;" />`;
+
+                this.notificationService.showSuccess(`${imagenHtml} Playlist ${this.nombrePlaylist} creada.`);
                 this.cerrarModalPlaylist();
                 console.log("Playlist creada con éxito");
             },
@@ -270,8 +289,25 @@ export class MiPerfilOyenteComponent implements OnInit {
         const foto = this.fotoPortada ? this.fotoPortada : "DEFAULT"; // Imagen predeterminada
         this.authService.crearPlaylist(foto, this.nombrePlaylist)
         .subscribe({
-            next: () => {   
+            next: () => { 
+                this.authService.pedirMisPlaylists()
+                .subscribe({
+                  next: (response) => {
+                    this.misPlaylists = response.playlists;
+                  },
+                  error: (error) => {
+                    console.error("Error al obtener las playlists:", error);
+                  },
+                  complete: () => {
+                    console.log("Playlists recuperadas con éxito");
+                  }
+                });  
                 this.cerrarModalPlaylist();
+                const imagenHtml = this.fotoPortada && this.fotoPortada !== "DEFAULT"
+                ? `<img src="${this.fotoPortada}" width="30" style="border-radius:5px;" />`
+                : `<img src="no_cancion.png" width="30" style="border-radius:5px;" />`;
+
+                this.notificationService.showSuccess(`${imagenHtml} Playlist ${this.nombrePlaylist} creada.`);
                 console.log("Playlist creada con éxito");
             },
             error: (error) => {

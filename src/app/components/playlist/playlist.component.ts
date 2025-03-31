@@ -11,6 +11,7 @@ import { DurationPipe } from '../../pipes/duration.pipe';
 import { Location } from '@angular/common';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { switchMap } from 'rxjs/operators';
+import { NotificationService } from '../../services/notification.service';
 
 
 @Component({
@@ -42,7 +43,7 @@ export class PlaylistComponent {
 
     nombreActual: string = '';
     fotoNueva!: string;
-    file!: File;
+    file:  File | null = null;;
 
     //buscador de mis playlists (para añadir canción a una playlist)
     filteredPlaylists: any[] = [];
@@ -60,6 +61,20 @@ export class PlaylistComponent {
     isModalPlaylistOpen = false;
     cancionActual: any;
     NuevaPlaylist: any;
+
+    // menu de ordenación
+    showSortMenu: boolean = false;
+
+    //orden de las canciones
+    originalSongOrder: any[] = [];
+    currentSortMethod: string = 'original';
+
+    // Opciones de ordenación
+    sortOptions = [
+      { value: 'nombre', label: 'Alfabético' },
+      { value: 'reproducciones', label: 'Reproducciones' },
+      { value: 'fecha', label: 'Fecha' }
+    ];
 
     @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
  
@@ -92,10 +107,19 @@ export class PlaylistComponent {
                 this.DropdownMenu = false;
             }
         }
+
+        // Cerrar el dropdown de ordenar (sort-dropdown)
+        if (this.showSortMenu) {
+          const target = event.target as HTMLElement;
+          const isDropdownOrChild = target.closest('.sort-dropdown') || target.closest('.sort-icon');
+          if (!isDropdownOrChild) {
+              this.showSortMenu = false;
+          }
+        }
     }
 
 
-    constructor(private el: ElementRef, private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private route: ActivatedRoute,private location: Location,  private subirCloudinary: SubirCloudinary){}
+    constructor(private el: ElementRef, private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private route: ActivatedRoute,private location: Location,  private subirCloudinary: SubirCloudinary, private notificationService: NotificationService){}
 
     ngOnInit(): void {
       const playlistId = this.route.snapshot.paramMap.get('id'); 
@@ -150,6 +174,9 @@ export class PlaylistComponent {
     this.fotoNueva = '';
   }
 
+  toggleSortMenu(): void {
+    this.showSortMenu = !this.showSortMenu;
+  }
 
   toggleDropdown(cancionId: number): void {
     console.log(`Toggling dropdown for cancionId: ${cancionId}`);
@@ -227,6 +254,50 @@ export class PlaylistComponent {
     return `${minutos} minutos ${segundos} segundos`;
   }
 
+  convertirFecha(fechaStr: string): Date {
+    const [dia, mes, año] = fechaStr.split(" ").map(Number); 
+    return new Date(año, mes - 1, dia); 
+  } 
+
+  // Método para ordenar las canciones
+  sortSongs(sortBy: string): void {
+    if (!this.playlist || !this.playlist.canciones) return;
+    
+    // Guardar el método de ordenación actual
+    this.currentSortMethod = sortBy;
+    
+    // Si es la primera vez que ordenamos, guardamos el orden original
+    if (!this.originalSongOrder.length) {
+      this.originalSongOrder = [...this.playlist.canciones];
+    }
+    
+    const sortedSongs = [...this.playlist.canciones]; 
+    
+    switch (sortBy) {
+      case 'nombre':
+        sortedSongs.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        break;
+      case 'reproducciones':
+        sortedSongs.sort((a, b) => b.reproducciones - a.reproducciones);
+        break;
+      case 'fecha':
+        sortedSongs.sort((a, b) => {
+          const dateA = this.convertirFecha(a.fecha);
+          const dateB = this.convertirFecha(b.fecha);
+          return dateB.getTime() - dateA.getTime(); // DE MAS RECIENTE A MAS ANTIGUA
+        });
+        break;
+      case 'original':
+        // Restaurar el orden original //Si original va a ser alfabetico quitar
+        if (this.originalSongOrder.length) {
+          this.playlist.canciones = [...this.originalSongOrder];
+          return;
+        }
+        break;
+    } 
+    this.playlist.canciones = sortedSongs;
+  }
+
   onTrackClick(track: any) {
     // Llamamos al servicio para establecer la canción seleccionada y el álbum con la lista de canciones
     const coleccion = {
@@ -249,10 +320,15 @@ export class PlaylistComponent {
 
   // cambiar para implementar aleatorio
   onPlayPlaylist(): void {
+    if (this.isPlaying && this.currentTrack) {
+      //this.playerService.playTrack();
+      return;
+    }
+
     const coleccion = {
       id: this.currentPlaylistId,
       modo: this.isShuffle ? "aleatorio" : "enOrden", // Dependiendo de si el shuffle está habilitado
-      canciones: this.playlist.canciones,
+      canciones: this.playlist.canciones, // Pone el nuevo orden si no estaba ya sonando alguna cancion
     };
   
     this.playerService.setTrack(this.playlist.canciones[0], coleccion); // Empieza desde la primera canción
@@ -287,9 +363,14 @@ export class PlaylistComponent {
     .subscribe({
       next: (response) => {   
         console.log('Cancion añadida', response);
+        this.notificationService.showSuccess(`Cancion añadidida a la playlist`);
       },
       error: (error) => {
-        console.error("Error al obtener añadir la cancion a la playlist:", error);
+        if (error.status === 409) {
+          this.notificationService.showError('La canción ya está en esa playlist.');
+        } else {
+          console.error("Error al añadir la canción a la playlist:", error);
+        }
       },
       complete: () => {
         console.log("Cancion añadida con éxito");
@@ -303,6 +384,7 @@ export class PlaylistComponent {
       next: (response) => { 
         this.playlist.canciones = this.playlist.canciones.filter((c: { id: string; }) => c.id !== cancionId);
         console.log('Cancion eliminada', response);
+        this.notificationService.showSuccess(`Cancion eliminada de la playlist`);
       },
       error: (error) => {
         console.error("Error al obtener eliminar la cancion de la playlist:", error);
@@ -366,6 +448,7 @@ export class PlaylistComponent {
       .subscribe({
         next: (response) => {
           console.log('Solicitud enviada');
+          this.notificationService.showSuccess(`Solicitud enviada a ${seguidor.nombreUsuario}`);
         },
         error: (error) => {
           console.error("Error al enviar la solicitud");
@@ -397,6 +480,7 @@ export class PlaylistComponent {
     this.authService.cambiarPrivacidadPlaylist(playlist,privacidad)
       .subscribe({
         next: (response) => {
+          this.playlist.playlist.privacidad=privacidad;
         },
         error: (error) => {
           console.error("Error al cambiar la privacidad de la playlist");
@@ -445,6 +529,8 @@ export class PlaylistComponent {
           next: () => {
             this.playlist.playlist.nombrePlaylist = this.nombreActual;
             this.playlist.playlist.fotoPortada= this.fotoNueva;
+            this.fotoNueva='';
+            this.file = null;
             this.cerrarModalEditar();
           },
           error: (error) => {
@@ -543,6 +629,8 @@ export class PlaylistComponent {
           next: (response) => {
             this.NuevaPlaylist=response.id;
             this.anadiraPlaylist(this.NuevaPlaylist,cancionId);
+            this.fotoNueva='';
+            this.file = null;
             this.cerrarModalPlaylist();
             console.log("Playlist creada con éxito");
             this.pedirMisPlaylist(); 
