@@ -246,8 +246,18 @@ cambiarFiltro(filtro: string) {
 }
 
 toggleSeguir() {
-  this.artista.siguiendo = !this.artista.siguiendo;
-  //MANDAR AL BACKEND
+  this.authService.changeFollow(this.artista.nombreUsuario, !this.artista.siguiendo)
+    .subscribe({
+      next: () => {   
+        this.artista.siguiendo = !this.artista.siguiendo;
+      },
+      error: (error) => {
+        console.error('Error al seguir o dejar de seguir', error);
+      },
+      complete: () => {
+        console.log('Cambio completado con éxito');
+      }
+    });
 }
 
 toggleFav(id: any) {

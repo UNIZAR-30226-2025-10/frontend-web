@@ -1,11 +1,12 @@
-import { Component, OnInit,  ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit,  ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PlayerService } from '../../services/player.service';
-import { SidebarService } from '../../services/sidebar.service';
+import { TokenService } from '../../services/token.service';
 import { AuthService } from '../../services/auth.service';
 import { DurationPipe } from '../../pipes/duration.pipe';
 import { FavoritosService } from '../../services/favoritos.service';
+import { Subscription } from 'rxjs';
 
 interface Album {
   nombre: string;
@@ -36,11 +37,12 @@ interface Cancion {
   templateUrl: './album.component.html',
   styleUrls: ['./album.component.css']  
 })
-export class AlbumComponent implements OnInit {
+export class AlbumComponent implements OnInit, OnDestroy {
 
   currentIndex: number = 0;
   isShuffle: boolean = false;
   isPlaying: boolean = false;
+  isBucle: boolean = false;
   currentTrack: any;
 
   mostrarBarra: boolean = false;
@@ -48,20 +50,56 @@ export class AlbumComponent implements OnInit {
   showListsDropdown: boolean = false;
   DropdownSeguidores: boolean = false;
   misPlaylists: any[] = [];
+  albumId: string = '';
+  private playSubscription!: Subscription;
+  private shuffleSubscription!: Subscription;
 
   album: Album = { nombre: '', fotoPortada: '', nombreArtisticoArtista: '', fechaPublicacion: '', duracion: 0, reproducciones: 0, favs: 0, canciones: []};
 
 
   @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
 
-  constructor(private route: ActivatedRoute, private playerService: PlayerService, private el: ElementRef,private authService:AuthService, private favoritosService: FavoritosService) {}
+  constructor(private route: ActivatedRoute, private playerService: PlayerService, private el: ElementRef,private authService:AuthService, private favoritosService: FavoritosService, private tokenService: TokenService) {}
 
   ngOnInit(): void {
     const albumId = this.route.snapshot.paramMap.get('id'); 
     if (albumId) {
+      this.albumId = albumId;
       this.getAlbum(albumId);  
     }
 
+    // Nos suscribimos al observable para recibir el play/pause
+    this.playSubscription = this.playerService.isPlaying$
+    .subscribe(playData => {
+      if (playData) {
+        if (this.tokenService.getColeccionActual() != null && this.albumId != '') {
+          if (this.tokenService.getColeccionActual().id.toString() == this.albumId) {
+            if (playData.emisor != 'pantalla') {
+              console.log('dentro evento play pantalla', playData);
+              this.isPlaying = playData.play;
+            }
+          }
+        }
+      }
+    });
+
+    // Nos suscribimos al observable para recibir el shuffle/no shuffle
+    this.shuffleSubscription = this.playerService.isShuffle$
+    .subscribe(shuffleData => {
+      if (shuffleData) {
+        if (this.tokenService.getColeccionActual() != null && this.albumId != '') {
+          if (this.tokenService.getColeccionActual().id.toString() == this.albumId) {
+            if (shuffleData.emisor != 'pantalla') {
+              console.log('dentro evento shuffle pantalla', shuffleData);
+              this.isShuffle = shuffleData.shuffle;
+            }
+          }
+        }
+      }
+    });
+
+
+ 
     this.mostrarBarra =  false;
       
       const topDiv = this.el.nativeElement.querySelector('.top-div');
@@ -70,7 +108,6 @@ export class AlbumComponent implements OnInit {
         const observer = new IntersectionObserver(
           (entries) => {
             this.mostrarBarra = !entries[0].isIntersecting;
-            console.log('mostrar:', this.mostrarBarra);
           },
           { threshold: 0 }
         );
@@ -81,7 +118,6 @@ export class AlbumComponent implements OnInit {
   getAlbum(albumId: string): void {
     this.authService.datosAlbum(albumId).subscribe({
       next: (data) => {
-        console.log('recibo1:', data);
         this.album.nombre = data.nombre; 
         this.album.fotoPortada = data.fotoPortada
         this.album.nombreArtisticoArtista = data.nombreArtisticoArtista
@@ -95,7 +131,6 @@ export class AlbumComponent implements OnInit {
           //featuring: cancion.featuring.length ? ` ${cancion.featuring.join(', ')}` : '',
           fechaPublicacion: this.formatearFecha(cancion.fechaPublicacion)
         }));
-        console.log('recibo:', this.album);
       },
       error: (error) => {
         console.error('Error al autenticar:', error);
@@ -222,30 +257,48 @@ export class AlbumComponent implements OnInit {
 
   //Lógica de reproducción
 
-  toggleShuffle(): void {
-    this.playerService.toggleShuffle(); // Habilitar o deshabilitar el shuffle
-    this.isShuffle = this.playerService.isShuffleEnabled();
-  }
-
   onTrackClick(track: any) {
-    // Llamamos al servicio para establecer la canción seleccionada y el álbum con la lista de canciones
-    this.playerService.setTrack(track, this.album.canciones); // Pasamos la lista de canciones del álbum
+    const idsCanciones = this.album.canciones.map((c: {id: any}) => c.id);
+    this.playerService.setTrackInCollection(this.albumId, track.id, idsCanciones)
   }
 
   playAlbum() {
+
+    //Comprueba si el álbum ya estaba puesto o no, si es que no, empieza su reproducción. Si es que si, reaunuda o para la canción.
+    this.playerService.setColeccion(this.albumId, this.album.canciones, this.isShuffle);
+
     if (!this.isPlaying) {
       this.isPlaying = true;
     }else {
       this.isPlaying = false;
     }
 
-    //Comprueba si el álbum ya estaba puesto o no, si es que no, empieza su reproducción
-    this.playerService.setColeccion(this.album);
+    this.playerService.togglePlay('pantalla')
    
-    //Toggle play para parar o reaunudar el audio
+  }
 
+  toggleShuffle(): void {
 
-   
+    if (!this.isShuffle) {
+      this.isShuffle = true;
+    }else {
+      this.isShuffle = false;
+    }
+
+    //Comprueba si el álbum ya estaba puesto o no, si es que no, empieza su reproducción. Si es que si, cambia el shuffle la canción.
+    this.playerService.setColeccion(this.albumId, this.album.canciones, this.isShuffle);
+    this.playerService.toggleShuffle('pantalla', this.isShuffle)
+    
+  }
+
+  ngOnDestroy(): void {
+    if (this.playSubscription) {
+      this.playSubscription.unsubscribe();
+    }
+
+    if (this.shuffleSubscription) {
+      this.shuffleSubscription.unsubscribe();
+    }
   }
 
   

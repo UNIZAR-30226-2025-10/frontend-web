@@ -143,9 +143,9 @@ export class PlaylistComponent {
         observer.observe(topDiv);
       }
 
-      this.playerService.isPlaying$.subscribe(isPlaying => {
+      /*this.playerService.isPlaying$.subscribe(isPlaying => {
         this.isPlaying = isPlaying; 
-      });
+      });*/
     
       this.playerService.currentTrack$.subscribe(track => {
         //this.isPlaying = !!track; // Si hay una canción, isPlaying será true
@@ -214,8 +214,8 @@ export class PlaylistComponent {
   
 
   toggleShuffle(): void {
-    this.playerService.toggleShuffle(); // Habilitar o deshabilitar el shuffle
-    this.isShuffle = this.playerService.isShuffleEnabled();
+    /*this.playerService.toggleShuffle(); // Habilitar o deshabilitar el shuffle
+    this.isShuffle = this.playerService.isShuffleEnabled();*/
   }
 
   toggleFavorite(id: any) {

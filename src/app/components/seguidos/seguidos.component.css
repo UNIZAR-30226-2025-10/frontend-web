@@ -18,11 +18,12 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start; /* Alinea las imágenes a la derecha */
-    gap: 0px;
+    gap: 5px;
     padding: 0;
     margin: 0 auto;
     width: 95%;
     box-sizing: border-box;
+    padding: 0px 35px;
 }
 
 /* Imagen de los seguidores */
@@ -33,7 +34,7 @@
     padding: 0;
     margin: 10px 0;
     display: block;
-    flex-basis: calc(16.66% - 10px); /* 6 imágenes por fila */
+    flex-basis: calc(12.5% - 10px); /* 6 imágenes por fila */
 }
 
 .filters {
@@ -67,10 +68,14 @@ h3 {
 
 .seguidorcard {
     display:flex; 
+    flex-basis: calc(12.5% - 10px);
     flex-direction: column; 
     align-items: center;
     padding: 5px 20px;
     border-radius: 12px;
+    width: 150px;
+    height: 100%;
+    min-width: 140px;
 }
 .seguidorcard:hover {
     background-color: #e9e6e6;

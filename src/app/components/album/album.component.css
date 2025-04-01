@@ -255,9 +255,6 @@ h2, h3 {
   font-size: 15px;
 }
 
-.play-song {
-  background-color: #0a1744;
-}
 
 .aleatorio {
   cursor: pointer;
@@ -266,10 +263,11 @@ h2, h3 {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #000E3B;
 }
 
 .aleatorio.active {
-  color: rgb(99, 122, 184);
+  color: #8ca4ff;
 }
 
 .aleatorio i {

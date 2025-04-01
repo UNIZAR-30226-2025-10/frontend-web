@@ -79,10 +79,10 @@
             <h6>Nombre artístico: {{ oyente.nombreArtistico }}</h6>
             <h1>{{this.oyente.biografia}}</h1>
             <div class="seguidores">
-                <button class="linkseguidores" style="border:none; background-color: transparent; padding: 0px; margin:0px;" [routerLink]="['/home/seguidores',oyente.nombreUsuario]">
+                <button class="linkseguidores" style="border:none; background-color: transparent; padding: 0px; margin:0px;" [routerLink]="['/home/seguidores']">
                     <h4>{{ oyente.nSeguidores }} {{ oyente.nSeguidores === 1 ? ' Seguidor' : ' Seguidores' }}</h4>
                 </button>
-                <button class="linkseguidores" style="border:none; background-color: transparent; padding: 0px; margin:0px;" [routerLink]="['/home/seguidos',oyente.nombreUsuario]">
+                <button class="linkseguidores" style="border:none; background-color: transparent; padding: 0px; margin:0px;" [routerLink]="['/home/seguidos']">
                     <h4>{{ oyente.nSeguidos }} {{ oyente.nSeguidos === 1 ? ' Seguido' : ' Seguidos' }}</h4>
                 </button>
             </div>
@@ -233,7 +233,11 @@
 
         <div class="container">       
             <div *ngFor="let seguido of seguidos; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                <a [routerLink]="['/home/perfil', seguido.nombreUsuario]"> 
+                <a *ngIf="seguido.tipo === 'oyente'" [routerLink]="['/home/perfil', seguido.nombreUsuario]"> 
+                    <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombre">
+                    <strong>{{ seguido.nombreUsuario }}</strong>
+                </a>
+                <a *ngIf="seguido.tipo === 'artista'" [routerLink]="['/home/artista', seguido.nombreUsuario]"> 
                     <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombre">
                     <strong>{{ seguido.nombreUsuario }}</strong>
                 </a>

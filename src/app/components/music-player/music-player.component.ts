@@ -26,12 +26,16 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
 
   @ViewChild('audioElement') audioElementRef!: ElementRef<HTMLAudioElement>; 
   currentTrack: any = null;
-
+  hayColeccion: boolean = false;
 
   isPlaying: boolean = false;
+  isShuffle: boolean = false;
+
   private trackSubscription!: Subscription;
   private progressSubscription!: Subscription;
   private favSubscription!: Subscription;
+  private playSubscription!: Subscription;
+  private shuffleSubscription!: Subscription;
 
   currentTime: number = 0; // Tiempo actual de la canción
   duration: number = 0;
@@ -44,9 +48,6 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   //PARA MANEJAR CUANTO TIEMPO DE LA CANCION SE HA REPRODUCIDO
   secondsListened: number = 0;  // Segundos reales escuchados
   lastTime: number = 0;         // Último tiempo registrado para detectar adelantos
-  hasCalledAPI: boolean = false;  // Para evitar llamadas duplicadas a la API
-
-
 
   constructor(private playerService: PlayerService, private authService:AuthService, private tokenService : TokenService, private progressService: ProgressService, private favoritosService: FavoritosService, private router: Router){}
 
@@ -57,14 +58,33 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    
-    if(this.tokenService.getCancionActual() != null) {
-      console.log('q tengo en local: ', this.tokenService.getCancionActual());
+    console.log('haycoleccion:', this.hayColeccion)
+    if (this.tokenService.getCancionActual() != null) {
+      if (this.tokenService.getColeccionActual() != null) {
+        this.hayColeccion = true;
+        this.playerService.coleccionActual.id = this.tokenService.getColeccionActual().id
+        this.playerService.coleccionActual.modo = this.tokenService.getColeccionActual().modo
+        this.playerService.coleccionActual.orden = this.tokenService.getColeccionActual().orden
+        this.playerService.coleccionActual.index = this.tokenService.getColeccionActual().index
+        this.playerService.coleccionActual.ordenNatural = this.tokenService.getColeccionActual().ordenNatural
+        if (this.playerService.coleccionActual.ordenNatural === null) {
+          this.playerService.coleccionActual.ordenNatural = this.playerService.coleccionActual.orden;
+        }
+
+        if ( this.playerService.coleccionActual.modo === 'aleatorio') {
+          this.playerService.toggleShuffleActivarForzado('musicplayer')
+          this.isShuffle = true;
+        }
+        console.log('me devuelve en orden:', this.playerService.coleccionActual.orden)
+        console.log('me devuelve en ordenNatural:', this.playerService.coleccionActual.ordenNatural)
+        console.log('me devuelve en index:', this.playerService.coleccionActual.index)
+        console.log('me devuelve en modo:', this.playerService.coleccionActual.modo)
+      }
       this.currentTrack = this.tokenService.getCancionActual();
+      this.playerService.trackIndividual = this.currentTrack;
       this.isPlaying = false;
-      this.playerService.isPlayingSubject.next(false);
       this.isFavorite = this.tokenService.getCancionActual().fav;
-      console.log('isFavorite:', this.isFavorite);
+      this.secondsListened = Number(this.tokenService.getTranscursoCancion())
     }
 
     console.log("Valor inicial de currentTrack$:", this.playerService.currentTrackSource.getValue());
@@ -75,14 +95,40 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     this.trackSubscription = this.playerService.currentTrack$.subscribe(trackData => {
       if (trackData && trackData.track) {
         this.currentTrack = trackData.track; // Actualiza el track actual
+        this.secondsListened = 0;
+        this.lastTime = 0;
         if(!trackData.coleccion) {
-          console.log('cancion sola', trackData.track);
+          console.log('cancion sola track', trackData.track);
           console.log('cancion sola2', this.currentTrack.id);
+          this.hayColeccion = false;
           this.playTrack();
         } else {
-          console.log('cancion en coleccion', trackData.coleccion);
-          console.log('cancion en coleccion', trackData.track);
+          console.log('coleccion que se reproduce', trackData.coleccion);
+          console.log('cancion de la coleccion que se reproduce', trackData.track);
+          this.hayColeccion = true;
           this.playTrackInCollection(trackData.coleccion);
+        }
+      }
+    });
+
+    // Nos suscribimos al observable para recibir el play/pause
+    this.playSubscription = this.playerService.isPlaying$
+    .subscribe(playData => {
+      if (playData) {
+        if (playData.emisor != 'musicplayer') {
+          console.log('dentro evento play musicplayer', playData);
+          this.isPlaying = playData.play;
+        }
+      }
+    });
+
+    // Nos suscribimos al observable para recibir el shuffle/no shuffle
+    this.shuffleSubscription = this.playerService.isShuffle$
+    .subscribe(shuffleData => {
+      if (shuffleData) {
+        if (shuffleData.emisor != 'musicplayer') {
+          console.log('dentro evento shuffle musicplayer', shuffleData);
+          this.isShuffle = shuffleData.shuffle;
         }
       }
     });
@@ -153,6 +199,14 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     if (this.favSubscription) {
       this.favSubscription.unsubscribe();
     }
+
+    if (this.playSubscription) {
+      this.playSubscription.unsubscribe();
+    }
+
+    if (this.shuffleSubscription) {
+      this.shuffleSubscription.unsubscribe();
+    }
   }
   
 
@@ -194,14 +248,18 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   }
 
 
-  playTrackInCollection( coleccion:any) {
+  playTrackInCollection(coleccion:any) {
     //CON ESTA PETICION SE MANDA AL BAKEND LA CANCION ACTUAL Y QUE ESTA EN UNA COLECCION
-    this.authService.pedirCancionColeccion(coleccion.id, coleccion.modo, coleccion.canciones, coleccion.index)
+    this.authService.pedirCancionColeccion(coleccion.id, coleccion.modo, coleccion.orden, coleccion.index)
     .subscribe({
       next: (response) => {
         //Esta peticion devuelve el audio, si es fav, y el nombre du user del artista
         if (response && response.audio) {
         this.audioElementRef.nativeElement.src = response.audio;
+        this.currentTrack.audio = this.audioElementRef.nativeElement.src;
+        this.currentTrack.fav = response.fav;
+        this.tokenService.setCancionActual(this.currentTrack);
+        this.tokenService.setColeccionActual(coleccion);
         this.audioElementRef.nativeElement.play();
         this.isPlaying = true;
         this.isFavorite = response.fav;
@@ -223,16 +281,12 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   togglePlay() {
 
     if(this.audioElementRef.nativeElement.src && this.audioElementRef.nativeElement.src !== '') {
-      const audio = this.audioElementRef.nativeElement;
-      if (audio.paused) {
-        audio.play();
+      if (!this.isPlaying) {  
         this.isPlaying = true;
-        this.playerService.isPlayingSubject.next(true);
       } else {
-        audio.pause();
         this.isPlaying = false;
-        this.playerService.isPlayingSubject.next(false);
       }
+      this.playerService.togglePlay('musicplayer')
     } 
   }
 
@@ -243,6 +297,16 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   nextTrack(): void {
     this.playerService.nextSong();  
   }
+
+  toggleShuffle() : void {
+    if (!this.isShuffle) {  
+      this.isShuffle = true;
+    } else {
+      this.isShuffle = false;
+    }
+    this.playerService.toggleShuffle('musicplayer', this.isShuffle)
+  }
+
 
   //PARA PONER BIEN EL VOLUMEN ANTES DE TOCAR LA BARRA
   setInitialVolumeProgress() {
@@ -257,8 +321,8 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   //PARA PROGRESO DE LA BARRA Y EL TIEMPO
   updateProgress() {
     const audioElement = this.audioElementRef.nativeElement;
-  if (audioElement) {
-    audioElement.addEventListener('loadedmetadata', () => {
+    if (audioElement) {
+      audioElement.addEventListener('loadedmetadata', () => {
       this.duration = !isNaN(audioElement.duration) ? audioElement.duration : 0;  // Se actualiza cuando el audio carga
     });
 
@@ -266,26 +330,23 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       this.currentTime = audioElement.currentTime;
       this.duration = !isNaN(audioElement.duration) ? audioElement.duration : 0; // Asegurar que siempre tenga valor
 
-      // Verifica si se ha adelantado la canción (comparando con el último tiempo)
-      if (this.currentTime < this.lastTime) {
-        // Si el tiempo actual es menor que el anterior, significa que el usuario ha adelantado
-        this.secondsListened = 0; // Reiniciar el contador de tiempo escuchado
-        this.hasCalledAPI = false; // Reiniciar la flag para evitar llamadas duplicadas
+      let entero = Math.floor(this.currentTime); 
+      if (entero != this.lastTime) {
+        this.lastTime = entero;
+        this.secondsListened++;
+        this.tokenService.setTranscursoCancion(this.secondsListened)
       }
-      // Actualizar el último tiempo
-      this.lastTime = this.currentTime;
-
+      if (this.secondsListened === 20){
+        this.incrementSongPlayCount()
+        this.secondsListened++;
+      }
+     
       const progressPercent = (this.currentTime / this.duration) * 100;
       const progressBar = document.querySelector('.progress-bar') as HTMLElement;
       if (progressBar) {
         progressBar.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000e3b ${progressPercent}%)`;
       }
 
-      // Si el usuario ha escuchado 20 segundos completos, llamamos a la API
-      if (this.currentTime >= 20 && !this.hasCalledAPI) {
-        this.hasCalledAPI = true;
-        this.incrementSongPlayCount();
-      }
 
     });
   }

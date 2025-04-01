@@ -16,6 +16,7 @@ import { FavoritosService } from '../../services/favoritos.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent {
   correoOusuario: string = '';
   credentials: { correo?: string; nombreUsuario?: string; contrasenya: string } = { contrasenya: '' };
@@ -39,7 +40,6 @@ export class LoginComponent {
     } else {
       this.credentials = { nombreUsuario: this.correoOusuario, contrasenya: this.credentials.contrasenya };
     }
-    
     this.authService.login(this.credentials)
     .subscribe({
       next: (response) => {
@@ -57,14 +57,16 @@ export class LoginComponent {
           this.router.navigate(['/admin']);
         } else {
           
-        /*this.authService.pedirCancionActual()
+        this.authService.pedirCancionActual()
           .subscribe({
             next: (response) => {
               if (response != null) {
-                console.log('actual: ', response);
-                console.log('id actualizar:', this.favoritosService.actualizarFavSource.getValue())
                 this.favoritosService.actualizarFavSource.next({ actualizarFavId: null})
-                console.log('id actualizar:', this.favoritosService.actualizarFavSource.getValue())
+                this.playerService.isPlayingSubject.next(null)
+                this.playerService.isShuffleSubject.next(null)
+                this.playerService.currentTrackSource.next({ track: null, coleccion: null})
+                
+                this.tokenService.setColeccionActual(null);
                 this.tokenService.setCancionActual(null);
                 if (response.cancion != null)  {
                   this.tokenService.setProgresoLocal(response.cancion.progreso);
@@ -84,7 +86,7 @@ export class LoginComponent {
               console.log('Petición completada');
               this.router.navigate(['/home/home']);
             }
-          })*/
+          })
         }
       },
       error: (error) => {
@@ -104,8 +106,6 @@ export class LoginComponent {
           this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
           this.errorType = 'general';
         }
-
-
       },
       complete: () => {
         //SE EJECUTA CAUNDO LA PETICION A TERMINADO YA SEA CON EXITO O NO. PARA HACER TAREAS COMO LIMPIAR RECURSOS O ESCRIBIR MENSAJES FINALES
