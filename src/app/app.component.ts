@@ -35,7 +35,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   
     setTimeout(() => {
       if (token && this.router.url === '/login') {  
-        this.router.navigate(['/home/home']);
+        //this.router.navigate(['/home/home']);
       }
     }, 0); 
 

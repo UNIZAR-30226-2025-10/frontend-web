@@ -54,10 +54,9 @@
           </div>
     </div>
     <div class="icons-container">
-        <div class="play-song" (click)="togglePlayPause()">
-          <i class="fas" [ngClass]="isPlaying ? 'fa-pause' : 'fa-play'"></i>
+        <div class="play-song" (click)="playLista()">
+          <i class="fas" [ngClass]="isPlaying ? 'fa-pause' : 'fa-play'"></i> 
         </div>
-      
         <div class="aleatorio" (click)="toggleShuffle()" [ngClass]="{'active': isShuffle}" >
           <i class="ph-shuffle"></i> 
         </div>
@@ -177,11 +176,9 @@
     <div class="playlist">
         <div *ngFor="let cancion of playlist?.canciones; let i = index" 
              class="song" 
-             [ngClass]="{
-              'playing': isPlaying && cancion.id === currentTrack?.id,
-              'current-track': cancion.id === currentTrack?.id
-            }" 
-             (click)="onTrackClick(cancion)">
+             [ngClass]="{'playing': isPlaying && cancion.id === currentTrack?.id,
+             'current-track': cancion.id === currentTrack?.id}" 
+              (click)="onTrackClick(cancion)">
           
           <div class="song-number">{{ i + 1 }}</div>
           <div class="song-image-wrapper">
@@ -243,8 +240,8 @@
                         Quitar de canciones que te gustan
                       </button>
                     </li>                 
-                    <li [routerLink]="['/album', cancion.albumId]">Ir al álbum</li>
-                    <li [routerLink]="['/perfil', cancion.artistaId]">Ir al artista</li>
+                    <li [routerLink]="['/home/album', cancion.idAlbum]">Ir al álbum</li>
+                    <li [routerLink]="['/home/artista', cancion.nombreUsuarioArtista]">Ir al artista</li>
                   </ul>
                 </div>
               </div>          

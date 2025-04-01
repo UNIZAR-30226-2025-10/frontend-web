@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
 import { ActivatedRoute } from '@angular/router';
 import { DurationPipe } from '../../pipes/duration.pipe';
@@ -38,6 +39,9 @@ export class PlaylistComponent {
     soyColaborador: boolean = false; 
     usuarioActual: string = ''; 
 
+    private playSubscription!: Subscription;
+    private shuffleSubscription!: Subscription;
+
     isModalEditarOpen= false;
     mensajeError = '';
 
@@ -67,7 +71,7 @@ export class PlaylistComponent {
 
     //orden de las canciones
     originalSongOrder: any[] = [];
-    currentSortMethod: string = 'original';
+    currentSortMethod: string = 'fecha';
 
     // Opciones de ordenación
     sortOptions = [
@@ -127,6 +131,36 @@ export class PlaylistComponent {
         this.currentPlaylistId = +playlistId;
         this.getPlaylist(playlistId);  
       }
+
+      // Nos suscribimos al observable para recibir el play/pause
+    this.playSubscription = this.playerService.isPlaying$
+    .subscribe(playData => {
+      if (playData) {
+        if (this.tokenService.getColeccionActual() != null && String(this.currentPlaylistId) != '') {
+          if (this.tokenService.getColeccionActual().id.toString() == String(this.currentPlaylistId)) {
+            if (playData.emisor != 'pantalla') {
+              console.log('dentro evento play pantalla', playData);
+              this.isPlaying = playData.play;
+            }
+          }
+        }
+      }
+    });
+
+    // Nos suscribimos al observable para recibir el shuffle/no shuffle
+    this.shuffleSubscription = this.playerService.isShuffle$
+    .subscribe(shuffleData => {
+      if (shuffleData) {
+        if (this.tokenService.getColeccionActual() != null && String(this.currentPlaylistId) != '') {
+          if (this.tokenService.getColeccionActual().id.toString() == String(this.currentPlaylistId)) {
+            if (shuffleData.emisor != 'pantalla') {
+              console.log('dentro evento shuffle pantalla', shuffleData);
+              this.isShuffle = shuffleData.shuffle;
+            }
+          }
+        }
+      }
+    });
       
       this.mostrarBarra =  false;
       
@@ -143,14 +177,6 @@ export class PlaylistComponent {
         observer.observe(topDiv);
       }
 
-      /*this.playerService.isPlaying$.subscribe(isPlaying => {
-        this.isPlaying = isPlaying; 
-      });*/
-    
-      this.playerService.currentTrack$.subscribe(track => {
-        //this.isPlaying = !!track; // Si hay una canción, isPlaying será true
-        this.currentTrack = track;
-      });
       this.pedirMisPlaylist(); 
   }
 
@@ -211,11 +237,37 @@ export class PlaylistComponent {
     this.DropdownMenu = !this.DropdownMenu;
   }
 
-  
+  //Lógica de reproducción
+  onTrackClick(track: any) {
+    const idsCanciones = this.playlist.canciones.map((c: {id: any}) => c.id);
+    this.playerService.setTrackInCollection(String(this.currentPlaylistId), track.id, idsCanciones)
+  }
+
+  playLista() {
+    //Comprueba si  la playlist ya estaba puesto o no, si es que no, empieza su reproducción. Si es que si, reaunuda o para la canción.
+    this.playerService.setColeccion(String(this.currentPlaylistId), this.playlist.canciones, this.isShuffle);
+
+    if (!this.isPlaying) {
+      this.isPlaying = true;
+    }else {
+      this.isPlaying = false;
+    }
+
+    this.playerService.togglePlay('pantalla')
+   
+  }
 
   toggleShuffle(): void {
-    /*this.playerService.toggleShuffle(); // Habilitar o deshabilitar el shuffle
-    this.isShuffle = this.playerService.isShuffleEnabled();*/
+    if (!this.isShuffle) {
+      this.isShuffle = true;
+    }else {
+      this.isShuffle = false;
+    }
+
+    //Comprueba si el álbum ya estaba puesto o no, si es que no, empieza su reproducción. Si es que si, cambia el shuffle la canción.
+    this.playerService.setColeccion(String(this.currentPlaylistId), this.playlist.canciones, this.isShuffle);
+    this.playerService.toggleShuffle('pantalla', this.isShuffle)
+    
   }
 
   toggleFavorite(id: any) {
@@ -281,14 +333,6 @@ export class PlaylistComponent {
         sortedSongs.sort((a, b) => b.reproducciones - a.reproducciones);
         break;
       case 'fecha':
-        sortedSongs.sort((a, b) => {
-          const dateA = this.convertirFecha(a.fecha);
-          const dateB = this.convertirFecha(b.fecha);
-          return dateB.getTime() - dateA.getTime(); // DE MAS RECIENTE A MAS ANTIGUA
-        });
-        break;
-      case 'original':
-        // Restaurar el orden original //Si original va a ser alfabetico quitar
         if (this.originalSongOrder.length) {
           this.playlist.canciones = [...this.originalSongOrder];
           return;
@@ -297,43 +341,6 @@ export class PlaylistComponent {
     } 
     this.playlist.canciones = sortedSongs;
   }
-
-  onTrackClick(track: any) {
-    // Llamamos al servicio para establecer la canción seleccionada y el álbum con la lista de canciones
-    const coleccion = {
-      id: this.currentPlaylistId, 
-      modo: this.isShuffle ? "aleatorio" : "enOrden", // Modo de reproducción
-      canciones: this.playlist.canciones,
-  };
-
-    console.log("track en playlist",track);
-    this.playerService.setTrack(track, coleccion); // Pasamos la lista de canciones del álbum
-  }
-
-  togglePlayPause(): void {
-    if (this.isPlaying) {
-      //this.playerService.pauseTrack(); 
-    } else {
-      this.onPlayPlaylist();
-    }
-  }
-
-  // cambiar para implementar aleatorio
-  onPlayPlaylist(): void {
-    if (this.isPlaying && this.currentTrack) {
-      //this.playerService.playTrack();
-      return;
-    }
-
-    const coleccion = {
-      id: this.currentPlaylistId,
-      modo: this.isShuffle ? "aleatorio" : "enOrden", // Dependiendo de si el shuffle está habilitado
-      canciones: this.playlist.canciones, // Pone el nuevo orden si no estaba ya sonando alguna cancion
-    };
-  
-    this.playerService.setTrack(this.playlist.canciones[0], coleccion); // Empieza desde la primera canción
-  }
-  
 
   getPlaylist(playlistId: any): void {
     this.authService.pedirDatosPlaylist(playlistId)
