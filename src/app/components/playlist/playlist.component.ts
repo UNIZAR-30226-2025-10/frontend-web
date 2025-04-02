@@ -45,6 +45,8 @@ export class PlaylistComponent {
     fotoNueva!: string;
     file:  File | null = null;;
 
+    isHovered = false;
+
     //buscador de mis playlists (para añadir canción a una playlist)
     filteredPlaylists: any[] = [];
     searchPlaylistTerm: string = '';
@@ -61,6 +63,9 @@ export class PlaylistComponent {
     isModalPlaylistOpen = false;
     cancionActual: any;
     NuevaPlaylist: any;
+
+    // modal colaboradores
+    isModalColaboradoresOpen = false;
 
     // menu de ordenación
     showSortMenu: boolean = false;
@@ -172,6 +177,15 @@ export class PlaylistComponent {
   cerrarModalPlaylist() {
     this.isModalPlaylistOpen = false;
     this.fotoNueva = '';
+  }
+
+  abrirModalColaboradores() {
+    this.isModalColaboradoresOpen = true
+    console.log("abierot colab")
+  }
+
+  cerrarModalColaboradores() {
+    this.isModalColaboradoresOpen = false;
   }
 
   toggleSortMenu(): void {
@@ -455,6 +469,27 @@ export class PlaylistComponent {
         },
         complete: () => {
           console.log("Solicitud enviada con éxito");
+        }
+      });
+  }
+
+  echarUsuario(nombreUsuario:string,playlist: any): void {
+    this.authService.echarUsuario(nombreUsuario,playlist)
+      .subscribe({
+        next: (response) => {
+          this.notificationService.showSuccess(`Usuario ${nombreUsuario} expulsado de la playlist`);
+          this.playlist.playlist.colaboradores = this.playlist.playlist.colaboradores.filter((c: string) => c !== nombreUsuario);
+          if (!playlist?.playlist?.colaboradores?.length) {
+            this.cerrarModalColaboradores();
+          }
+          
+          
+        },
+        error: (error) => {
+          console.error("Error al expulsar al usuario de la playlist");
+        },
+        complete: () => {
+          console.log("Usuario expulsado con éxito");
         }
       });
   }

@@ -14,7 +14,7 @@
   padding: 10px;
   text-align: center;
   font-size: 18px;
-  z-index: 1000;  
+  z-index: 1000;
 }
 
 .barra-superior.mostrar {
@@ -35,7 +35,6 @@
   min-height: 100vh;
   overflow-y: auto;
   position: relative;
-  z-index: 1; 
 }
 
 .top-div {
@@ -491,9 +490,11 @@ h2, h3 {
   width: 90%;
   max-width: 400px;
   box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
-  color: white;
+  color: black;
 }
 
+
+/* Botones dentro del modal */
 .btn-cerrar {
   background-color: transparent;
   color: #000e3b;
@@ -518,6 +519,30 @@ h2, h3 {
 }
 
 .btn-guardar:hover {
+  background-color: #2e4074;
+}
+
+.colaborador{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.btn-expulsar {
+  background-color: #8ca4ff;
+  color: #000e3b;
+  padding: 7px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  width: 30%;
+  font-size: 14px;
+  align-items: flex-end;
+  
+}
+
+.btn-expulsar:hover {
   background-color: #2e4074;
 }
 

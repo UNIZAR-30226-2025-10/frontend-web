@@ -11,6 +11,8 @@ import { AuthService } from '../../services/auth.service';
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap, catchError } from 'rxjs/operators';
 import { TokenService } from '../../services/token.service';
+import { ActualizarFotoPerfilService } from '../../services/actualizar-foto-perfil.service';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-buscador',
@@ -25,13 +27,15 @@ export class BuscadorComponent implements OnInit, OnDestroy{
   previousUrl: string = '';
   foto: string = '';
 
+  tieneNotificaciones: boolean=false;
+
 
   private searchQuerySubject: Subject<string> = new Subject(); 
   private subscription!: Subscription;
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
-  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService) {}
+  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService,private socketService: SocketService) {}
 
 
   ngOnInit() {
@@ -72,6 +76,14 @@ export class BuscadorComponent implements OnInit, OnDestroy{
         console.error('Error al obtener los datos', error);
       }
     });
+
+    this.socketService.connect();
+
+    this.socketService.listen('invite-to-playlist-ws').subscribe((data) => {
+      console.log('Nueva invitación recibida:', data);
+      this.tieneNotificaciones = true; 
+    });
+
   }
 
 
@@ -104,6 +116,10 @@ export class BuscadorComponent implements OnInit, OnDestroy{
   onSearchInputChange() {
     // Emitimos el valor de búsqueda cuando cambia el input
     this.searchQuerySubject.next(this.searchQuery);
+  }
+
+  verNotificaciones() {
+    this.tieneNotificaciones = false; 
   }
 }
 

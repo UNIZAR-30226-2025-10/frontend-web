@@ -2,6 +2,8 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TokenService } from '../../services/token.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,18 +14,18 @@ import { CommonModule } from '@angular/common';
 export class SidebarComponent {
   @ViewChild('userIconsContainer') userIconsContainer!: ElementRef;
 
-  users = [
-    { name: 'Usuario 1', img: 'nouser.png', status: 'status-red' },
-    { name: 'Usuario 2', img: 'nouser.png', status: 'status-red' },
-    { name: 'Usuario 3', img: 'nouser.png', status: 'status-red' },
-    { name: 'Usuario 4', img: 'nouser.png', status: 'status-red' },
-    { name: 'Usuario 5', img: 'nouser.png', status: 'status-red' },
-    { name: 'Usuario 6', img: 'nouser.png', status: 'status-red' },
-    { name: 'Usuario 7', img: 'nouser.png', status: 'status-red' },
-    { name: 'Usuario 8', img: 'nouser.png', status: 'status-red' },
-    { name: 'Usuario 9', img: 'nouser.png', status: 'status-red' },
-    { name: 'Usuario 10',img: 'nouser.png', status: 'status-red' }
-  ];
+  constructor(private authService: AuthService,private tokenService: TokenService){}
+
+  foto: string ='';
+
+  seguidos: any[] = [];
+
+  ngOnInit(): void {
+
+    this.foto = this.tokenService.getUser().fotoPerfil;
+    this.pedirSeguidos()
+  
+  }
 
   onScroll(event: Event): void {
     const scrollTop = (event.target as HTMLElement).scrollTop; // Obtiene la cantidad de scroll vertical
@@ -37,4 +39,21 @@ export class SidebarComponent {
         }
     }
   }
+
+  pedirSeguidos(){
+    this.authService.pedirMisSeguidos()
+    .subscribe({
+      next: (response) => {
+        console.log("response",response)
+        this.seguidos = response.seguidos;
+      },
+      error: (error) => {
+        console.error("Error al recuperar los seguidos:", error);
+      },
+      complete: () => {
+        console.log("Seguidos recuperados con éxito");
+      }
+    });
+  }
+  
 }

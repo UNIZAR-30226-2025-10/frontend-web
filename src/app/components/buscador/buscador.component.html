@@ -8,7 +8,12 @@
       <button (click)="toggleSidebar()"><img src="noizz.png" alt="noizz" class="noizz"></button>
   </div>
     <div class="right-icons">
-      <button class="notis-btn"><a [routerLink]="['/home/notificaciones']"><i class="fa fa-bell"></i></a></button>
+      <button class="notis-btn" (click)="verNotificaciones()">
+        <a [routerLink]="['/home/notificaciones']">
+          <i class="fa fa-bell"></i>
+          <span *ngIf="tieneNotificaciones" class="notification-dot"></span>
+        </a>
+      </button>
       <button (click)="goPerfil()"><img [src]="foto && foto!== 'DEFAULT' ? foto : 'nouser.png'" alt="Foto de perfil" class="foto"></button>
     </div>
 </div>

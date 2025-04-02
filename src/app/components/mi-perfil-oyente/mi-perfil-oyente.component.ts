@@ -32,8 +32,6 @@ export class MiPerfilOyenteComponent implements OnInit {
   isModalEliminarOpen = false;
   isModalPlaylistOpen = false;
 
-
-
   oyente: misDatos = { nombre: '', nSeguidores: 0, nSeguidos: 0 };
   ultimosArtistas: any[] = [];
   misPlaylists: any[] = [];
@@ -87,7 +85,7 @@ export class MiPerfilOyenteComponent implements OnInit {
         this.ultimosArtistas = response.ultimosArtistas.historial_artistas;
         this.ultimasCanciones = response.ultimasCanciones.historial_canciones;
         this.misPlaylists = response.misPlaylists.playlists;
-        this.seguidos = response.seguidos.seguidos;
+        
 
       },
       error: (error) => {

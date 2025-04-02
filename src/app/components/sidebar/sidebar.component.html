@@ -2,15 +2,17 @@
     <!-- Sección fija (sin scroll) -->
     <div class="fixed-section">
         <div class="user-me_icon">
-            <div class="user-me">YO</div>
+            <div class="user-me"><img [src]="foto && foto !== 'DEFAULT' ? foto : 'nouser.png'" ></div>
         </div>
     </div>
 
     <!-- Sección con scroll -->
     <div class="scrollable-section" (scroll)="onScroll($event)">
         <div class="user-icons">
-            <div *ngFor="let user of users">
-                <img [src]="user.img" [alt]="user.name">
+            <div *ngFor="let user of seguidos">
+                <a [routerLink]="['/home/perfil', user.nombreUsuario]"> 
+                    <img [src]="user.fotoPerfil && user.fotoPerfil !== 'DEFAULT' ? user.fotoPerfil : 'nouser.png'" [alt]="user.nombreUsuario">
+                </a>
             </div>
         </div>
     </div>

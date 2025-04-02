@@ -58,7 +58,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    const body = { contrasenya: credentials};
+    const body = { contrasenya: credentials.contrasenya};
 
     return this.http.delete(`${this.apiUrl}/delete-account`, { body, headers });
   }
@@ -438,6 +438,24 @@ export class AuthService {
     const body = { cancion: idCancion, playlist: idPlaylist};
   
     return this.http.delete(`${this.apiUrl}/delete-from-playlist`,  { body, headers });  
+  }
+
+  echarUsuario(nombreUsuario: string, idPlaylist: string): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const body = { nombreUsuario: nombreUsuario, playlist: idPlaylist};
+  
+    return this.http.delete(`${this.apiUrl}/expel-from-playlist`,  { body, headers });  
   }
 
   deletePlaylist(idPlaylist: string): Observable<any> {

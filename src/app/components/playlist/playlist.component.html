@@ -16,7 +16,11 @@
                       <span *ngIf="!playlist?.playlist?.colaboradores?.length">{{ playlist?.playlist?.creador }}</span>
                     
                       <!-- Si hay colaboradores, muestra al creador y a los colaboradores -->
-                      <div *ngIf="playlist?.playlist?.colaboradores?.length" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                      <div *ngIf="playlist?.playlist?.colaboradores?.length" style="display: flex; gap: 10px; flex-wrap: wrap;" (click)="abrirModalColaboradores()"
+                      [ngStyle]="{'text-decoration': isHovered ? 'underline' : 'none'}"
+                      style="display: flex; gap: 10px; flex-wrap: wrap;"
+                      (mouseover)="isHovered = true" 
+                      (mouseout)="isHovered = false">
                         <span>{{ playlist?.playlist?.creador }}</span>
                     
                         <!-- Muestra el primer colaborador -->
@@ -112,6 +116,21 @@
               </ul>
             </div>
         </span>
+        <div *ngIf="isModalColaboradoresOpen" class="modal-overlay">
+          <div class="modal-content">
+              <div class="cabecera" style="display: flex;justify-content: space-between;">
+                  <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Compartida con</p>
+                  <button (click)="cerrarModalColaboradores()" class="btn-cerrar"><i class="fas fa-times"></i></button>
+              </div>
+              <div *ngFor="let colaborador of playlist.playlist.colaboradores; let i = index;">
+                <div class="colaborador">
+                  {{ playlist.playlist.colaboradores[i] }} 
+                  <button *ngIf=esMiPlaylist class="btn-expulsar" (click)="echarUsuario(playlist.playlist.colaboradores[i], currentPlaylistId)">Expulsar</button>
+                </div>
+              </div>     
+            </div>
+        </div>
+
         <div *ngIf="isModalEditarOpen" class="modal-overlay">
           <div class="modal-content">
               <div class="cabecera" style="display: flex;justify-content: space-between;">
@@ -131,11 +150,9 @@
                       <input type="text" id="nombre" [(ngModel)]="nombreActual" placeholder="Escribe un nuevo nombre">
                       <button class="btn-guardar" (click)="guardarCambiosPlaylist()">Guardar Cambios</button>
                   </div>
-  
               </div>
           </div>
-      </div>
-        
+      </div>     
     </div>
       <div *ngIf="!playlist?.canciones?.length" class="empty-playlist-container">
         <div class="empty-state-message">
@@ -243,8 +260,8 @@
                         Quitar de canciones que te gustan
                       </button>
                     </li>                 
-                    <li [routerLink]="['/album', cancion.albumId]">Ir al álbum</li>
-                    <li [routerLink]="['/perfil', cancion.artistaId]">Ir al artista</li>
+                    <li [routerLink]="['/home/album', cancion.album]">Ir al álbum</li>
+                    <li [routerLink]="['/home/artista', cancion.nombreUsuarioArtista]">Ir al artista</li>
                   </ul>
                 </div>
               </div>          
@@ -279,5 +296,7 @@
             </div>
             </div>
         </div>
+
+        
       
 </div>

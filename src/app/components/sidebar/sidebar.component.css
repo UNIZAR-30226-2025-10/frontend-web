@@ -76,6 +76,13 @@ a {
     margin-bottom: 10px;
 }
 
+.user-me img{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    z-index:900;
+}
+
 
 
 
