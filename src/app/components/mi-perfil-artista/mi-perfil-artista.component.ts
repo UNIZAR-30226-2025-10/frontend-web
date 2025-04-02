@@ -9,6 +9,7 @@ import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PlayerService } from '../../services/player.service';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
+import { ActualizarFotoPerfilService } from '../../services/actualizar-foto-perfil.service';
 
 
 interface misDatos {
@@ -54,7 +55,7 @@ export class MiPerfilArtistaComponent implements OnInit {
   isPasswordViejaVisible: boolean = false;
   isPasswordNuevaVisible: boolean = false;
 
-  constructor(private authService: AuthService, private tokenService: TokenService,  private router: Router, private playerService: PlayerService, private subirCloudinary: SubirCloudinary){}
+  constructor(private authService: AuthService, private tokenService: TokenService,  private router: Router, private playerService: PlayerService, private subirCloudinary: SubirCloudinary, private actFotoService: ActualizarFotoPerfilService){}
 
   ngOnInit(): void {
 
@@ -158,13 +159,12 @@ export class MiPerfilArtistaComponent implements OnInit {
 
     this.mensajeError = '';
 
-    if (this.fotoNueva !== this.foto) {
-      this.subirCloudinary.uploadFile(this.file, 'artistas').pipe(
-        // Esperar a que se termine la subida y obtener la URL de la imagen
+    if (this.fotoNueva !== this.foto && this.fotoNueva != "nouser.png") {
+      
+      this.subirCloudinary.uploadFile(this.file, 'artistas').pipe(     
         switchMap((url) => {
           console.log('Imagen subida:', url);
           this.fotoNueva = url;
-          // Aquí realizamos la llamada a cambiarDatosArtista
           return this.authService.cambiarDatosArtista(this.nombreActual, this.nombreArtisticoActual, this.biografiaActual, this.fotoNueva);
         })
       ).subscribe({
@@ -177,6 +177,7 @@ export class MiPerfilArtistaComponent implements OnInit {
             const user = this.tokenService.getUser();
             user.fotoPerfil = this.foto;
             this.tokenService.setUser(user);
+            this.actFotoService.actualizarFoto();
           }
           this.cerrarModal();
         },
@@ -192,31 +193,57 @@ export class MiPerfilArtistaComponent implements OnInit {
         }
       });
     } else {
-      // Si la foto no cambió, solo se actualizan los datos
-      this.authService.cambiarDatosArtista(this.nombreActual, this.nombreArtisticoActual, this.biografiaActual, this.fotoNueva).subscribe({
-        next: () => {
-          this.oyente.nombreUsuario = this.nombreActual;
-          this.oyente.nombreArtistico = this.nombreArtisticoActual;
-          this.oyente.biografia = this.biografiaActual;
-          this.foto = this.fotoNueva;
-          if (this.foto !== this.tokenService.getUser().fotoPerfil) {
-            const user = this.tokenService.getUser();
-            user.fotoPerfil = this.foto;
-            this.tokenService.setUser(user);
+      if (this.fotoNueva === "nouser.png" && this.fotoNueva !== this.foto) {
+        this.authService.cambiarDatosOyente(this.nombreActual, 'DEFAULT')
+        .subscribe({
+          next: () => {
+            this.oyente.nombreUsuario = this.nombreActual;
+            this.oyente.nombreArtistico = this.nombreArtisticoActual;
+            this.oyente.biografia = this.biografiaActual;
+            this.foto = this.fotoNueva;
+            if (this.foto !== this.tokenService.getUser().fotoPerfil) {
+              const user = this.tokenService.getUser();
+              user.fotoPerfil = this.foto;
+              this.tokenService.setUser(user);
+              this.actFotoService.actualizarFoto();
+            }
+            this.cerrarModal();
+          },
+          error: (error) => {
+            console.error("Error al guardar los nuevos datos:", error);
+            this.oyente.nombreUsuario = this.nombreActual;
+            this.oyente.nombreArtistico = this.nombreArtisticoActual;
+            this.oyente.biografia = this.biografiaActual;
+            this.fotoNueva = this.foto;
+          },
+          complete: () => {
+            console.log("Datos guardados con éxito");
           }
-          this.cerrarModal();
-        },
-        error: (error) => {
-          console.error("Error al guardar los nuevos datos:", error);
-          this.nombreActual = this.oyente.nombreUsuario;
-          this.nombreArtisticoActual = this.oyente.nombreArtistico;
-          this.biografiaActual = this.oyente.biografia;
-          this.fotoNueva = this.foto;
-        },
-        complete: () => {
-          console.log("Datos guardados con éxito");
+        });
+      } else {
+        let fotoMandar = this.fotoNueva
+        if (this.fotoNueva === "nouser.png") {
+          fotoMandar = 'DEFAULT'
         }
-      });
+
+        this.authService.cambiarDatosArtista(this.nombreActual, this.nombreArtisticoActual, this.biografiaActual, this.fotoNueva).subscribe({
+          next: () => {
+            this.oyente.nombreUsuario = this.nombreActual;
+            this.oyente.nombreArtistico = this.nombreArtisticoActual;
+            this.oyente.biografia = this.biografiaActual;
+            this.cerrarModal();
+          },
+          error: (error) => {
+            console.error("Error al guardar los nuevos datos:", error);
+            this.nombreActual = this.oyente.nombreUsuario;
+            this.nombreArtisticoActual = this.oyente.nombreArtistico;
+            this.biografiaActual = this.oyente.biografia;
+          },
+          complete: () => {
+            console.log("Datos guardados con éxito");
+          }
+        });
+      }
     }
   }
   
@@ -274,6 +301,10 @@ export class MiPerfilArtistaComponent implements OnInit {
       };
       reader.readAsDataURL(this.file);
     }
+  }
+
+  quitarFoto() {
+    this.fotoNueva = "nouser.png";
   }
 
   cerrarSesion(): void {

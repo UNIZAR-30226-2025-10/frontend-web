@@ -18,11 +18,12 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start; /* Alinea las imágenes a la derecha */
-    gap: 0px;
+    gap: 5px;
     padding: 0;
     margin: 0 auto;
     width: 95%;
     box-sizing: border-box;
+    padding: 0px 35px;
 }
 
 /* Imagen de los seguidores */
@@ -71,6 +72,9 @@ h3 {
     align-items: center;
     padding: 5px 20px;
     border-radius: 12px;
+    width: 150px;
+    height: 100%;
+    min-width: 140px;
 }
 .seguidorcard:hover {
     background-color: #e9e6e6;

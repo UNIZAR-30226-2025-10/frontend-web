@@ -34,6 +34,9 @@
 <!-- Controles de reproducción -->
 <div class="parte_central">
     <div class="controls">
+        <button class="aleatorio-btn" (click)="toggleShuffle()" [ngClass]="{'disabled-btn': !currentTrack, 'desaparecer': hayColeccion === false, 'active': currentTrack && isShuffle}">
+          <i class="ph-shuffle"></i>
+        </button>
         <button class="control-btn" (click)="prevTrack()" [ngClass]="{'disabled-btn': !currentTrack}">
             <i class="fas fa-step-backward"></i>
         </button>

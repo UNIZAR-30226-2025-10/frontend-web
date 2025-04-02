@@ -162,11 +162,22 @@ export class PerfilComponent implements OnInit{
   }
 
   toggleSeguir() {
-    this.oyente.siguiendo = !this.oyente.siguiendo;
-    //MANDAR AL BACKEND
+    this.authService.changeFollow(this.oyente.nombre, !this.oyente.siguiendo)
+    .subscribe({
+      next: () => {   
+        this.oyente.siguiendo = !this.oyente.siguiendo;
+      },
+      error: (error) => {
+        console.error('Error al seguir o dejar de seguir', error);
+      },
+      complete: () => {
+        console.log('Cambio completado con éxito');
+      }
+    });
   }
 
   toggleLike() {
+   
     this.ultimoNoizzy.like = !this.ultimoNoizzy.like;
     //MANDAR AL BACKEND
   }

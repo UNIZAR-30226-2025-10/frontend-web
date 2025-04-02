@@ -12,6 +12,7 @@ export class TokenService {
   private cancionActual = 'cancionActual';
   private coleccionActual = 'coleccionActual';
   private progreso = 'progreso';
+  private transcursoCancion = 'transcurso'
 
   constructor() { }
  
@@ -88,9 +89,13 @@ export class TokenService {
     return localStorage.getItem('sid');
   }
 
-
-
-
+  setTranscursoCancion(transcurso: any): void {
+    localStorage.setItem(this.transcursoCancion, transcurso);
+  }
+  
+  getTranscursoCancion(): string | null {
+    return localStorage.getItem(this.transcursoCancion);
+  }
 
 
   // Eliminar token (Logout)

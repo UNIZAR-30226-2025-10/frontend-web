@@ -1,50 +1,90 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TokenService } from './token.service';
+import { AuthService } from './auth.service';
+
+
+interface Coleccion {
+  id: string;
+  modo: string;
+  orden: any[];
+  index: number;
+  ordenNatural: any[]
+}
+
+interface Track {
+  id: string;
+  nombre: string;
+  nombreArtisticoArtista: string;
+  fotoPortada: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayerService {
-  currentTrackSource = new BehaviorSubject<{ track: any, coleccion:boolean } | null>(null);
+  currentTrackSource = new BehaviorSubject<{ track: any, coleccion:any } | null>(null);
   currentTrack$ = this.currentTrackSource.asObservable();
 
-  public isPlayingSubject = new BehaviorSubject<boolean>(false);
+  public isPlayingSubject = new BehaviorSubject<{play: boolean, emisor: string} | null>(null);
   isPlaying$ = this.isPlayingSubject.asObservable();
 
+  public isShuffleSubject = new BehaviorSubject<{shuffle: boolean, emisor: string} | null>(null);
+  isShuffle$ = this.isShuffleSubject.asObservable();
+
   private esColeccion = false;
-  private isShuffle = false;
-  private currentIndex = 0;
+  
+  trackIndividual: any;
+  coleccionActual: Coleccion = { id: '', modo: '', orden: [], index:0, ordenNatural: []} ;
 
-  private songsSonando: any[] = [];
-  private songListEnOrden: any[] = [];
-  private songListAleatorio: any[] = [];
+  constructor( private tokenService: TokenService, private authService: AuthService) {}
 
-  private playedSongs: any[] = [];
+  //Cuando accedo desde fuera de una colección: track es de tipo Track
+  //Cuando accedo desde una colección: track es un id y listaColeccion es una lista de ids en cierto orden
+  setTrack(track: any, listaColeccion:any =null): void {
+    this.esColeccion = listaColeccion !== null;
 
-  constructor( private tokenService: TokenService) {}
+    if (this.esColeccion) {
+      console.log('Reproduciendo desde colección:');
+      this.trackIndividual = null;
+      
+      this.coleccionActual.index = listaColeccion.findIndex((id: any) => id === track);
 
-  //Para cuando se accede a una canción concreta, ya sea desde buscador, home, mi Perfil o album
-  setTrack(track: any, coleccion:any =null): void {
-    this.esColeccion = coleccion !== null;
-
-    if (coleccion) {
-      console.log('Reproduciendo desde colección:', coleccion);
-      this.songsSonando = coleccion.canciones;
-      this.currentIndex = this.songsSonando.findIndex(song => song.id === track.id);
-      coleccion.canciones= this.songsSonando.map((c: { id: any }) => c.id);
-
+      this.authService.pedirOtraCancion(track)
+      .subscribe({
+        next: (response) => { 
+          const currentTrack: Track = {
+            nombre: response.nombre,
+            nombreArtisticoArtista: response.nombreArtisticoArtista,
+            fotoPortada: response.fotoPortada,
+            id: track
+          };
+          this.currentTrackSource.next({ track: currentTrack, coleccion: this.coleccionActual});
+        },
+        error: (error) => {
+          console.error("Error al recibir los datos de la canción", error);
+        },
+        complete: () => {
+          console.log("Datos recibidos con éxito");
+        }
+      });
     } else {
+        if (this.tokenService.getColeccionActual() != null) {
+          this.tokenService.setColeccionActual(null)
+        }
         console.log('Reproduciendo canción individual');
-        this.songsSonando = [track];
-        this.currentIndex = this.songsSonando.findIndex(song => song.id === track.id);
+        this.trackIndividual = track;
+
+        this.coleccionActual.id = '';
+        this.coleccionActual.modo = '';
+        this.coleccionActual.orden = [];
+        this.coleccionActual.index = 0;
+        this.currentTrackSource.next({ track: track, coleccion: null})
+
+        this.isPlayingSubject.next({play:true, emisor: 'pantalla'});
     }
 
-  
-    if (coleccion) coleccion.index = this.currentIndex;
-
-    this.currentTrackSource.next({ track: this.songsSonando[this.currentIndex], coleccion})
-    this.isPlayingSubject.next(true);
+    
 
     setTimeout(() => {
       this.currentTrackSource.next(null);
@@ -52,81 +92,234 @@ export class PlayerService {
   }
 
   //Cuando se reproducen desde el play general del album
-  setColeccion(coleccion: any) {
+  setColeccion(idColeccion:string, coleccion: any, isShuffle: boolean) {
 
     //La colección ya está sonando
-    if(this.tokenService.getColeccionActual().id === coleccion.id) {
+    if(this.tokenService.getColeccionActual() != null && this.tokenService.getColeccionActual().id.toString() === idColeccion) {
+      console.log('return')
       return;
     }
    
     //La colección suena por primera vez
-    this.songListEnOrden = coleccion.canciones;
-    this.currentIndex = 0;
+    this.coleccionActual.id = idColeccion;
+    this.coleccionActual.index = 0;
+    const songListEnOrden = coleccion.map((song: { id: any; }) => song.id);
+    this.coleccionActual.ordenNatural = songListEnOrden;
   
     // Si está activado el modo aleatorio, se genera un vector aleatorio
-    if (this.isShuffle) {
-      this.songListAleatorio = this.shuffleArray(this.songListEnOrden);
-      this.setTrack(this.songListAleatorio[this.currentIndex], this.songListAleatorio);
+    if (isShuffle) {
+      const songListAleatorio = this.shuffleArray(songListEnOrden);
+      this.coleccionActual.modo = 'aleatorio';
+      this.coleccionActual.orden = songListAleatorio;
+      this.setTrack(songListAleatorio[this.coleccionActual.index], songListAleatorio);
 
-    //Sino está el modo aleatorio, se pasa el vector ordenado
+    //Sino está el modo enOrden, se pasa el vector ordenado
     } else {
-      this.setTrack(this.songListEnOrden[this.currentIndex], this.songListEnOrden);
+      this.isShuffleSubject.next({shuffle: false, emisor: 'pantalla'});
+      this.coleccionActual.modo = 'enOrden';
+      this.coleccionActual.orden = songListEnOrden;
+      this.setTrack(songListEnOrden[this.coleccionActual.index], songListEnOrden);
     }
   }
   
   
   nextSong(): void {
-    if (this.songListEnOrden.length === 1) {
-      this.currentTrackSource.next(this.songListEnOrden[this.currentIndex]); // Reproducir la misma canción en bucle
+    console.log('en next song')
+    if (this.coleccionActual.orden.length === 0) {
+      console.log('en next song en individual')
+
+      this.authService.pedirOtraCancion(this.trackIndividual.id)
+      .subscribe({
+        next: (response) => { 
+          const nextTrack: Track = {
+            nombre: response.nombre,
+            nombreArtisticoArtista: response.nombreArtisticoArtista,
+            fotoPortada: response.fotoPortada,
+            id: this.trackIndividual.id
+          };
+          this.currentTrackSource.next({ track: nextTrack, coleccion: null}); // Reproducir la misma canción en bucle
+        },
+        error: (error) => {
+          console.error("Error al recibir los datos de la canción", error);
+        },
+        complete: () => {
+          console.log("Datos recibidos con éxito");
+        }
+      });
+ 
     } else {
-      if (this.isShuffle) {
-        //this.playRandomSong();
+
+        if (this.isPlayingSubject.getValue() === null) {
+          console.log('envento forzado')
+          this.isPlayingSubject.next({play:true, emisor: 'musicplayer'});
+        }
+
+        this.coleccionActual.index = (this.coleccionActual.index + 1) % this.coleccionActual.orden.length;
+        console.log('index',  this.coleccionActual.index)
+
+        this.authService.pedirOtraCancion(this.coleccionActual.orden[this.coleccionActual.index])
+        .subscribe({
+          next: (response) => { 
+            const nextTrack: Track = {
+              nombre: response.nombre,
+              nombreArtisticoArtista: response.nombreArtisticoArtista,
+              fotoPortada: response.fotoPortada,
+              id: this.coleccionActual.orden[this.coleccionActual.index]
+            };
+            this.currentTrackSource.next({track: nextTrack, coleccion:this.coleccionActual});
+          },
+          error: (error) => {
+            console.error("Error al recibir los datos de la canción", error);
+          },
+          complete: () => {
+            console.log("Datos recibidos con éxito");
+          }
+        }); 
+    }
+  }
+  
+
+  prevSong(): void {
+    //Es una cancion sola
+    if (this.coleccionActual.orden.length === 0) {
+      this.authService.pedirOtraCancion(this.trackIndividual.id)
+        .subscribe({
+          next: (response) => { 
+            const currentTrack: Track = {
+              nombre: response.nombre,
+              nombreArtisticoArtista: response.nombreArtisticoArtista,
+              fotoPortada: response.fotoPortada,
+              id: this.trackIndividual.id
+            };
+            this.currentTrackSource.next({ track: currentTrack, coleccion: null});
+          },
+          error: (error) => {
+            console.error("Error al recibir los datos de la canción", error);
+          },
+          complete: () => {
+            console.log("Datos recibidos con éxito");
+          }
+        });
+    } else {
+      //Es la primera, no hay ninguna detrás
+      if (this.coleccionActual.index === 0) {
+        this.coleccionActual.index = (this.coleccionActual.orden.length -1)
+        
+        this.authService.pedirOtraCancion(this.coleccionActual.orden[this.coleccionActual.index])
+        .subscribe({
+          next: (response) => { 
+            const currentTrack: Track = {
+              nombre: response.nombre,
+              nombreArtisticoArtista: response.nombreArtisticoArtista,
+              fotoPortada: response.fotoPortada,
+              id: this.coleccionActual.orden[this.coleccionActual.index]
+            };
+            this.currentTrackSource.next({track: currentTrack, coleccion:this.coleccionActual});
+          },
+          error: (error) => {
+            console.error("Error al recibir los datos de la canción", error);
+          },
+          complete: () => {
+            console.log("Datos recibidos con éxito");
+          }
+        });
       } else {
-        this.currentIndex = (this.currentIndex + 1) % this.songListEnOrden.length;  // Avanzar al siguiente índice
-        const nextTrack = this.songListEnOrden[this.currentIndex];
-        this.playedSongs.push(nextTrack); 
-        this.currentTrackSource.next(nextTrack);
+        this.coleccionActual.index = (this.coleccionActual.index- 1) % this.coleccionActual.orden.length;
+  
+        this.authService.pedirOtraCancion(this.coleccionActual.orden[this.coleccionActual.index])
+        .subscribe({
+          next: (response) => { 
+            const prevTrack: Track = {
+              nombre: response.nombre,
+              nombreArtisticoArtista: response.nombreArtisticoArtista,
+              fotoPortada: response.fotoPortada,
+              id: this.coleccionActual.orden[this.coleccionActual.index]
+            };
+            this.currentTrackSource.next({track: prevTrack, coleccion:this.coleccionActual});
+          },
+          error: (error) => {
+            console.error("Error al recibir los datos de la canción", error);
+          },
+          complete: () => {
+            console.log("Datos recibidos con éxito");
+          }
+        });
       }
     }
   }
 
-  prevSong(): void {
-    if (this.playedSongs.length > 1) { // Aseguramos que haya canciones previas para ir hacia atrás
-      // Eliminar la última canción reproducida del historial
-      this.playedSongs.pop();
-      const prevTrack = this.playedSongs[this.playedSongs.length - 1];  // Obtener la canción anterior
-      this.currentIndex = this.songListEnOrden.indexOf(prevTrack);  // Actualizar el índice de la canción anterior
-      this.currentTrackSource.next(prevTrack);  // Reproducir la canción anterior
-    } else {
-      // Si solo hay una canción en la lista o no hay historial, reproducimos la canción actual
-      const currentTrack = this.songListEnOrden[this.currentIndex]; // Obtener la canción actual
-      this.currentTrackSource.next(currentTrack);  // Reproducir la canción actual
-      console.log('No hay canciones anteriores para reproducir, repitiendo la canción actual');
-    }
-}
 
-togglePlay(): void {
+
+togglePlay(emisor: string): void {
   const audioElement = document.querySelector('audio'); 
+  console.log('nuevo evento play')
   if (audioElement) {
     if (audioElement.paused) {
       audioElement.play();
-      this.isPlayingSubject.next(true);
+      this.isPlayingSubject.next({play:true, emisor: emisor});
     } else {
       audioElement.pause();
-      this.isPlayingSubject.next(false);
+      this.isPlayingSubject.next({play:false, emisor: emisor});
     }
   }
 }
 
+toggleShuffle(emisor: string, isShuffle: boolean): void {
 
+  //El modo pasa a ser aleatorio
+  if(isShuffle) {
+    console.log('ALEATORIO')
+    const idCancionSonando =  this.coleccionActual.orden[this.coleccionActual.index]
 
-toggleShuffle(): void {
-  this.isShuffle = !this.isShuffle;
+    let nuevoOrden = this.shuffleArray(
+      this.coleccionActual.ordenNatural.filter(id => id !== idCancionSonando)
+    );
+    nuevoOrden.unshift(idCancionSonando);
+
+    this.coleccionActual.orden = nuevoOrden;
+    console.log('nuevo orden:', this.coleccionActual.orden)
+    this.coleccionActual.index = 0;
+    this.coleccionActual.modo = 'aleatorio';
+
+  //El modo pasa a ser enOrden
+  } else {
+    console.log('ORDENADO')
+    const idCancionSonando =  this.coleccionActual.orden[this.coleccionActual.index]
+    this.coleccionActual.orden = this.coleccionActual.ordenNatural;
+    console.log('nuevo orden:', this.coleccionActual.orden)
+    const indice = this.coleccionActual.orden.findIndex(item => item === idCancionSonando);
+    console.log('indice calculado:', indice)
+    this.coleccionActual.index = indice;
+    this.coleccionActual.modo = 'enOrden';
+
+  }
+
+  //Guardar en backend
+  this.authService.cambiarModo(this.coleccionActual.modo, this.coleccionActual.orden, this.coleccionActual.index)
+    .subscribe({
+      next: () => { 
+        if (this.coleccionActual.modo === 'aleatorio') {
+          this.isShuffleSubject.next({shuffle:true, emisor: emisor});
+        } else {
+          this.isShuffleSubject.next({shuffle:false, emisor: emisor});
+        }
+      },
+      error: (error) => {
+        console.error("Error al cambiar el modo", error);
+      },
+      complete: () => {
+        console.log("Modo cambiado con éxito");
+      }
+    });
+
+  //Guardar en localStorage
+  this.tokenService.setColeccionActual(this.coleccionActual)
 }
 
-isShuffleEnabled(): boolean {
-  return this.isShuffle;
+toggleShuffleActivarForzado(emisor: string): void {
+  this.isShuffleSubject.next({shuffle:true, emisor: emisor});
 }
+
 
 //Método que crea un vector de canciones aleatorias
 shuffleArray<T>(array: T[]): T[] {
@@ -138,6 +331,21 @@ shuffleArray<T>(array: T[]): T[] {
   return shuffledArray;
 }
 
-  
+setTrackInCollection(idColeccion: string, idCancion: any, listaIds: any[]): void{
+
+  if(this.coleccionActual.id != idColeccion) {
+    this.coleccionActual.id = idColeccion;
+    this.coleccionActual.index = 0;
+    this.coleccionActual.modo = 'enOrden'
+    this.coleccionActual.orden = listaIds
+    this.coleccionActual.ordenNatural = listaIds
+  }
+
+  this.setTrack(idCancion, listaIds)
 }
+
+}
+
+  
+
 

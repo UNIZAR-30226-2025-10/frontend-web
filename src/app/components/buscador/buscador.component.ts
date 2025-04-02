@@ -32,6 +32,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
   private searchQuerySubject: Subject<string> = new Subject(); 
   private subscription!: Subscription;
+  private fotoSubscription!: Subscription;
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
@@ -50,8 +51,18 @@ export class BuscadorComponent implements OnInit, OnDestroy{
       }
     });
 
-   
+      // Nos suscribimos al observable para recibir la nueva foto de perfil instantáneamente
+      this.fotoSubscription = this.actFotoService.actualizarFoto$
+      .subscribe(fotoData => {
+        if (fotoData) {
+          if (fotoData.actualizarFoto) {
+            console.log('dentro evento actualizar foto', fotoData);
+            this.foto = this.tokenService.getUser().fotoPerfil;
+          }
+        }
+      });
 
+   
     this.searchQuerySubject.pipe(
       debounceTime(500),  
       switchMap(query => {

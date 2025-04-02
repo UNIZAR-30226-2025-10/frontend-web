@@ -12,8 +12,9 @@
                     <i class="fa fa-upload" aria-hidden="true"></i> Subir nueva foto
                 </label>
                 <input id="file-input" type="file" style="display: none;" (change)="onFileSelected($event)">
+                <button class="quitarFoto" (click)="quitarFoto()"  [ngClass]="fotoNueva === 'nouser.png' || fotoNueva === 'DEFAULT' ? 'desaparecer' : ''">Quitar foto</button>
             </div>
-            <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center;">
+            <div class="textos" style="display: flex; flex-direction: column; width: 70%; justify-content: center; align-items: center;">
                 <input type="text" id="nombre" [(ngModel)]="nombreActual" placeholder="Escribe un nuevo nombre de usuario">
                 <p *ngIf="mensajeError" style="color: red; font-size: 10px; margin: 0px;">{{ mensajeError }}</p>
                 <button class="btn-guardar" (click)="guardarCambios()">Guardar Cambios</button>
@@ -109,10 +110,10 @@
     <div class="column2">   
         <h3>{{ oyente.nombre }}</h3>
         <div class="seguidores" >
-            <button class="linkseguidores" style="border:none; background-color: transparent; padding: 0px; margin:0px;" [routerLink]="['/home/seguidores',oyente.nombre]">
+            <button class="linkseguidores" style="border:none; background-color: transparent; padding: 0px; margin:0px;" [routerLink]="['/home/seguidores']">
                 <h4>{{ oyente.nSeguidores }}{{ oyente.nSeguidores === 1 ? ' Seguidor' : ' Seguidores' }}</h4>
             </button>
-            <button class="linkseguidores" style="border:none; background-color: transparent; padding: 0px; margin:0px;"[routerLink]="['/home/seguidos',oyente.nombre]">
+            <button class="linkseguidores" style="border:none; background-color: transparent; padding: 0px; margin:0px;"[routerLink]="['/home/seguidos']">
                 <h4>{{ oyente.nSeguidos }}{{ oyente.nSeguidos === 1 ? ' Seguido' : ' Seguidos' }}</h4>
             </button>
         </div>
@@ -210,7 +211,11 @@
 
         <div class="container">       
             <div *ngFor="let seguido of seguidos; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                <a [routerLink]="['/home/perfil', seguido.nombreUsuario]"> 
+                <a *ngIf="seguido.tipo === 'oyente'" [routerLink]="['/home/perfil', seguido.nombreUsuario]"> 
+                    <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombre">
+                    <strong>{{ seguido.nombreUsuario }}</strong>
+                </a>
+                <a *ngIf="seguido.tipo === 'artista'" [routerLink]="['/home/artista', seguido.nombreUsuario]"> 
                     <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombre">
                     <strong>{{ seguido.nombreUsuario }}</strong>
                 </a>

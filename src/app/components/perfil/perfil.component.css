@@ -260,6 +260,21 @@
     z-index: 1000;  /* Asegúrate de que esté encima de otros elementos */
   }
 
+  a {
+    text-decoration: none; 
+    color: inherit; 
+    all: unset; 
+    display: contents;
+  }
+  
+  a:focus,
+  a:active,
+  a:hover {
+    outline: none; 
+    text-decoration: none; 
+    color: inherit;
+  }
+
   @media (max-width: 550px) {
     h1 {
         font-size: 30px;

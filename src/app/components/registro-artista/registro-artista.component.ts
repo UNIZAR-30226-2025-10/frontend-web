@@ -54,6 +54,14 @@ export class RegistroArtistaComponent {
 
   onPasswordChange(): void {
     this.validatePassword();
+
+    if (this.credentials.correo) {
+      this.correoError = '';
+    }
+
+    if (this.credentials.nombreUsuario) {
+      this.nombreError = '';
+    }
   }
 
 
@@ -70,7 +78,7 @@ export class RegistroArtistaComponent {
       error: (error) => {
         console.error('Error al autenticar:', error);
 
-        if (error.status === 400) {
+        if (error.status === 409) {
           const errorResponse = error.error;
 
           if (errorResponse.error.includes('correo')) {
@@ -89,12 +97,16 @@ export class RegistroArtistaComponent {
           }
 
         } else {
-          this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
-          this.correoError = ''; 
-          this.nombreError = '';  
+          if (error.status === 400) {
+            this.errorMessage = 'Faltan campos.';
+            this.correoError = ''; 
+            this.nombreError = '';  
+          } else {
+            this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
+            this.correoError = ''; 
+            this.nombreError = ''; 
+          } 
         }
-
-
       },
       complete: () => {
         //SE EJECUTA CAUNDO LA PETICION A TERMINADO YA SEA CON EXITO O NO. PARA HACER TAREAS COMO LIMPIAR RECURSOS O ESCRIBIR MENSAJES FINALES

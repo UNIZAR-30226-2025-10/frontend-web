@@ -165,10 +165,9 @@ h2, h3 {
   width: 100%;
 }
 
-
 .song {
   display: grid;
-  grid-template-columns: 30px 50px 0.75fr 1fr 150px; /* Definición de las columnas */
+  grid-template-columns: 30px 50px 1fr 1fr 150px; /* Definición de las columnas */
   width: 100%;
   align-items: center;
   gap: 15px;
@@ -255,9 +254,6 @@ h2, h3 {
   font-size: 15px;
 }
 
-.play-song {
-  background-color: #0a1744;
-}
 
 .aleatorio {
   cursor: pointer;
@@ -266,10 +262,11 @@ h2, h3 {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #000E3B;
 }
 
 .aleatorio.active {
-  color: rgb(99, 122, 184);
+  color: #8ca4ff;
 }
 
 .aleatorio i {
@@ -280,16 +277,18 @@ h2, h3 {
   position: relative;
 }
 
+
 .dropdown-menu {
   position: absolute;
   right: 0;
   top: 100%;  /* Colócalo justo debajo del ícono */
   background-color: white;
   border-radius: 5px;
-  width: 200px;
+  width: 180px;
   z-index: 10;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   display: none; /* Ocultamos el menú inicialmente */
+  padding:0;
 }
 
 .dropdown-menu.show {
@@ -304,7 +303,7 @@ h2, h3 {
 }
 
 .dropdown-menu li {
-  padding: 3px 12px;
+  padding: 12px 16px;
   cursor: pointer;
   position: relative;
   display: flex;
@@ -312,12 +311,8 @@ h2, h3 {
   align-items: center;
 }
 
-.dropdown-menu:hover {
-  background-color: #b5b3b3;
-}
-
 .dropdown-menu li:hover {
-  background-color: #b5b3b3;
+  background-color: #807c7c71;
 }
 
 .list-option {
@@ -325,7 +320,7 @@ h2, h3 {
   display: flex; /* Usamos flexbox */
   justify-content: space-between; /* Esto distribuye el espacio entre el texto y el icono */
   align-items: center; /* Centra verticalmente el contenido */
-  padding: 12px 16px;
+  padding: 5px 5px;
   cursor: pointer;
 }
 
@@ -340,15 +335,43 @@ h2, h3 {
   top: 0;  /* Aparece al mismo nivel que el item "Añadir a lista" */
   background-color: white;
   border-radius: 5px;
-  width: 200px;
+  width: 180px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   display: none; /* Inicialmente oculto */
   z-index: 100; /* Asegura que esté por encima del dropdown principal */
 }
 
+
 .list-option:hover .lists-dropdown {
   display: block; /* Se muestra cuando el mouse pasa por encima del "Añadir a lista" */
 }
+
+.lists-dropdown li .btn-nueva-lista {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.search-container {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.playlist-search-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
 
 .btn-remove-playlist{
   padding:0px;
@@ -404,4 +427,111 @@ h2, h3 {
 
 .seguidores-dropdown li:hover {
   background-color: #f0f0f0;
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 0px 25px 28px 25px;
+  border-radius: 10px;
+  text-align: left;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Botones dentro del modal */
+.btn-cerrar {
+  background-color: transparent;
+  color: #000e3b;
+  border: none;
+  cursor: pointer;
+  width: 5%;
+  height: auto;
+  padding: 0px;
+  margin: 0px;
+}
+
+.btn-guardar {
+  background-color: #8ca4ff;
+  color: #000e3b;
+  padding: 7px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  margin-top: 13px;
+  width: 70%;
+  font-size: 14px;
+}
+
+.btn-guardar:hover {
+  background-color: #2e4074;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1.5px solid #a6a6a6;
+  background-color: rgb(228, 228, 228);
+  color: #000e3b;
+  font-size: 11px;
+  margin:0px;
+}
+
+.image-upload-container {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+
+.image-upload-container{
+  transition: opacity 0.3s ease;
+}
+
+.image-upload-container:hover .upload-icon {
+  display: block;  
+}
+
+.upload-icon i {
+  color: white;
+}
+
+.upload-icon-playlist {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 110px;
+  height: 110px;
+  padding: 25px;
+  color: white;
+  font-size: 16px;
+  background-color: rgba(61, 59, 59, 0.5);  /* Fondo semitransparente */
+  border-radius: 5%;
+  cursor: pointer;
+  display: none;  /* Ocultamos el icono por defecto */
+}
+
+.image-upload-container:hover .upload-icon-playlist {
+  display: block;  /* Mostramos el icono al pasar el cursor */
+}
+
+.upload-icon-playlist i {
+  color: white;
 }

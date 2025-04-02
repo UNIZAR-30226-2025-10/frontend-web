@@ -51,6 +51,14 @@ export class RegistroOyenteComponent {
 
   onPasswordChange(): void {
     this.validatePassword();
+
+    if (this.credentials.correo) {
+      this.correoError = '';
+    }
+
+    if (this.credentials.nombreUsuario) {
+      this.nombreError = '';
+    }
   }
 
   onSubmit(): void {
@@ -67,7 +75,7 @@ export class RegistroOyenteComponent {
       error: (error) => {
         console.error('Error al autenticar:', error);
 
-        if (error.status === 400) {
+        if (error.status === 409) {
           const errorResponse = error.error;  // Asumiendo que el mensaje de error está dentro de `error.error`
 
           // Si el error contiene un mensaje específico de correo ya en uso
@@ -87,12 +95,16 @@ export class RegistroOyenteComponent {
           }
 
         } else {
-          this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
-          this.correoError = '';  // Limpiar error de correo
-          this.nombreError = '';  // Limpiar error de nombre
+          if (error.status === 400) {
+            this.errorMessage = 'Faltan campos.';
+            this.correoError = ''; 
+            this.nombreError = '';  
+          } else {
+            this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
+            this.correoError = ''; 
+            this.nombreError = ''; 
+          } 
         }
-
-
       },
       complete: () => {
         //SE EJECUTA CAUNDO LA PETICION A TERMINADO YA SEA CON EXITO O NO. PARA HACER TAREAS COMO LIMPIAR RECURSOS O ESCRIBIR MENSAJES FINALES

@@ -47,26 +47,72 @@
               <i class="fas fa-plus"></i>
             
               <!-- dropdown menu principal -->
-              <div class="dropdown-menu" *ngIf="showDropdownId === cancion.id" [ngClass]="{ 'show': showDropdownId === cancion.id }">
+              <div class="dropdown-menu" *ngIf="showDropdownId === cancion.id" [ngClass]="{ 'show': showDropdownId === cancion.id }" >
                 <ul>
                   <li class="list-option" (click)="toggleListsDropdown($event)">
                     Añadir a lista
                     <i class="fas fa-chevron-right"></i>
-    
+            
                     <!-- dropdown menu listas -->
                     <div class="lists-dropdown" *ngIf="showListsDropdown">
-                      <ul>
-                        <li>Nueva lista</li>
-                        <ng-template ngFor let-playlist [ngForOf]="misPlaylists">
-                          <li (click)="anadiraPlaylist(playlist.id, cancion.id)">{{ playlist.nombre }} </li>
-                        </ng-template>
-                      </ul>
-                    </div>              
+                      <div class="search-container" (click)="preventDropdownClose($event)">
+                        <input 
+                            type="text"  
+                            placeholder="Buscar playlist" 
+                            [(ngModel)]="searchPlaylistTerm" 
+                            (input)="filterPlaylists()"
+                            class="playlist-search-input"
+                        >
+                    </div>
+                    <ul>
+                      <li (click)="abrirModalPlaylist(cancion.id)">
+                        <button class="btn-nueva-lista">Nueva lista</button>
+                      </li>
+                    
+                      <ng-container *ngFor="let playlist of filteredPlaylists">
+                        <li (click)="anadiraPlaylist(playlist.id, cancion.id)">
+                          {{ playlist?.nombre }}
+                        </li>
+                      </ng-container>
+                    </ul>
+                    </div>
                 </ul>
               </div>
+            </div>    
+
+
             </div>          
         </div>
       </div>
     </div>
+    <div *ngIf="isModalPlaylistOpen" class="modal-overlay">
+      <div class="modal-content">
+          <div class="cabecera" style="display: flex;justify-content: space-between;">
+          <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Crear playlist</p>
+          <button (click)="cerrarModalPlaylist()" class="btn-cerrar">
+              <i class="fas fa-times"></i>
+          </button>
+          </div>
+      
+          <div class="atributos" style="display: flex;justify-content: space-between;">
+          <div class="image-upload-container">
+              <!-- Mostrar la imagen seleccionada o la imagen por defecto -->
+              <img [src]="fotoNueva && fotoNueva!== 'DEFAULT' ? fotoNueva : 'no_cancion.png'" alt="Foto de perfil" class="logo" style="border-radius: 5%; width: 110px; height: 110px;">
+              
+              <label for="file-input" class="upload-icon-playlist">
+                <i class="fa fa-upload" aria-hidden="true"></i> Subir una foto
+              </label>
+              
+              <input id="file-input" type="file" style="display: none;" (change)="onFileSelectedPlaylist($event)">
+              </div>
+              
+      
+          <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center; gap: 5px;">
+              <input type="text" id="nombre"  [(ngModel)]="nombre" placeholder="Escribe el nombre de la playlist">
+              <button class="btn-guardar" (click)="crearPlaylist(cancionActual)">Guardar Cambios</button>
+          </div>
+          </div>
+      </div>
+    
     
 </div>

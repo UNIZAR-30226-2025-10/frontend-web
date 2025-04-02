@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core'
-import {RouterOutlet} from '@angular/router'
-import { Router } from '@angular/router';
+import {Component, OnInit, AfterViewInit} from '@angular/core'
+import {RouterOutlet, Router, NavigationEnd } from '@angular/router'
 import { TokenService } from './services/token.service';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { LOCALE_ID } from '@angular/core';
+import { filter } from 'rxjs';
 
 registerLocaleData(localeEs);
 
@@ -18,7 +18,7 @@ selector: 'app-root',
   ]
 
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'Noizz';
 
   constructor(private router: Router, private tokenService: TokenService) {}
@@ -26,11 +26,23 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     const token = this.tokenService.getToken();
     console.log('token en app:', token);
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      window.scrollTo(0, 0);
+    });
   
     setTimeout(() => {
       if (token && this.router.url === '/login') {  
-        this.router.navigate(['/home/home']);
+        //this.router.navigate(['/home/home']);
       }
     }, 0); 
+
+
+  }
+
+  ngAfterViewInit(): void {
+    window.scrollTo(0, 0);
   }
 }

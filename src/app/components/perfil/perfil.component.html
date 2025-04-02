@@ -15,13 +15,13 @@
                     <h1>{{oyente.nombre}}</h1>
                     <div class="seguidores">
                         <a>
-                            <h4><strong> {{oyente.nSeguidores}} seguidores</strong></h4>
+                            <h4><strong> {{oyente.nSeguidores}} {{ oyente.nSeguidores === 1 ? ' Seguidor' : ' Seguidores' }}</strong></h4>
                         </a>
                         <a>
-                            <h4><strong>{{oyente.nSeguidos}} seguidos</strong></h4>
+                            <h4><strong>{{oyente.nSeguidos}} {{ oyente.nSeguidos === 1 ? ' Seguido' : ' Seguidos' }}</strong></h4>
                         </a>
                     </div>
-                    <h4 style="margin-top: 8px; font-size: 15px;"> {{suNumeroPlaylistsPublicas}} playlists públicas</h4>
+                    <h4 style="margin-top: 8px; font-size: 15px;"> {{suNumeroPlaylistsPublicas}} {{suNumeroPlaylistsPublicas === 1 ? ' playlist pública' : ' playlists públicas' }}</h4>
                 </div>
             </div>
 
@@ -67,8 +67,10 @@
             <div class="container">       
                 <div *ngFor="let playlist of susPlaylistsPublicas; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
                     <div class="dentro-card">
-                        <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
-                        <strong>{{ playlist.nombre}}</strong>
+                        <a [routerLink]="['/home/playlist', playlist.id]"> 
+                            <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
+                            <strong>{{ playlist.nombre}}</strong>
+                        </a>
                     </div>          
                 </div>
             </div>

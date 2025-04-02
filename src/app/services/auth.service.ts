@@ -165,7 +165,11 @@ export class AuthService {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-  
+
+    console.log('orden:', orden)
+    console.log('index', index)
+    console.log ('id', orden[index])
+
     const body = { coleccion: coleccionId, modo: modo, orden: orden, index: index };
   
     return this.http.put(`${this.apiUrl}/put-cancion-coleccion`, body, { headers: headers });
@@ -1188,5 +1192,61 @@ export class AuthService {
 
     const body = { nombre_album: nombreAlbum, fotoPortada: foto_url }
     return this.http.post(`${this.apiUrl}/create-album"`, body,{ headers: headers } );
+  }
+  
+  changeFollow(nombreUsuario:any, siguiendo: boolean): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = { nombreUsuario: nombreUsuario, siguiendo: siguiendo };
+
+    return this.http.put(`${this.apiUrl}/change-follow`, body, { headers: headers } );
+  }
+
+  pedirOtraCancion(id: any): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-data-cancion?id=${id}`, { headers: headers } );
+  }
+
+
+  cambiarModo(modo: any, orden: any, index: any): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    
+    const body = { modo: modo, orden: orden, index: index};
+    return this.http.patch(`${this.apiUrl}/change-modo`, body, { headers: headers } );
+  }
+
+  cambiarSesion(credentials: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/switch-session`, credentials);
   }
 }

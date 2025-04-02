@@ -158,7 +158,7 @@ body {
     gap: 5px;
 }
 
-.control-btn {
+.control-btn, .aleatorio-btn {
     background: none;
     border: none;
     color: #000E3B;
@@ -168,6 +168,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.aleatorio-btn.active {
+    color: #8ca4ff;
+}
+
+.aleatorio-btn.desaparecer {
+    display: none;
+    color: red;
 }
 
 .play-btn {
@@ -187,8 +196,7 @@ body {
 }
 
 
-.control-btn:hover,
-.play-btn:hover {
+.control-btn:hover, .play-btn:hover, .aleatorio-btn:hover{
     opacity: 0.7;
 }
 

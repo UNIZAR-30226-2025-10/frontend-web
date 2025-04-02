@@ -1,28 +1,48 @@
 <body>
-    <section class="container">
-      <img src="logo_noizz.png" alt="Logo" class="logo">
-      <h2><strong>Inicia sesión en Noizz</strong></h2>
 
-      <form (ngSubmit)="onSubmit()">
-          <label for="email">Correo electrónico o nombre de usuario</label>
-          <input type="email" id="email" [(ngModel)]="correoOusuario" name="email" placeholder="Correo electrónico o nombre de usuario" required>
-
-          <label for="password">Contraseña</label>
-          <div class="password-container">
-            <input [type]="isPasswordVisible ? 'text' : 'password'" id="password" [(ngModel)]="credentials.contrasenya" name="password" placeholder="Contraseña" required>
-            <i [ngClass]="isPasswordVisible ? 'fas fa-eye' : 'fas fa-eye-slash'" (click)="togglePassword()" class="toggle-password"></i>
+  <div *ngIf="isModalOpen" class="modal-overlay">
+    <div class="modal-content">
+        <div class="cabecera" style="display: flex;justify-content: space-between;">
+            <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Cambiar de sesión</p>
+            <button (click)="cerrarVentana()" class="btn-cerrar"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="pregunta">
+          <p style="margin:0px; padding: 0px; color:#000e3b">Ya hay una sesión iniciada. ¿Desea cambiarla? La sesión actual se cerrará.</p>
+          <div *ngIf="errorMessageModal" class="error-message">
+            <p>{{ errorMessageModal }}</p>
           </div>
-
-          <div *ngIf="errorMessage" class="error-message">
-            <p [ngClass]="{'error-email': errorType === 'user', 'error-password': errorType === 'password'}">{{ errorMessage }}</p>
+          <div style="display:flex; gap: 20px;">
+            <button class="btn-aceptar" (click)="cambiarSesion()">Aceptar</button>
+            <button class="btn-aceptar" (click)="cerrarVentana()">Rechazar</button>
           </div>
+        </div>
+    </div>
+</div>
 
-        <button type="submit" class="btn">Iniciar Sesión</button>
-      </form>
+  <section class="container">
+    <img src="logo_noizz.png" alt="Logo" class="logo">
+    <h2><strong>Inicia sesión en Noizz</strong></h2>
+
+    <form (ngSubmit)="onSubmit()">
+        <label for="email">Correo electrónico o nombre de usuario</label>
+        <input type="email" id="email" [(ngModel)]="correoOusuario" name="email" placeholder="Correo electrónico o nombre de usuario" required>
+
+        <label for="password">Contraseña</label>
+        <div class="password-container">
+          <input [type]="isPasswordVisible ? 'text' : 'password'" id="password" [(ngModel)]="credentials.contrasenya" name="password" placeholder="Contraseña" required>
+          <i [ngClass]="isPasswordVisible ? 'fas fa-eye' : 'fas fa-eye-slash'" (click)="togglePassword()" class="toggle-password"></i>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+          <p>{{ errorMessage }}</p>
+        </div>
+
+      <button type="submit" class="btn">Iniciar Sesión</button>
+    </form>
 
 
-      <a [routerLink]="['/olvidoContrasena1']"><strong>¿Has olvidado tu contraseña?</strong></a>
-      <a [routerLink]="['/opcionesRegistro']">¿No tienes una cuenta? <strong>Regístrate aquí</strong></a>
-    </section>
+    <a [routerLink]="['/olvidoContrasena1']"><strong>¿Has olvidado tu contraseña?</strong></a>
+    <a [routerLink]="['/opcionesRegistro']">¿No tienes una cuenta? <strong>Regístrate aquí</strong></a>
+  </section>
 </body>
 
