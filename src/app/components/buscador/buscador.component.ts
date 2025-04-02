@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap, catchError } from 'rxjs/operators';
 import { TokenService } from '../../services/token.service';
+import { ActualizarFotoPerfilService } from '../../services/actualizar-foto-perfil.service';
 
 @Component({
   selector: 'app-buscador',
@@ -28,10 +29,11 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
   private searchQuerySubject: Subject<string> = new Subject(); 
   private subscription!: Subscription;
+  private fotoSubscription!: Subscription;
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
-  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService) {}
+  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService) {}
 
 
   ngOnInit() {
@@ -46,8 +48,18 @@ export class BuscadorComponent implements OnInit, OnDestroy{
       }
     });
 
-   
+      // Nos suscribimos al observable para recibir la nueva foto de perfil instantáneamente
+      this.fotoSubscription = this.actFotoService.actualizarFoto$
+      .subscribe(fotoData => {
+        if (fotoData) {
+          if (fotoData.actualizarFoto) {
+            console.log('dentro evento actualizar foto', fotoData);
+            this.foto = this.tokenService.getUser().fotoPerfil;
+          }
+        }
+      });
 
+   
     this.searchQuerySubject.pipe(
       debounceTime(500),  
       switchMap(query => {

@@ -12,6 +12,7 @@ import { switchMap } from 'rxjs/operators';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
+import { ActualizarFotoPerfilService } from '../../services/actualizar-foto-perfil.service';
 
 interface misDatos {
   nombre: string;
@@ -58,7 +59,7 @@ export class MiPerfilOyenteComponent implements OnInit {
 
   @Output() trackClicked = new EventEmitter<any>();
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private subirCloudinary: SubirCloudinary, private changeDetectorRef: ChangeDetectorRef,private notificationService: NotificationService){}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private subirCloudinary: SubirCloudinary, private changeDetectorRef: ChangeDetectorRef,private notificationService: NotificationService, private actFotoService: ActualizarFotoPerfilService){}
 
   ngOnInit(): void {
 
@@ -158,9 +159,9 @@ export class MiPerfilOyenteComponent implements OnInit {
     }
 
     this.mensajeError = '';
-    if (this.fotoNueva !== this.foto) {
+    if (this.fotoNueva !== this.foto && this.fotoNueva != "nouser.png") {
+      
       this.subirCloudinary.uploadFile(this.file, 'perfiles').pipe(
-
         switchMap((url) => {
           console.log('Imagen subida:', url);
           this.fotoNueva = url;
@@ -174,6 +175,7 @@ export class MiPerfilOyenteComponent implements OnInit {
             const user = this.tokenService.getUser();
             user.fotoPerfil = this.foto;
             this.tokenService.setUser(user);
+            this.actFotoService.actualizarFoto();
           }
           console.log('FOTO PERFIL DESPUES', this.tokenService.getUser().fotoPerfil);
           this.cerrarModal();
@@ -187,21 +189,51 @@ export class MiPerfilOyenteComponent implements OnInit {
           console.log("Datos guardados con éxito");
         }
       });
-    } else {
-      this.authService.cambiarDatosOyente(this.nombreActual, this.fotoNueva)
-      .subscribe({
-        next: () => {
-          this.oyente.nombre = this.nombreActual;
-          this.cerrarModal();
-        },
-        error: (error) => {
-          console.error("Error al guardar los nuevos datos:", error);
-          this.nombreActual = this.oyente.nombre;
-        },
-        complete: () => {
-          console.log("Datos guardados con éxito");
+    } else { 
+      if (this.fotoNueva === "nouser.png" && this.fotoNueva !== this.foto) {
+        this.authService.cambiarDatosOyente(this.nombreActual, 'DEFAULT')
+        .subscribe({
+          next: () => {
+            this.oyente.nombre = this.nombreActual;
+            this.foto = this.fotoNueva;
+            if (this.foto !== this.tokenService.getUser().fotoPerfil) {
+              const user = this.tokenService.getUser();
+              user.fotoPerfil = this.foto;
+              this.tokenService.setUser(user);
+              this.actFotoService.actualizarFoto();
+            }
+            this.cerrarModal();
+          },
+          error: (error) => {
+            console.error("Error al guardar los nuevos datos:", error);
+            this.nombreActual = this.oyente.nombre;
+            this.fotoNueva = this.foto;
+          },
+          complete: () => {
+            console.log("Datos guardados con éxito");
+          }
+        });
+      } else {
+        console.log('en else 2')
+        let fotoMandar = this.fotoNueva
+        if (this.fotoNueva === "nouser.png") {
+          fotoMandar = 'DEFAULT'
         }
-      });
+        this.authService.cambiarDatosOyente(this.nombreActual, fotoMandar)
+        .subscribe({
+          next: () => {
+            this.oyente.nombre = this.nombreActual;
+            this.cerrarModal();
+          },
+          error: (error) => {
+            console.error("Error al guardar los nuevos datos:", error);
+            this.nombreActual = this.oyente.nombre;
+          },
+          complete: () => {
+            console.log("Datos guardados con éxito");
+          }
+        });
+      }
     }
   }
   
@@ -340,6 +372,9 @@ onFileSelectedPlaylist(event:any) {
     }
   }
 
+  quitarFoto() {
+    this.fotoNueva = "nouser.png";
+  }
   
   
 
@@ -374,7 +409,6 @@ onFileSelectedPlaylist(event:any) {
       )
       .subscribe({
         next: () => {   
-          console.log('lo que envio:', this.tokenService.getCancionActual());
           this.tokenService.clearStorage();
           this.router.navigate(['/login']);
         },

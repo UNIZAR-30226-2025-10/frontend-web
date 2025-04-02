@@ -23,7 +23,8 @@ export class LoginComponent {
   isPasswordVisible: boolean = false;
 
   errorMessage: string = '';
-  errorType: string = '';
+  errorMessageModal: string = ''
+  isModalOpen = false;
 
   @Output() trackClicked = new EventEmitter<any>();
 
@@ -45,9 +46,10 @@ export class LoginComponent {
       next: (response) => {
         this.tokenService.clearStorage();
         this.tokenService.setToken(response.token);
-        this.tokenService.setUser(response.usuario);
-        console.log('soy:', response.usuario)
         this.tokenService.setTipo(response.tipo);
+        if (response.usuario) {
+          this.tokenService.setUser(response.usuario);
+        }
 
         if (response.tipo === "pendiente") {
           this.router.navigate(['/pendiente']);
@@ -90,28 +92,87 @@ export class LoginComponent {
         }
       },
       error: (error) => {
-        //SI ALGO FALLA, ERROR TIENE LA INFORMACION SOBRE EL ERROR
         console.error('Error al autenticar:', error);
-
-        if (error.status === 401) {
-          if (error.error.error.includes('incorrecta')) {
-            this.errorMessage = 'Contraseña incorrecta.';  // Error de contraseña
-            this.errorType = 'password';
-          } else if (error.error.error.includes('correo') || error.error.error.includes('correo')) {
-            this.errorMessage = 'Nombre de usuario o correo no válido.';  // Error de usuario/correo
-            this.errorType = 'user';
-          }
-        } else {
-          // En caso de otros errores
-          this.errorMessage = 'Hubo un problema al procesar tu solicitud. Intenta más tarde.';
-          this.errorType = 'general';
+        this.errorMessage = error.error.error;
+        
+        if(error.status === 403) {
+          this.crearVentanaEleccion()
         }
       },
       complete: () => {
-        //SE EJECUTA CAUNDO LA PETICION A TERMINADO YA SEA CON EXITO O NO. PARA HACER TAREAS COMO LIMPIAR RECURSOS O ESCRIBIR MENSAJES FINALES
         console.log('Petición completada');
       }
     });
   
+  }
+
+  crearVentanaEleccion() {
+    this.isModalOpen = true;
+  }
+
+  cerrarVentana() {
+    this.isModalOpen = false;
+  }
+
+  cambiarSesion() {
+
+    this.authService.cambiarSesion(this.credentials)
+    .subscribe({
+      next: (response) => {
+        this.tokenService.clearStorage();
+        this.tokenService.setToken(response.token);
+        this.tokenService.setTipo(response.tipo);
+        if (response.usuario) {
+          this.tokenService.setUser(response.usuario);
+        }
+
+        if (response.tipo === "pendiente") {
+          this.router.navigate(['/pendiente']);
+        } else if (response.tipo === "valido") {
+          this.router.navigate(['/introducirCodigo']);
+        } else if (response.tipo === "admin") {
+          this.router.navigate(['/admin']);
+        } else {
+          
+        this.authService.pedirCancionActual()
+          .subscribe({
+            next: (response) => {
+              if (response != null) {
+                this.favoritosService.actualizarFavSource.next({ actualizarFavId: null})
+                this.playerService.isPlayingSubject.next(null)
+                this.playerService.isShuffleSubject.next(null)
+                this.playerService.currentTrackSource.next({ track: null, coleccion: null})
+                
+                this.tokenService.setColeccionActual(null);
+                this.tokenService.setCancionActual(null);
+                if (response.cancion != null)  {
+                  this.tokenService.setProgresoLocal(response.cancion.progreso);
+                  if(response.coleccion != null) {
+                    this.tokenService.setCancionActual(response.cancion);
+                    this.tokenService.setColeccionActual(response.coleccion);
+                  } else {
+                    this.tokenService.setCancionActual(response.cancion);
+                  }
+                } 
+              }            
+            },
+            error: (error) => {
+              console.error('Error al pedir cancion actual:', error);
+            },
+            complete: () => {
+              console.log('Petición completada');
+              this.router.navigate(['/home/home']);
+            }
+          })
+        }
+      },
+      error: (error) => {
+        console.error('Error al autenticar:', error);
+        this.errorMessageModal = error.error.error;
+      },
+      complete: () => {
+        console.log('Petición completada');
+      }
+    });
   }
 }

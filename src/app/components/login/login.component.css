@@ -112,6 +112,60 @@ a:hover strong {
   margin-top: 5px;
 }
 
+/*VENTANA DE CAMBIO DE SESIÓN*/
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 0px 25px 28px 25px;
+  border-radius: 10px;
+  text-align: left;
+  max-width: 430px;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.btn-cerrar {
+  background-color: transparent;
+  color: #000e3b;
+  border: none;
+  cursor: pointer;
+  width: 5%;
+  height: auto;
+  padding: 0px;
+  margin: 0px;
+}
+
+.btn-aceptar {
+  background-color: #8ca4ff;
+  color: #000e3b;
+  padding: 5px 0px;
+  width: 50%;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  margin-top: 13px;
+  font-size: 14px;
+}
+
+.btn-guardar:hover {
+  background-color: #6e6f72;
+}
+
+
+
 @media (max-width: 576px) {
   body {
     background: #000e3b !important;

@@ -12,8 +12,9 @@
                     <i class="fa fa-upload" aria-hidden="true"></i> Subir nueva foto
                 </label>
                 <input id="file-input" type="file" style="display: none;" (change)="onFileSelected($event)">
+                <button class="quitarFoto" (click)="quitarFoto()"  [ngClass]="fotoNueva === 'nouser.png' || fotoNueva === 'DEFAULT' ? 'desaparecer' : ''">Quitar foto</button>
             </div>
-            <div class="textos" style="display: flex; flex-direction: column; width: 60%; justify-content: center; align-items: center;">
+            <div class="textos" style="display: flex; flex-direction: column; width: 70%; justify-content: center; align-items: center;">
                 <input type="text" id="nombre" [(ngModel)]="nombreActual" placeholder="Escribe un nuevo nombre de usuario">
                 <p *ngIf="mensajeError" style="color: red; font-size: 10px; margin: 0px;">{{ mensajeError }}</p>
                 <button class="btn-guardar" (click)="guardarCambios()">Guardar Cambios</button>

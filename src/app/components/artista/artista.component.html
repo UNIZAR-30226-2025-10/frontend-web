@@ -93,7 +93,7 @@
                                 <div class="dentro-track-card">
                                     <img [src]="song.fotoPortada ? song.fotoPortada : 'no_cancion.png'" alt="{{ song.nombre}}">
                                     <strong>{{ song.nombre }}</strong>
-                                    <p>{{currentUser}}</p> 
+                                    <p>{{artista.nombreArtistico}}</p> 
                                 </div>          
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                                     <a [routerLink]="['/home/album', album.id]"> 
                                         <img [src]="album.fotoPortada ? album.fotoPortada : 'no_cancion.png'" alt="{{ album.nombre}}">
                                         <strong>{{ album.nombre }}</strong>
-                                        <p>{{ currentUser}}</p> 
+                                        <p>{{ artista.nombreArtistico}}</p> 
                                     </a>
                                 </div>          
                             </div>

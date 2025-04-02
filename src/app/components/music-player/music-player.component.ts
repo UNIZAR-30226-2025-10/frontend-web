@@ -228,8 +228,8 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
           this.audioElementRef.nativeElement.src = response.audio;
           this.currentTrack.audio = this.audioElementRef.nativeElement.src;
           this.currentTrack.fav = response.fav;
+          this.currentTrack.nombreUsuarioArtista = response.nombreUsuarioArtista;
           this.tokenService.setCancionActual(this.currentTrack);
-          console.log('que guardo', this.currentTrack );
           this.audioElementRef.nativeElement.play();
           this.isPlaying = true;
           this.isFavorite = response.fav;
@@ -258,6 +258,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
         this.audioElementRef.nativeElement.src = response.audio;
         this.currentTrack.audio = this.audioElementRef.nativeElement.src;
         this.currentTrack.fav = response.fav;
+        this.currentTrack.nombreUsuarioArtista = response.nombreUsuarioArtista;
         this.tokenService.setCancionActual(this.currentTrack);
         this.tokenService.setColeccionActual(coleccion);
         this.audioElementRef.nativeElement.play();

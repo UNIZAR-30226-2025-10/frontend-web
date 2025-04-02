@@ -1228,5 +1228,7 @@ export class AuthService {
     return this.http.patch(`${this.apiUrl}/change-modo`, body, { headers: headers } );
   }
 
-
+  cambiarSesion(credentials: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/switch-session`, credentials);
+  }
 }
