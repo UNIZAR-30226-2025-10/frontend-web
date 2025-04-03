@@ -53,6 +53,7 @@ export class MiPerfilOyenteComponent implements OnInit {
   //para editar contraseña
   isPasswordViejaVisible: boolean = false;
   isPasswordNuevaVisible: boolean = false;
+  isPasswordIntroducida: boolean = false;
 
 
   @Output() trackClicked = new EventEmitter<any>();
@@ -109,6 +110,7 @@ export class MiPerfilOyenteComponent implements OnInit {
   }
 
   abrirModalEliminar() {
+    this.isPasswordIntroducida = false;
     this.isModalEliminarOpen = true;
   }
   
@@ -130,6 +132,7 @@ export class MiPerfilOyenteComponent implements OnInit {
   }
 
   cerrarModalEliminar() {
+    this.mensajeError = '';
     this.isModalEliminarOpen = false;
   }
 
@@ -429,6 +432,7 @@ onFileSelectedPlaylist(event:any) {
         this.router.navigate(['/login']);
       },
       error: (error) => {
+        this.mensajeError = error.error.error
         console.error('Error al eliminar la cuenta:', error);
       },
       complete: () => {
@@ -445,6 +449,8 @@ onFileSelectedPlaylist(event:any) {
   togglePasswordNueva(): void {
     this.isPasswordNuevaVisible = !this.isPasswordNuevaVisible;
   }
-  
 
+  togglePasswordIntroducida(): void {
+    this.isPasswordIntroducida = !this.isPasswordIntroducida;
+  }
 }

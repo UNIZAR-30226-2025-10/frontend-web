@@ -59,7 +59,10 @@
         
         <div class="atributos" style="display: flex;justify-content: space-between;">
             <div class="textos" style="display: flex; flex-direction: column; width: 100%; justify-content: center; align-items: center; gap: 8px;">
-                <input type="text" id="contrasena_eliminar" placeholder="Escribe la contraseña actual">
+                <div class="password-container">
+                    <input [type]="isPasswordIntroducida? 'text' : 'password'" id="contrasena_eliminar" placeholder="Escribe la contraseña actual">
+                    <i [ngClass]="isPasswordIntroducida? 'fas fa-eye' : 'fas fa-eye-slash'" (click)="togglePasswordIntroducida()" class="toggle-password"></i>
+                </div>
                 <p *ngIf="mensajeError" style="color: red; font-size: 10px; margin: 0px;">{{ mensajeError }}</p>
                 <button class="btn-guardar" styles="margin-top: 0px;" (click)="eliminarCuenta()">Eliminar</button>
             </div>

@@ -54,6 +54,7 @@ export class MiPerfilArtistaComponent implements OnInit {
   //para editar contraseña
   isPasswordViejaVisible: boolean = false;
   isPasswordNuevaVisible: boolean = false;
+  isPasswordIntroducida: boolean = false;
 
   constructor(private authService: AuthService, private tokenService: TokenService,  private router: Router, private playerService: PlayerService, private subirCloudinary: SubirCloudinary, private actFotoService: ActualizarFotoPerfilService){}
 
@@ -117,6 +118,7 @@ export class MiPerfilArtistaComponent implements OnInit {
   }
 
   abrirModalEliminar() {
+    this.isPasswordIntroducida = false;
     this.isModalEliminarOpen = true;
   }
 
@@ -136,6 +138,7 @@ export class MiPerfilArtistaComponent implements OnInit {
   }
 
   cerrarModalEliminar() {
+    this.mensajeError = '';
     this.isModalEliminarOpen = false;
   }
 
@@ -355,6 +358,7 @@ export class MiPerfilArtistaComponent implements OnInit {
         this.router.navigate(['/login']);
       },
       error: (error) => {
+        this.mensajeError = error.error.error
         console.error('Error al eliminar la cuenta:', error);
       },
       complete: () => {
@@ -373,6 +377,10 @@ export class MiPerfilArtistaComponent implements OnInit {
 
   togglePasswordNueva(): void {
     this.isPasswordNuevaVisible = !this.isPasswordNuevaVisible;
+  }
+
+  togglePasswordIntroducida(): void {
+    this.isPasswordIntroducida = !this.isPasswordIntroducida;
   }
 
   navigateToSubirCancion() {
