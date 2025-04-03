@@ -4,7 +4,7 @@
     <div class="container">
         <div *ngFor="let solicitud of solicitudes; let i = index" class="solicitud">
             <p class="indice">Solicitud {{ i + 1 }}</p>
-            <h2>{{solicitud.nombreUsuario}}</h2>
+            <h2>{{solicitud.nombreArtistico}}</h2>
             <div class="botones">
                 <button type="submit" class="btn" (click)="aceptarSolicitud(solicitud.correo)">Aceptar Solicitud</button>
                 <button type="submit" class="btn" (click)="rechazarSolicitud(solicitud.correo)">Rechazar Solicitud</button>

@@ -58,7 +58,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    const body = { contrasenya: credentials};
+    const body = { contrasenya: credentials.contrasenya};
 
     return this.http.delete(`${this.apiUrl}/delete-account`, { body, headers });
   }
