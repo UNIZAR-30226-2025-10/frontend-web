@@ -1191,7 +1191,7 @@ export class AuthService {
     });
 
     const body = { nombre_album: nombreAlbum, fotoPortada: foto_url }
-    return this.http.post(`${this.apiUrl}/create-album"`, body,{ headers: headers } );
+    return this.http.post(`${this.apiUrl}/create-album`, body,{ headers: headers } );
   }
   
   changeFollow(nombreUsuario:any, siguiendo: boolean): Observable<any> {
