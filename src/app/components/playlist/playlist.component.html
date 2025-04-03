@@ -118,7 +118,7 @@
         <div *ngIf="isModalColaboradoresOpen" class="modal-overlay">
           <div class="modal-content">
               <div class="cabecera" style="display: flex;justify-content: space-between;">
-                  <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Compartida con</p>
+                  <p style="font-size: 20px; color:var(--letra); margin-top: 23px; font-weight: bold;">Compartida con</p>
                   <button (click)="cerrarModalColaboradores()" class="btn-cerrar"><i class="fas fa-times"></i></button>
               </div>
               <div *ngFor="let colaborador of playlist.playlist.colaboradores; let i = index;">
@@ -133,7 +133,7 @@
         <div *ngIf="isModalEditarOpen" class="modal-overlay">
           <div class="modal-content">
               <div class="cabecera" style="display: flex;justify-content: space-between;">
-                  <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Editar Playlist</p>
+                  <p style="font-size: 20px; color: var(--letra); margin-top: 23px; font-weight: bold;">Editar Playlist</p>
                   <button (click)="cerrarModalEditar()" class="btn-cerrar"><i class="fas fa-times"></i></button>
               </div>
               
@@ -268,7 +268,7 @@
       <div *ngIf="isModalPlaylistOpen" class="modal-overlay">
         <div class="modal-content">
             <div class="cabecera" style="display: flex;justify-content: space-between;">
-            <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Crear playlist</p>
+            <p style="font-size: 20px; color: var(--letra); margin-top: 23px; font-weight: bold;">Crear playlist</p>
             <button (click)="cerrarModalPlaylist()" class="btn-cerrar">
                 <i class="fas fa-times"></i>
             </button>

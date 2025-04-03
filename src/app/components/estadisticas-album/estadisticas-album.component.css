@@ -1,7 +1,7 @@
 .top-div {
     height: auto;
-    background-color: #e9e6e6; /* Fondo de ejemplo */
-    color: #000e3b;
+    background-color: var(--cabecera); /* Fondo de ejemplo */
+    color: var(--letra);
     top: 0;
     z-index: 1;
     display: flex;
@@ -42,7 +42,7 @@ h1 {
 
 h4 {
     font-size: 18px;
-    color: #000e3b;
+    color: var(--letra);
     margin: 0px;
 }
 
@@ -87,7 +87,7 @@ h4 {
     width: 100%;
     flex-direction: column;
     gap: 3px;
-    color: #000e3b;
+    color: var(--letra);
     font-size: 20px;
 }
 .partesMeGusta {
@@ -155,7 +155,7 @@ h4 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color:#000e3b ;
+    color:var(--letra);
     padding: 12px;
     border-radius: 12px;
     border: transparent;
@@ -221,7 +221,7 @@ h4 {
 }
 
 .popular-songs {
-    color: #000e3b;
+    color: var(--letra);
     width: 98%;
     padding: 10px 10px 0px 30px;
 }
@@ -276,7 +276,7 @@ h4 {
 
 .tres_puntos {
     display: none;
-    color:rgb(76, 75, 75);
+    color:var(--letra);
     font-size: 11px;
     cursor: pointer;
 }
@@ -285,7 +285,7 @@ h4 {
     border: none;
     background-color: transparent;
     display: none;
-    color:rgb(76, 75, 75);
+    color:var(--letra);
 }
 
 .dropdown-content {

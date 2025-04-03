@@ -2,3 +2,38 @@
 * {
     font-family: 'Poppins', arial; 
   }
+
+  :root {
+    --background-color: #ffffff;
+    --fondo: #dddcdc;  
+    --navbar: #000E3B; 
+    --cabecera: #e9e6e6; 
+    --letra: #000e3b; 
+    --button-bg:  #8CA4FF;
+    --button-text: #ffffff;
+    --controles:#000E3B;
+    --modal: #FFFFFF;
+    --shadow:rgba(255, 255, 255, 0.2);
+    --dropdown: white;
+  }
+  
+  .dark-theme {
+    --background-color: black;
+    --fondo: #3C3B3B; 
+    --navbar: #3C3B3B;
+    --cabecera: #515050;
+    --letra: white;   
+    --button-bg: #8CA4FF;
+    --button-text: white;
+    --controles: #8CA4FF;
+    --modal: #3C3B3B;
+    --shadow:rgba(62, 62, 62, 0.2);
+    --dropdown: black;
+  }
+  
+  button{
+    background-color: var(--button-bg);
+    color:var(--button-text)
+  }
+
+  

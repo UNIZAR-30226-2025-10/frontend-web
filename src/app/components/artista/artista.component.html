@@ -51,7 +51,7 @@
                             <p *ngIf="song.featuring" style="margin: 0px;"> ft. {{ song.featuring }}</p>
                         </div>
                         
-                        <div class="song-plays" style="color:rgb(76, 75, 75);">
+                        <div class="song-plays" style="color:var(--letra);">
                             <p class ="repros" style="margin-bottom: 0px;  white-space: nowrap;">{{song.reproducciones}} {{ song.reproducciones === 1 ? ' Reproducción' : ' Reproducciones' }}</p>
                             <button class="favorite-btn" (click)="toggleFav(song.id)">
                                 <i [ngClass]="song.fav ? 'fas fa-heart' : 'far fa-heart'"></i>

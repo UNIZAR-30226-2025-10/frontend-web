@@ -4,6 +4,7 @@
     flex-direction: column; /* Los elementos se apilan verticalmente */
     min-height: 100vh; /* La altura mínima será siempre igual a la altura de la ventana */
     overflow: hidden; /* Evita el desplazamiento global */
+    background-color: var(--background-color);
   }
 
   /* Buscador y Reproductor de Música */
@@ -39,7 +40,7 @@ app-sidebar {
 
 app-sidebar.active {
   flex: 0 0 12%; /* El sidebar ocupa el 15% del ancho */
-  background-color: #dddcdc;
+  background-color: var(--fondo);
   color: white;
   border-radius: 12px;
   margin: 0.7% 0% 0% 0.7%;
@@ -49,7 +50,7 @@ app-sidebar.active {
 /* Ruta pantalla*/
 .ruta {
   flex: 1; /* El contenido de resultados ocupará el resto del espacio disponible */
-  background-color: #dddcdc;
+  background-color: var(--fondo);
   border-radius: 12px;
   margin: 0.7% 0.7% 0% 0.7%;
   overflow-x: hidden;

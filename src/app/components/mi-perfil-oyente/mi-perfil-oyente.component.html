@@ -1,7 +1,7 @@
 <div *ngIf="isModalOpen" class="modal-overlay">
     <div class="modal-content">
         <div class="cabecera" style="display: flex;justify-content: space-between;">
-            <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Editar Perfil</p>
+            <p style="font-size: 20px; color: var(--letra); margin-top: 23px; font-weight: bold;">Editar Perfil</p>
             <button (click)="cerrarModal()" class="btn-cerrar"><i class="fas fa-times"></i></button>
         </div>
         
@@ -27,7 +27,7 @@
 <div *ngIf="isModalContrasenaOpen" class="modal-overlay">
     <div class="modal-content">
         <div class="cabecera" style="display: flex;justify-content: space-between;">
-            <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Cambiar Contraseña</p>
+            <p style="font-size: 20px; color:var(--letra); margin-top: 23px; font-weight: bold;">Cambiar Contraseña</p>
             <button (click)="cerrarModalContrasena()" class="btn-cerrar"><i class="fas fa-times"></i></button>
         </div>
         
@@ -52,7 +52,7 @@
 <div *ngIf="isModalEliminarOpen" class="modal-overlay">
     <div class="modal-content">
         <div class="cabecera" style="display: flex;justify-content: space-between;">
-            <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Eliminar Cuenta</p>
+            <p style="font-size: 20px; color: var(--letra); margin-top: 23px; font-weight: bold;">Eliminar Cuenta</p>
             <button (click)="cerrarModalEliminar()" class="btn-cerrar"><i class="fas fa-times"></i></button>
         </div>
         
@@ -70,7 +70,7 @@
 <div *ngIf="isModalPlaylistOpen" class="modal-overlay">
     <div class="modal-content">
         <div class="cabecera" style="display: flex;justify-content: space-between;">
-        <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Crear playlist</p>
+        <p style="font-size: 20px; color: var(--letra); margin-top: 23px; font-weight: bold;">Crear playlist</p>
         <button (click)="cerrarModalPlaylist()" class="btn-cerrar">
             <i class="fas fa-times"></i>
         </button>

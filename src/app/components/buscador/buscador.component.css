@@ -5,7 +5,7 @@
     justify-content: space-between;
     padding: 10px 15px;
     box-sizing: border-box;
-    background: #000E3B;
+    background: var(--navbar);;
     position: fixed;
     top: 0;
     left: 0;
@@ -52,7 +52,7 @@
     padding: 0px 40px 0px 15px;
     font-size: 16px;
     border: 1.5px solid white; /* Borde blanco */
-    background-color:#000E3B; /* Azul */
+    background-color:var(--navbar);
     color: white; /* Texto en blanco */
 }
 

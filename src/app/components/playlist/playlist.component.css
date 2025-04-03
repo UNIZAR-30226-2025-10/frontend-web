@@ -10,7 +10,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #000e3b;
+  background-color: var(--cabecera);
   padding: 10px;
   text-align: center;
   font-size: 18px;
@@ -40,8 +40,8 @@
 .top-div {
   position: relative; 
   height: auto;
-  background-color: #e9e6e6;
-  color: #000e3b;
+  background-color: var(--cabecera);
+  color: var(--letra);
   top: 0;
   position: relative;
   z-index: 0; 
@@ -91,6 +91,7 @@ h2, h3 {
 
 .ph-shuffle {
   font-size: 30px;
+  color:var(--controles);
 }
 
 .icons-container {
@@ -167,6 +168,7 @@ h2, h3 {
   border-radius: 10px;
   transition: background-color 0.3s ease;
   cursor: pointer;
+  color:var(--letra)
 }
 
 .song:hover {
@@ -198,12 +200,24 @@ h2, h3 {
 
 .far.fa-heart {
   font-size: 23px;
-  color: #000E3B;
+  color: var(--controles);
 }
 
 .fas.fa-heart {
   font-size: 23px;
-  color: #000E3B;
+  color: var(--controles);
+}
+
+.fas.fa-plus{
+  color:var(--controles);
+}
+
+.far.fa-user{
+  color:var(--controles);
+}
+
+.fas.fa-ellipsis-h{
+  color:var(--controles);
 }
 
 .song-ellipsis {
@@ -221,14 +235,14 @@ h2, h3 {
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 13px;
-  color: #000E3B;
+  color: var(--controles);
 }
 
 .play-song {
   margin-left:50px;
   font-size: 30px;
   color: white;
-  background-color: #000E3B;
+  background-color: var(--controles);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -240,7 +254,7 @@ h2, h3 {
 }
 
 .play-song {
-  background-color: #0a1744;
+  background-color: var(--controles);
 }
 
 .aleatorio {
@@ -268,12 +282,13 @@ h2, h3 {
   position: absolute;
   right: 0;
   top: 100%;  /* Colócalo justo debajo del ícono */
-  background-color: white;
+  background-color: var(--dropdown);
   border-radius: 5px;
   width: 200px;
   z-index: 10;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px var(--shadow);
   display: none; 
+  color:var(--letra);
 }
 
 .dropdown-menu.show {
@@ -316,10 +331,10 @@ h2, h3 {
   position: absolute;
   right: 100%;  
   top: 0;  
-  background-color: white;
+  background-color: var(--dropdown);
   border-radius: 5px;
   width: 200px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px var(--shadow);
   display: none; 
   z-index: 100; 
 }
@@ -380,12 +395,13 @@ h2, h3 {
   left: 0;
   min-width: 200px; 
   max-width: 250px;
-  background-color: white;
+  background-color: var(--dropdown);
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px var(--shadow);
   overflow: hidden;
   z-index: 10;
   padding: 8px 0;
+  color:var(--letra);
 }
 
 .seguidores-dropdown ul {
@@ -431,9 +447,10 @@ h2, h3 {
   left: 0;
   min-width: 160px; 
   max-width: 200px;
-  background-color: white;
+  background-color: var(--dropdown);
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px var(--shadow);
+  color:var(--letra);
   overflow: hidden;
   z-index: 10;
   padding: 8px 0;
@@ -483,21 +500,21 @@ h2, h3 {
 }
 
 .modal-content {
-  background: white;
+  background: var(--modal);
   padding: 0px 25px 28px 25px;
   border-radius: 10px;
   text-align: left;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
-  color: black;
+  box-shadow: 0 4px 10px var(--shadow);
+  color: var(--letra);
 }
 
 
 /* Botones dentro del modal */
 .btn-cerrar {
   background-color: transparent;
-  color: #000e3b;
+  color: var(--letra);
   border: none;
   cursor: pointer;
   width: 5%;
@@ -613,7 +630,7 @@ input {
 .empty-state-message {
   text-align: left;
   align-items: left;
-  color: black;
+  color: var(--letra);
   font-weight: bold;
 }
 
@@ -741,14 +758,14 @@ input {
   position: absolute;
   top: 100%;
   right: 15px;
-  background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background:var(--dropdown);
+  box-shadow: 0 4px 8px var(--shadow);
   border-radius: 8px;
   padding: 10px;
   width: 180px;
   display: flex;
   flex-direction: column;
-  color:black;
+  color:var(--letra);
 }
 
 .sort-dropdown h4 {
@@ -774,4 +791,5 @@ input {
 
 .vertical-icon {
   transform: rotate(90deg);
+  color:var(--controles)
 }

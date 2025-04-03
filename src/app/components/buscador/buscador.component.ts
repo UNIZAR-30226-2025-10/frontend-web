@@ -13,6 +13,7 @@ import { debounceTime, switchMap, catchError } from 'rxjs/operators';
 import { TokenService } from '../../services/token.service';
 import { ActualizarFotoPerfilService } from '../../services/actualizar-foto-perfil.service';
 import { SocketService } from '../../services/socket.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-buscador',
@@ -36,7 +37,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
-  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService,private socketService: SocketService) {}
+  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService,private socketService: SocketService,private themeService: ThemeService) {}
 
 
   ngOnInit() {
@@ -97,8 +98,6 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
   }
 
-
-
   ngOnDestroy(): void {
     // Nos desuscribimos para evitar pérdidas de memoria
     if (this.subscription) {
@@ -131,6 +130,14 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
   verNotificaciones() {
     this.tieneNotificaciones = false; 
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
+  }
+
+  get isDarkMode() {
+    return this.themeService.isDarkMode();
   }
 }
 

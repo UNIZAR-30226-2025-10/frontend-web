@@ -8,6 +8,9 @@
       <button (click)="toggleSidebar()"><img src="noizz.png" alt="noizz" class="noizz"></button>
   </div>
     <div class="right-icons">
+      <button (click)="toggleTheme()">
+        {{ isDarkMode ? '🌙 Modo Claro' : '☀️ Modo Oscuro' }}
+      </button>
       <button class="notis-btn" (click)="verNotificaciones()">
         <a [routerLink]="['/home/notificaciones']">
           <i class="fa fa-bell"></i>

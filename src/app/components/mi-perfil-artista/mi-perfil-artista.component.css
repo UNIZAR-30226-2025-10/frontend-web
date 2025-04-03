@@ -2,7 +2,7 @@
   /* Div superior que es fijo */
   .top-div {
     height: auto;
-    background-color: #e9e6e6; /* Fondo de ejemplo */
+    background-color: var(--cabecera); /* Fondo de ejemplo */
     position: sticky;
     top: 0;
     z-index: 1;
@@ -39,22 +39,22 @@
   }
 
   h3 {
-    color: #000e3b;
+    color: var(--letra);
   }
 
   h4 {
     font-size: 15px;
-    color: #000e3b;
+    color: var(--letra);
     margin: 0px;
   }
 
   h6 {
-    color: #000e3b;
+    color: var(--letra);
     font-size: 20px;
   }
 
   h1 {
-    color: #000e3b;
+    color: var(--letra);
     font-size: 14px;
     font-weight: normal;
   }
@@ -65,7 +65,7 @@
   
   .linkseguidores:hover {
     text-decoration: underline;
-    color: #000e3b
+    color: var(--letra)
   }
 
   .botones_opciones {
@@ -90,7 +90,7 @@
   
   h5 {
     font-size: 13px;
-    color: #000e3b
+    color: var(--letra)
   }
 
   .boton-crear {
@@ -132,7 +132,7 @@
   /* Div inferior que tiene el scroll */
   .bottom-div {
     flex: 1; /* Este div ocupará el espacio restante */
-    background-color: #dddcdc; /* Fondo de ejemplo */
+    background-color: var(--fondo); /* Fondo de ejemplo */
     overflow-y: auto; /* Habilita el scroll vertical */
     padding: 0px 0px 20px 0px;
   }
@@ -146,7 +146,7 @@
 
   h2 {
     font-size: 25px;
-    color: #000e3b;
+    color:var(--letra);
     margin: 0px 0px 3px 30px;
   }
 
@@ -171,7 +171,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color:#000e3b ;
+    color:var(--letra);
     padding: 12px;
     border-radius: 12px;
     border: transparent;
@@ -253,19 +253,19 @@
 
 /* Contenedor del modal */
 .modal-content {
-  background: white;
+  background: var(--modal);
   padding: 0px 25px 28px 25px;
   border-radius: 10px;
   text-align: left;
   max-width: 430px;
-  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 10px var(--shadow);
   color: white;
 }
 
 /* Botones dentro del modal */
 .btn-cerrar {
   background-color: transparent;
-  color: #000e3b;
+  color: var(--letra);
   border: none;
   cursor: pointer;
   width: 5%;

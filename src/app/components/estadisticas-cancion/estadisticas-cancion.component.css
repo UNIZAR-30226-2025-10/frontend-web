@@ -1,7 +1,7 @@
 .top-div {
     height: auto;
-    background-color: #e9e6e6; /* Fondo de ejemplo */
-    color: #000e3b;
+    background-color: var(--cabecera); /* Fondo de ejemplo */
+    color: var(--letra);
     top: 0;
     z-index: 1;
     display: flex;
@@ -42,7 +42,7 @@ h1 {
 
 h4 {
     font-size: 18px;
-    color: #000e3b;
+    color: var(--letra);
     margin: 0px;
 }
 
@@ -87,7 +87,7 @@ h4 {
     width: 100%;
     flex-direction: column;
     gap: 3px;
-    color: #000e3b;
+    color: var(--letra);
     font-size: 20px;
 }
 .partesMeGusta {
@@ -130,6 +130,7 @@ h4 {
     margin-bottom:3px; 
     text-decoration: underline; 
     padding:0px;
+    color:var(--letra);
 }
 
 .container {
@@ -149,7 +150,7 @@ h4 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color:#000e3b ;
+    color:var(--letra);
     padding: 12px;
     border-radius: 12px;
     border: transparent;
@@ -235,20 +236,20 @@ h4 {
   
   /* Contenedor del modal */
   .modal-content {
-    background: white;
+    background: var(--modal);
     padding: 0px 22px 25px 25px;
     border-radius: 10px;
     text-align: left;
     width: 90%;
     max-width: 465px;
-    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
-    color: white;
+    box-shadow: 0 4px 10px var(--shadow);
+    color: var(--letra);
   }
   
   /* Botones dentro del modal */
   .btn-cerrar {
     background-color: transparent;
-    color: #000e3b;
+    color: var(--letra);
     border: none;
     cursor: pointer;
     width: 5%;
