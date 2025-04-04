@@ -2,17 +2,18 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
-import { Router } from '@angular/router';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
+import { switchMap, map } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
+
 
 @Component({
-  selector: 'app-subir-cancion',
+  selector: 'app-subir-album',
   imports: [RouterModule, CommonModule],
-  templateUrl: './subir-cancion.component.html',
-  styleUrls: ['./subir-cancion.component.css']
+  templateUrl: './subir-album.component.html',
+  styleUrls: ['./subir-album.component.css']
 })
-export class SubirCancionComponent implements OnInit {
+export class SubirAlbumComponent implements OnInit {
   albumes: any[] = []; // Lista de álbumes disponibles
   isDropdownOpen: boolean = false; // Controla si el menú desplegable está abierto
   selectedAlbum: string = 'Selecciona el álbum al que deseas asociar la canción'; // Texto del álbum seleccionado
@@ -33,7 +34,7 @@ export class SubirCancionComponent implements OnInit {
   @ViewChild('tituloCancion') tituloCancionInput!: ElementRef<HTMLInputElement>;
   @ViewChild('artistasFt') artistasFtInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private authService: AuthService,  private subirCloudinary: SubirCloudinary, private router: Router) {}
+  constructor(private authService: AuthService,  private subirCloudinary: SubirCloudinary) {}
 
   ngOnInit(): void {
     this.cargarAlbumes(); 
@@ -299,59 +300,65 @@ export class SubirCancionComponent implements OnInit {
   // Funcion final y subida a base de datos
   agregarCancion(nombreCancion: string, artistasFt: string): void {
     const listaArtistasFt = artistasFt.split(",");
-    if(this.albumCreado) {
-      this.subirCloudinary.uploadFile(this.file, 'albumes').pipe(
-        switchMap(( url ) => {
-          return this.authService.crearAlbum(this.selectedAlbum, url).pipe(
-            switchMap(() => {
-              return this.authService.pedirMisAlbumesArtista(); 
-            })
-          );
-        })
-      ).subscribe({
-        next: (response) => {
+    this.selectedAlbum = this.nuevoAlbum.nombre;
+  
+    const albumEncontrado = this.albumes.find(album => album.nombre === this.selectedAlbum);
+    
+    let albumObservable: Observable<number>;
+  
+    if (albumEncontrado) {
+      console.log("Álbum encontrado");
+      this.selectedAlbumId = albumEncontrado.id;
+      this.albumCreado = false;
+      albumObservable = of(this.selectedAlbumId); // Convertimos el ID en un observable
+    } else {
+      console.log("Creando álbum...");
+      albumObservable = this.subirCloudinary.uploadFile(this.file, 'albumes').pipe(
+        switchMap((url) => {
+          console.log("Foto subida");
+          return this.authService.crearAlbum(this.selectedAlbum, url);
+        }),
+        switchMap(() => this.authService.pedirMisAlbumesArtista()),
+        map((response) => {
           if (response && response.albumes) {
+            console.log("Álbum subido");
             this.albumes = response.albumes;
             console.log(this.albumes);
-            const albumEncontrado = this.albumes.find(album => album.nombre === this.selectedAlbum);
-            if (albumEncontrado) {
-              this.selectedAlbumId = albumEncontrado.id; 
-              this.albumCreado = false; 
+            const nuevoAlbum = this.albumes.find(album => album.nombre === this.selectedAlbum);
+            if (nuevoAlbum) {
+              console.log("Álbum ID:", nuevoAlbum.id);
+              this.albumCreado = false;
+              return nuevoAlbum.id;
             } else {
-              console.error('No se encontró el álbum recién creado en la lista.');
+              throw new Error("No se encontró el álbum recién creado en la lista.");
             }
           } else {
-            console.error('No se encontraron álbumes en la respuesta.');
+            throw new Error("No se encontraron álbumes en la respuesta.");
           }
-        },
-          error: (error) => {
-            console.error("Error al guardar los nuevos datos de album:", error);
-          },
-          complete: () => {
-            console.log("Datos de album guardados con éxito");
-          }
-        });
+        })
+      );
     }
-
-    this.subirCloudinary.uploadSong(this.archivoSeleccionado, 'canciones').pipe(
-    switchMap(({ url, duration }) => {
-      return this.authService.crearCancion(nombreCancion, this.selectedAlbumId, duration, url, this.etiquetasSeleccionadas.map(etiqueta => etiqueta.nombre), listaArtistasFt);
+  
+    albumObservable.pipe(
+      switchMap((albumId) => {
+        this.selectedAlbumId = albumId;
+        return this.subirCloudinary.uploadSong(this.archivoSeleccionado, 'canciones');
+      }),
+      switchMap(({ url, duration }) => {
+        return this.authService.crearCancion(nombreCancion, this.selectedAlbumId, duration, url, this.etiquetasSeleccionadas.map(etiqueta => etiqueta.nombre), listaArtistasFt);
       })
-      ).subscribe({
-        next: () => {
-          this.archivoSeleccionado = null!; 
-          this.etiquetasSeleccionadas = []; 
-          this.mensajeError = ''; 
-          this.tituloCancionInput.nativeElement.value = ''; 
-          if(this.artistasFtInput.nativeElement.value) {this.artistasFtInput.nativeElement.value = ''; }
-          this.router.navigate(['/home/miPerfilArtista']);
-        },
-        error: (error) => {
-          console.error("Error al guardar los nuevos datos de cancion:", error);
-        },
-        complete: () => {
-          console.log("Datos de cancion guardados con éxito");
-        }
-      });
-  }
+    ).subscribe({
+      next: () => {
+        this.archivoSeleccionado = null!;
+        this.etiquetasSeleccionadas = [];
+        this.mensajeError = '';
+        this.tituloCancionInput.nativeElement.value = '';
+        if (this.artistasFtInput.nativeElement.value) { this.artistasFtInput.nativeElement.value = ''; }
+        console.log("Datos de canción guardados con éxito");
+      },
+      error: (error) => {
+        console.error("Error al guardar los nuevos datos de álbum/canción:", error);
+      }
+    });
+  }  
 }

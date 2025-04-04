@@ -386,6 +386,10 @@ export class MiPerfilArtistaComponent implements OnInit {
   navigateToSubirCancion() {
     this.router.navigate(['/home/subir-cancion']);
   }
+
+  navigateToSubirAlbum() {
+    this.router.navigate(['/home/subir-album']);
+  }
   
 
 }

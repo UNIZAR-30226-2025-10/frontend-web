@@ -27,6 +27,7 @@ import { EstadisticasCancionComponent} from './components/estadisticas-cancion/e
 import { NotificacionesComponent } from './components/notificaciones/notificaciones.component';
 import { CancionesFavsComponent } from './components/canciones-favs/canciones-favs.component';
 import { SubirCancionComponent } from './components/subir-cancion/subir-cancion.component';
+import { SubirAlbumComponent } from './components/subir-album/subir-album.component';
 
 
 
@@ -58,6 +59,7 @@ export const routes: Routes = [
       { path: 'estadisticasAlbum/:id', component: EstadisticasAlbumComponent,  canActivate: [authGuard], data: { roles: 'artista' }},
       { path: 'seguidos', component: SeguidosComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'seguidores', component: SeguidoresComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'subir-album', component: SubirAlbumComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'subir-cancion', component: SubirCancionComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'notificaciones', component: NotificacionesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'cancionesFavs/:nombreUsuario', component: CancionesFavsComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
