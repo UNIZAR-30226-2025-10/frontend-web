@@ -14,6 +14,9 @@ import { TokenService } from '../../services/token.service';
 import { ActualizarFotoPerfilService } from '../../services/actualizar-foto-perfil.service';
 import { SocketService } from '../../services/socket.service';
 import { ThemeService } from '../../services/theme.service';
+import { NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { NotificacionesService } from '../../services/notificaciones.service';
 
 @Component({
   selector: 'app-buscador',
@@ -29,7 +32,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
   foto: string = '';
 
   tieneNotificaciones: boolean=false;
-
+  estaEnPaginaNotificaciones = false;
 
   private searchQuerySubject: Subject<string> = new Subject(); 
   private subscription!: Subscription;
@@ -37,7 +40,19 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
-  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService,private socketService: SocketService,private themeService: ThemeService) {}
+  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService,private socketService: SocketService,private themeService: ThemeService,private notificacionesService: NotificacionesService) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      // Comprobar si está en la página de notificaciones
+      this.estaEnPaginaNotificaciones = event.url.includes('/notificaciones');
+      
+      // Resetear el indicador si está en la página de notificaciones
+      if (this.estaEnPaginaNotificaciones) {
+        this.tieneNotificaciones = false;
+      }
+    });
+  }
 
 
   ngOnInit() {
@@ -93,7 +108,11 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
     this.socketService.listen('invite-to-playlist-ws').subscribe((data) => {
       console.log('Nueva invitación recibida:', data);
-      this.tieneNotificaciones = true; 
+      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+
+      if (this.estaEnPaginaNotificaciones) {
+        this.notificarNuevaInvitacion(data);
+      }
     });
 
   }
@@ -138,6 +157,10 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
   get isDarkMode() {
     return this.themeService.isDarkMode();
+  }
+
+  notificarNuevaInvitacion(data: any): void {
+    this.notificacionesService.notificarNuevaInvitacion(data);
   }
 }
 

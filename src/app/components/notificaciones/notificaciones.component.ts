@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { NotificacionesService } from '../../services/notificaciones.service';
 
 
 
@@ -19,10 +20,14 @@ export class NotificacionesComponent {
 
   misInvitaciones: any[] = [];
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router,private route: ActivatedRoute){}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router,private route: ActivatedRoute,private notificacionesService:NotificacionesService){}
 
   ngOnInit(): void {
     this.pedirInvitaciones();
+
+    this.notificacionesService.nuevaInvitacion$.subscribe(nuevaInvitacion => {
+      this.misInvitaciones.unshift(nuevaInvitacion);
+    });
   }
 
   pedirInvitaciones(): void {
