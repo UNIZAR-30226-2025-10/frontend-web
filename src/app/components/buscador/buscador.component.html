@@ -8,9 +8,17 @@
       <button (click)="toggleSidebar()"><img src="noizz.png" alt="noizz" class="noizz"></button>
   </div>
     <div class="right-icons">
-      <button (click)="toggleTheme()">
-        {{ isDarkMode ? '🌙 Modo Claro' : '☀️ Modo Oscuro' }}
-      </button>
+      <div class="theme-toggle-wrapper">
+        <div class="theme-toggle-container">
+          <button (click)="toggleTheme()" class="theme-toggle" [ngClass]="{'dark-mode': isDarkMode}" aria-label="Toggle theme">
+            <div class="toggle-track">
+              <div class="toggle-thumb">
+                <span class="icon">{{ isDarkMode ? '🌙' : '☀️' }}</span>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
       <button class="notis-btn" (click)="verNotificaciones()">
         <a [routerLink]="['/home/notificaciones']">
           <i class="fa fa-bell"></i>

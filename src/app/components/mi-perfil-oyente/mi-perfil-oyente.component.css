@@ -201,15 +201,15 @@
 }
 
 .artist-card:hover, .card:hover {
-  background: rgb(230, 230, 230);
-  transform: scale(1.03); /* 🔥 Efecto más sutil */
+  background: var(--hover);
+  transform: scale(1.03); 
 }
 
 .dentro-card {
   display: flex;
-  flex-direction: column; /* Alinea los elementos (imagen y texto) en columna */
-  align-items: flex-start; /* Alinea la imagen y el texto horizontalmente */
-  justify-content: center; /* Alinea la imagen y el texto verticalmente */
+  flex-direction: column; 
+  align-items: flex-start; 
+  justify-content: center; 
   text-align: center;
   padding: 8px;
   max-width: 100%;

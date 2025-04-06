@@ -1,7 +1,7 @@
 <div *ngIf="isModalOpen" class="modal-overlay">
     <div class="modal-content">
         <div class="cabecera" style="display: flex;justify-content: space-between;">
-            <p style="font-size: 20px; color: #000e3b; margin-top: 18px; font-weight: bold;">Editar Álbum</p>
+            <p style="font-size: 20px; color: var(--letra); margin-top: 18px; font-weight: bold;">Editar Álbum</p>
             <button (click)="cerrarModal()" class="btn-cerrar"><i class="fas fa-times"></i></button>
         </div>
         
@@ -27,8 +27,8 @@
             <button (click)="cerrarModalEliminar()" class="btn-cerrar"><i class="fas fa-times"></i></button>
         </div>
 
-        <p style="margin:0px; color:#000e3b; font-size: 17px; margin-bottom: 5px;"><strong>¿Está seguro de que desea eliminar este álbum?</strong></p>
-        <p style="margin:0px; color:#000e3b; text-align: justify;" >Al hacerlo, desaparecerá completamente del sistema. Se perderán todas sus canciones, con sus reproducciones, 'Me gusta' y cualquier playlist en las que hayan sido añadidas. Esta acción es irreversible.</p>
+        <p style="margin:0px; color:var(--letra); font-size: 17px; margin-bottom: 5px;"><strong>¿Está seguro de que desea eliminar este álbum?</strong></p>
+        <p style="margin:0px; color:var(--letra); text-align: justify;" >Al hacerlo, desaparecerá completamente del sistema. Se perderán todas sus canciones, con sus reproducciones, 'Me gusta' y cualquier playlist en las que hayan sido añadidas. Esta acción es irreversible.</p>
         <div class="boton" style="display: flex; justify-content: center;">
             <button (click)="eliminarAlbum()" class="btn-eliminar">Eliminar Álbum</button>
         </div>
@@ -107,7 +107,7 @@
         </div>
         <div *ngFor="let song of album.canciones; let i = index">
             <div class="song">
-                <div style="justify-content: center; text-align: center;"><p style="margin: 0px; margin-right:12px; color:rgb(76, 75, 75);"><strong> {{ i + 1 }}</strong></p></div>
+                <div style="justify-content: center; text-align: center;"><p style="margin: 0px; margin-right:12px; color:var(--letra2);"><strong> {{ i + 1 }}</strong></p></div>
                 <div class="song-title">
                     <strong>{{song.nombre}}</strong>
                     <div style="display:flex; gap: 0px;">
@@ -116,14 +116,14 @@
                     </div>
                     
                 </div>
-                <div class="song-plays" style="color:rgb(76, 75, 75);">
+                <div class="song-plays" style="color:var(--letra2);">
                     <p style="margin-bottom: 0px; width: 120px;">{{song.reproducciones}}</p>           
                     <p class="duracion" style="margin-bottom: 0px; width: 120px;">{{song.duracion}}</p>
-                    <button class="estats_cancion" (click)="verEstadisticas(song.id)"style="margin-bottom: 0px; width: 120px; border: none; background-color: transparent; color: rgb(76, 75, 75);">Ver estadísticas</button>
+                    <button class="estats_cancion" (click)="verEstadisticas(song.id)"style="margin-bottom: 0px; width: 120px; border: none; background-color: transparent; color: var(--letra2);">Ver estadísticas</button>
                     <div class="tres_puntos">
                         <button (click)="abrirDesplegable(i)" style="border: none; background-color: transparent;"><i class="fas fa-ellipsis-v"></i></button>  
                         <div *ngIf="openDropdown === i" class="dropdown-content" #dropdown [ngStyle]="{ top: dropdownTopPosition + 'px', left: dropdownLeftPosition + 'px' }">
-                            <button class="opcion_desplegable" (click)="verEstadisticas(song.id)">Ver estadísticas</button>
+                            <button class="opcion_desplegable" style="color: var(--letra2);" (click)="verEstadisticas(song.id)">Ver estadísticas</button>
                         </div>
                     </div>
                 </div>

@@ -179,7 +179,7 @@ h4 {
     width: auto; 
 }
 .song:hover {
-    background-color: white; /* Cambia el color de fondo a blanco */
+    background-color: var(--hover); /* Cambia el color de fondo a blanco */
     transform: scale(1.01); /* Aumenta ligeramente el tamaño de la canción */
 }
 
@@ -378,7 +378,7 @@ h3 {
 }
 
 .track-card:hover {
-    background: rgb(230, 230, 230);
+    background: var(--hover);
     transform: scale(1.03); /*  Efecto más sutil */
 }
 

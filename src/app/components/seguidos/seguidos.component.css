@@ -79,7 +79,7 @@ h3 {
     color:var(--letra);
 }
 .seguidorcard:hover {
-    background-color: #e9e6e6;
+    background-color: var(--hover);
 }
 
 a {

@@ -157,14 +157,46 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
       console.error("Los canvas no están disponibles todavía.");
       return;
     }
-  
+      
     const ctx = this.canvas.nativeElement.getContext('2d');
     const ctxPie = this.canvasPie.nativeElement.getContext('2d');
-  
+
+      
     // Extraer nombres de canciones y reproducciones del álbum
     const labels = this.album.canciones.map((cancion: { nombre: string }) => cancion.nombre);
     const data = this.album.canciones.map((cancion: { reproducciones: number }) => cancion.reproducciones);
-
+    
+    // Opciones comunes para ambos gráficos
+    const commonOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            usePointStyle: true,
+            boxWidth: 0,
+            color: 'black' // color de la leyenda
+          }
+        },
+        title: {
+          color: 'black' // Color para el título 
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: 'black' // Color para las etiquetas del eje X
+          }
+        },
+        y: {
+          ticks: {
+            color: 'black' // Color para las etiquetas del eje Y
+          }
+        }
+      }
+    };
+  
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -179,24 +211,26 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
           borderWidth: 1
         }]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: true,
-            labels: {
-              usePointStyle: true,
-              boxWidth: 0
-            }
+      options: commonOptions
+    });
+        
+    const pieOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            usePointStyle: true,
+            boxWidth: 0,
+            color: 'black' // Aquí se cambia el color de la leyenda
           }
         }
       }
-    });
+    };
   
-
     this.chartPie = new Chart(ctxPie, {
-      type: 'pie', // Tipo 'pie' para gráfico de pastel
+      type: 'pie',
       data: {
         labels: labels,
         datasets: [{
@@ -209,19 +243,7 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
           borderWidth: 1
         }]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: true,
-            labels: {
-              usePointStyle: true,
-              boxWidth: 0
-            }
-          }
-        }
-      }
+      options: pieOptions
     });
   }
 

@@ -220,8 +220,8 @@
 }
 
 .artist-card:hover, .card:hover {
-  background: rgb(230, 230, 230);
-  transform: scale(1.03); /* 🔥 Efecto más sutil */
+  background: var(--hover);
+  transform: scale(1.03); 
 }
 
 .dentro-card {

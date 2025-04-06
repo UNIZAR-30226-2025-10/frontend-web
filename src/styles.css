@@ -9,12 +9,17 @@
     --navbar: #000E3B; 
     --cabecera: #e9e6e6; 
     --letra: #000e3b; 
+    --letra2:rgb(76, 75, 75);
     --button-bg:  #8CA4FF;
     --button-text: #ffffff;
     --controles:#000E3B;
     --modal: #FFFFFF;
     --shadow:rgba(255, 255, 255, 0.2);
     --dropdown: white;
+    --repro:#000E3B;
+    --hover: rgb(230, 230, 230);
+    --campos:#D2D1D1;
+    --aleatorio_activo:#8CA4FF;
   }
   
   .dark-theme {
@@ -23,12 +28,17 @@
     --navbar: #3C3B3B;
     --cabecera: #515050;
     --letra: white;   
+    --letra2:rgb(240, 239, 239);
     --button-bg: #8CA4FF;
     --button-text: white;
     --controles: #8CA4FF;
     --modal: #3C3B3B;
     --shadow:rgba(62, 62, 62, 0.2);
     --dropdown: black;
+    --repro:white;
+    --hover: #6d6b6b;
+    --campos:#000000;
+    --aleatorio_activo:white;
   }
   
   button{

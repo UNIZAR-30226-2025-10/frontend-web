@@ -71,7 +71,7 @@ h4 {
 }
 
 .btn-album:hover {
-    background-color:#7587c8e0;
+    background-color:var(--hover);
 }
 
 .bottom-div {
@@ -200,7 +200,7 @@ h4 {
 }
 
 .artist-card:hover, .card:hover {
-    background: rgb(230, 230, 230);
+    background: var(--hover);;
     transform: scale(1.03);
 }
 

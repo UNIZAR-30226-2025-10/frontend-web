@@ -1,6 +1,6 @@
 <div class="subir-cancion-container">
   <h2>Subir canción</h2>
-  <div class="custom-dropdown">
+  <div class="custom-dropdown" style="margin-top: 20px;">
     <!-- Elemento seleccionado -->
     <div class="selected-option" (click)="toggleDropdown()">
       <img *ngIf="selectedAlbumImage" [src]="selectedAlbumImage" alt="{{ selectedAlbum }}" width="50" height="50" />
@@ -73,7 +73,7 @@
   <div *ngIf="isModalAlbumOpen" class="modal-overlay">
     <div class="modal-content">
       <div class="cabecera">
-        <p style="font-size: 20px; color: #000e3b; margin-top: 23px; font-weight: bold;">Crear Álbum</p>
+        <p style="font-size: 20px; color: var(--letra); margin-top: 23px; font-weight: bold;">Crear Álbum</p>
         <button (click)="cerrarModalAlbum()" class="btn-cerrar"><i class="fas fa-times"></i></button>
       </div>
   

@@ -1,24 +1,28 @@
 
 
 .subir-cancion-container {
-    margin-top: 8%;
-      align-items: center !important; /* Centra verticalmente */
-      padding: 20px;
-      background-color: #dddcdc;
-      border-radius: 8px;
-    }
-   
+  align-items: center !important; /* Centra verticalmente */
+  background-color: var(--fondo);
+  border-radius: 8px;
+  padding:30px;
+  width: 100%;
+}
+
+input{
+  background-color: var(--campos);
+}
+
     .subir-cancion-container h2 {
       all: unset; /* Elimina todos los estilos heredados */
       margin: 0; /* Restablece el margen */
       padding: 0; /* Restablece el padding */
       font-size: 24px; /* Define un tamaño de fuente específico */
       margin: 0 auto; /* Centra el campo en su contenedor */
-      margin-left: 10%;
-      margin-bottom: 15%;
+      margin-left: 5%;
+      margin-bottom: 20%;
       font-size: 24px;
       font-weight: bold;
-      color: #000e3b;
+      color: var(--letra);
     }
   
      
@@ -90,7 +94,7 @@
     margin-top: 15px;
     margin-bottom: 15px;
     position: relative;
-    width: 80%;
+    width: 100%;
     border: none;
     border-radius: 8px;
     background-color: #aaa7a7;
@@ -103,7 +107,8 @@
     justify-content: space-between;
     padding: 10px;
     font-size: 16px;
-    color: #333;
+    color: #888;
+    background-color: var(--campos);
   }
   
   .selected-option span {
@@ -199,7 +204,6 @@
   .campo select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
     border-radius: 4px;
   }
   
@@ -208,7 +212,7 @@
     padding: 20px;
     text-align: center;
     border-radius: 8px;
-    color: #6f6f6f;
+    color:#888;
   }
   
   button {
@@ -254,8 +258,8 @@
     padding: 20px;
     text-align: center;
     border-radius: 8px;
-    color: #6f6f6f;
-    background-color: #f9f9f9;
+    background-color: var(--campos);
+    color:#888;
     transition: background-color 0.3s ease;
   }
   
@@ -282,7 +286,7 @@
   .file-upload span {
     display: block;
     font-size: 14px;
-    color: #333;
+    color:#888;;
     word-wrap: break-word; 
   }
   
@@ -295,7 +299,7 @@
   
   .etiqueta {
     background-color: #007bff;
-    color: white;
+    color: var(--letra);
     padding: 5px 10px;
     border-radius: 4px;
     font-size: 14px;
@@ -377,7 +381,7 @@
   }
   
   .subir-cancion-container .campo {
-     width: 80%;
+     width: 90%;
      /*centrar*/
       margin: 0 auto; 
       margin-bottom: 15px;
@@ -452,7 +456,7 @@
   .campo input {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: none;
     border-radius: 4px;
   }
   
