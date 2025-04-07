@@ -38,6 +38,12 @@ export class BuscadorComponent implements OnInit, OnDestroy{
   private subscription!: Subscription;
   private fotoSubscription!: Subscription;
 
+  tieneInvitaciones: boolean = false;
+  tieneNovedadesMusicales: boolean = false;
+  tieneInteracciones: boolean = false;
+  tieneSeguidores: boolean = false;
+  
+
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
   constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService,private socketService: SocketService,private themeService: ThemeService,private notificacionesService: NotificacionesService) {
@@ -46,11 +52,6 @@ export class BuscadorComponent implements OnInit, OnDestroy{
     ).subscribe((event: NavigationEnd) => {
       // Comprobar si está en la página de notificaciones
       this.estaEnPaginaNotificaciones = event.url.includes('/notificaciones');
-      
-      // Resetear el indicador si está en la página de notificaciones
-      if (this.estaEnPaginaNotificaciones) {
-        this.tieneNotificaciones = false;
-      }
     });
   }
 
@@ -59,6 +60,8 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
     this.previousUrl = this.router.url;
     this.foto = this.tokenService.getUser().fotoPerfil;
+
+    this.pedirNotificaciones();
 
     this.subscription = this.limpiarBuscadorService.limpiarBuscador$.subscribe(data => {
       if (data === true) {
@@ -104,6 +107,10 @@ export class BuscadorComponent implements OnInit, OnDestroy{
       }
     });
 
+    this.notificacionesService.hayNotificaciones$.subscribe(hay => {
+      this.tieneNotificaciones = hay;
+    });
+
     this.socketService.connect();
 
     this.socketService.listen('invite-to-playlist-ws').subscribe((data) => {
@@ -112,6 +119,25 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
       if (this.estaEnPaginaNotificaciones) {
         this.notificarNuevaInvitacion(data);
+      }
+    });
+
+    this.socketService.listen('novedad-musical-ws').subscribe((data) => {
+      console.log('Nueva novedad musical recibida:', data);
+      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+
+      if (this.estaEnPaginaNotificaciones) {
+        this.notificarNuevaNovedad(data);
+      }
+    });
+
+    // Respuesta o like a noizzy
+    this.socketService.listen('nueva-interaccion-ws').subscribe((data) => {
+      console.log('Nueva interaccion recibida:', data);
+      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+
+      if (this.estaEnPaginaNotificaciones) {
+        this.notificarNuevaInteraccion(data);
       }
     });
 
@@ -147,9 +173,6 @@ export class BuscadorComponent implements OnInit, OnDestroy{
     this.searchQuerySubject.next(this.searchQuery);
   }
 
-  verNotificaciones() {
-    this.tieneNotificaciones = false; 
-  }
 
   toggleTheme() {
     this.themeService.toggleTheme();
@@ -162,5 +185,46 @@ export class BuscadorComponent implements OnInit, OnDestroy{
   notificarNuevaInvitacion(data: any): void {
     this.notificacionesService.notificarNuevaInvitacion(data);
   }
+
+  notificarNuevaInteraccion(data: any): void {
+    this.notificacionesService.notificarNuevaInteraccion(data);
+  }
+
+  notificarNuevaNovedad(data: any): void {
+    this.notificacionesService.notificarNuevaNovedad(data);
+  }
+
+  pedirNotificaciones() {
+    this.authService.pedirNotificaciones()
+    .subscribe({
+      next: (response) => {   
+        this.tieneInvitaciones = response.invitaciones;
+        this.tieneNovedadesMusicales = response["novedades-musicales"];
+        this.tieneInteracciones = response.interacciones;
+        this.tieneSeguidores = response.seguidores;
+        
+        this.tieneNotificaciones = 
+          this.tieneInvitaciones || 
+          this.tieneNovedadesMusicales || 
+          this.tieneInteracciones || 
+          this.tieneSeguidores;
+        console.log('Notificaciones recibidas:', response);
+
+        this.notificacionesService.actualizarNotificaciones(
+          response.invitaciones,
+          response["novedades-musicales"],
+          response.interacciones,
+          response.seguidores
+        );
+      },
+      error: (error) => {
+        console.error('Error al pedir las notificaciones', error);
+      },
+      complete: () => {
+        console.log('Notificaciones recuperadas con éxito');
+      }
+    });
+  }
+
 }
 

@@ -818,6 +818,22 @@ export class AuthService {
       return this.http.get(`${this.apiUrl}/get-mis-canciones`, { headers: headers } );
     }
 
+    pedirNotificaciones(): Observable<any> {
+      const token = this.tokenService.getToken();
+  
+      if (!token) {
+        console.error('No se encontró el token');
+        return of({ error: 'No autorizado' });;
+      }
+  
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      });
+  
+      return this.http.get(`${this.apiUrl}/has-notificaciones`, { headers: headers } );
+    }
+
 
   pedirInvitaciones(): Observable<any> {
     const token = this.tokenService.getToken();
@@ -833,6 +849,74 @@ export class AuthService {
     });
 
     return this.http.get(`${this.apiUrl}/get-invitaciones`, { headers: headers } );
+  }
+
+  pedirNovedadesMusicales(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-novedades-musicales`, { headers: headers } );
+  }
+
+  quitarNovedades(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token de autorización');
+      return of({ error: 'No autorizado' });
+    }
+
+    console.log('token', token);
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.delete(`${this.apiUrl}/delete-novedades-musicales`,{ headers });
+  }
+
+  pedirInteracciones(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-interacciones`, { headers: headers } );
+  }
+
+  quitarInteracciones(): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token de autorización');
+      return of({ error: 'No autorizado' });
+    }
+
+    console.log('token', token);
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.delete(`${this.apiUrl}/read-interacciones`,{ headers });
   }
 
 

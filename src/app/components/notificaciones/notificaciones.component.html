@@ -1,31 +1,130 @@
 <div class="notificaciones-container">
     <h2>Notificaciones</h2>
+
+    <div class="filtros">
+        <button class="boton-filtro" (click)="cambiarFiltro('invitaciones')"  [ngClass]="{ 'activo': filtroActivo === 'invitaciones' }">
+            <h3>Invitaciones</h3>
+            <span *ngIf="hayInvitaciones" class="notification-dot"></span>
+        </button>
+        <button class="boton-filtro" (click)="cambiarFiltro('nuevaMusica')"  [ngClass]="{ 'activo': filtroActivo === 'nuevaMusica' }">
+            <h3>Novedades musicales</h3>
+            <span *ngIf="hayNovedades" class="notification-dot"></span>
+        </button>
+        <button class="boton-filtro" (click)="cambiarFiltro('interacciones')"  [ngClass]="{ 'activo': filtroActivo === 'interacciones' }">
+            <h3>Interacciones</h3>
+            <span *ngIf="hayInteracciones" class="notification-dot"></span>
+        </button>
+        <button class="boton-filtro" (click)="cambiarFiltro('nuevosSeguidores')"  [ngClass]="{ 'activo': filtroActivo === 'nuevosSeguidores' }">
+            <h3>Nuevos seguidores</h3>
+            <span *ngIf="hayNuevosSeguidores" class="notification-dot"></span>
+        </button>
+    </div>
     
-    <div class="notificaciones-scroll">
-      <!-- Notificaciones de invitaciones a listas -->
-      <div *ngIf="misInvitaciones.length > 0" class="notificaciones-lista">
-          <div *ngFor="let invitacion of misInvitaciones" class="notificacion-item">
-              <div class="notificacion-imagen">
-                <img [src]="invitacion.fotoPortada && invitacion.fotoPortada!== 'DEFAULT' ? invitacion.fotoPortada : 'logo_noizz.png'" alt="Portada de playlist" class="playlist-cover">
-              </div>
-              <div class="notificacion-contenido">
+    <div class="contenido" (scroll)="onScroll($event)">
+        <div class="notificaciones-scroll">
+        <!-- Notificaciones de invitaciones a listas -->
+        <div *ngIf="filtroActivo === 'invitaciones'">
+            <div *ngIf="misInvitaciones.length > 0" class="notificaciones-lista">
+                <div *ngFor="let invitacion of misInvitaciones" class="notificacion-item">
+                    <div class="notificacion-imagen">
+                        <img [src]="invitacion.fotoPortada && invitacion.fotoPortada!== 'DEFAULT' ? invitacion.fotoPortada : 'logo_noizz.png'" alt="Portada de playlist" class="playlist-cover">
+                    </div>
+                    <div class="notificacion-contenido">
+                        <p style="font-weight:bold;margin-top:7px;margin-bottom: 10px;font-size:18px;">
+                            Te han invitado a colaborar en {{ invitacion.nombre }}
+                        </p>
+                        <p class="texto-secundario">
+                            Podrás añadir canciones a esta lista de {{ invitacion.nombreUsuario }}
+                        </p>
+                    </div>
+                    <div class="notificacion-acciones">
+                        <button class="btn-unirse" (click)="aceptarInvitacion(invitacion.id)">Unirme a la lista</button>
+                        <button class="btn-cancelar" (click)="rechazarInvitacion(invitacion.id)">Rechazar solicitud</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mensaje cuando no hay notificaciones -->
+            <div *ngIf="misInvitaciones.length === 0" class="sin-notificaciones">
+                <p>No tienes notificaciones nuevas</p>
+            </div>
+        </div>
+
+        <div *ngIf="filtroActivo === 'nuevaMusica'">
+            <div *ngIf="nuevaMusica.length > 0" class="notificaciones-lista">
+              <div *ngFor="let novedad of nuevaMusica" class="notificacion-item">
+                <div class="notificacion-imagen">
+                  <img [src]="novedad.fotoPortada || 'no_cancion.png'" alt="Portada del álbum" class="playlist-cover">
+                </div>
+                <div class="notificacion-contenido">
                   <p style="font-weight:bold;margin-top:7px;margin-bottom: 10px;font-size:18px;">
-                      Te han invitado a colaborar en {{ invitacion.nombre }}
+                    {{ novedad.tipo === 'album' ? 'Nuevo álbum de ' : 'Nueva canción de ' }}{{ novedad.nombreArtisticoArtista }} 
+                    <span *ngIf="novedad?.featuring?.length">
+                      ft. {{ novedad.featuring.join(', ') }}
+                    </span>                                     
                   </p>
                   <p class="texto-secundario">
-                      Podrás añadir canciones a esta lista de {{ invitacion.nombreUsuario }}
+                    {{ novedad.nombre }} 
                   </p>
+                </div>
+                <div class="notificacion-acciones">
+                  <button class="btn-escuchar" (click)="irAlbum(novedad.id)">Escuchar</button>
+                </div>
               </div>
-              <div class="notificacion-acciones">
-                  <button class="btn-unirse" (click)="aceptarInvitacion(invitacion.id)">Unirme a la lista</button>
-                  <button class="btn-cancelar" (click)="rechazarInvitacion(invitacion.id)">Rechazar solicitud</button>
+             </div>
+             <div *ngIf="nuevaMusica.length === 0" class="sin-notificaciones">
+                <p>No hay novedades musicales</p>
               </div>
-          </div>
-      </div>
+        </div>
 
-      <!-- Mensaje cuando no hay notificaciones -->
-      <div *ngIf="misInvitaciones.length === 0" class="sin-notificaciones">
-          <p>No tienes notificaciones nuevas</p>
-      </div>
-  </div>
+        <div *ngIf="filtroActivo === 'interacciones'">
+            <div *ngIf="interacciones.length > 0" class="notificaciones-lista">
+              <div *ngFor="let interaccion of interacciones" class="notificacion-item">
+                <div class="notificacion-imagen">
+                  <img [src]="interaccion.fotoUsuario || 'nouser.png'" alt="Avatar de usuario" class="playlist-cover" style="border-radius: 50%;">
+                </div>
+                <div class="notificacion-contenido">
+                  <p style="font-weight:bold;margin-top:7px;margin-bottom: 10px;font-size:18px;">
+                    {{ interaccion.nombreUsuario }} {{ interaccion.tipo === 'respuesta' ? ' ha respondido a tu Noizzy ' : ' le ha dado me gusta a tu Noizzy ' }} 
+                  </p>
+                  <p class="texto-secundario">
+                    {{ interaccion.texto }}
+                  </p>
+                </div>
+                <div class="notificacion-acciones">
+                  <button class="btn-ver" (click)="irNoizzy(interaccion.id)" >Ver</button>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="interacciones.length === 0" class="sin-notificaciones">
+              <p>No tienes interacciones nuevas</p>
+            </div>
+          </div>
+
+          <div *ngIf="filtroActivo === 'nuevosSeguidores'">
+            <div *ngIf="nuevosSeguidores.length > 0" class="notificaciones-lista">
+              <div *ngFor="let seguidor of nuevosSeguidores" class="notificacion-item">
+                <div class="notificacion-imagen">
+                  <img [src]="seguidor.fotoUsuario || 'nouser.png'" alt="Avatar de usuario" class="playlist-cover">
+                </div>
+                <div class="notificacion-contenido">
+                  <p style="font-weight:bold;margin-top:7px;margin-bottom: 10px;font-size:18px;">
+                    {{ seguidor.nombreUsuario }} ha comenzado a seguirte
+                  </p>
+                  <p class="texto-secundario">
+                    {{ seguidor.fechaSeguimiento | date:'dd/MM/yyyy' }}
+                  </p>
+                </div>
+                <div class="notificacion-acciones">
+                  <button class="btn-ver-perfil" (click)="irPerfil(seguidor.id)">Ver perfil</button>
+                  <button *ngIf="!seguidor.siguesDeVuelta" class="btn-seguir" (click)="seguirUsuario(seguidor.id)">Seguir</button>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="nuevosSeguidores.length === 0" class="sin-notificaciones">
+              <p>No tienes nuevos seguidores</p>
+            </div>
+          </div>
+        
+    </div>
+    </div>
 </div>
