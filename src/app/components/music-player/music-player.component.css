@@ -58,7 +58,7 @@ body {
     outline: none;
     appearance: none;
     transition: background-color 0.3s ease;
-    background: linear-gradient(to right, var(--letra) 0%, #8ca4ff 0%, var(--letra) 0%);
+    background: linear-gradient(to right, var(--repro) 0%, #8ca4ff 0%, var(--repro) 0%);
   }
   
   .progress-bar::-webkit-slider-thumb {
@@ -72,13 +72,13 @@ body {
   }
   
   .progress-bar:focus {
-    background-color: var(--letra);
+    background-color: var(--repro);
   }
   
   .time-left,
   .time-right {
     font-size: 12px;
-    color: var(--letra);
+    color: var(--repro);
   }
   
   .time-left {
@@ -171,7 +171,7 @@ body {
 }
 
 .aleatorio-btn.active {
-    color: #8ca4ff;
+    color:var(--aleatorio_activo);
 }
 
 .aleatorio-btn.desaparecer {

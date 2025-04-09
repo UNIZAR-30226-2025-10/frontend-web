@@ -74,11 +74,7 @@
   margin-right: 10px;
 }
 
-<<<<<<< Updated upstream
-.btn-unirse, .btn-cancelar {
-=======
 .btn-unirse, .btn-cancelar,.btn-escuchar, .btn-ver, .btn-ver-perfil {
->>>>>>> Stashed changes
   padding: 8px 15px;
   border: none;
   border-radius: 30px;
@@ -87,20 +83,13 @@
   transition: background-color 0.3s ease;
 }
 
-<<<<<<< Updated upstream
-.btn-unirse {
-=======
+
 .btn-unirse, .btn-escuchar,.btn-ver, .btn-ver-perfil {
->>>>>>> Stashed changes
   background-color: var(--controles);
   color: white;
 }
 
-<<<<<<< Updated upstream
-.btn-unirse:hover {
-=======
 .btn-unirse:hover, .btn-ver:hover, .btn-escuchar:hover, .btn-ver-perfil:hover {
->>>>>>> Stashed changes
   background-color: #000e3ba7;
 }
 
@@ -118,3 +107,70 @@
   color: #666;
   padding: 20px;
 }
+
+.filtros {
+  display: flex; 
+  gap: 12px; 
+  padding: 16px;
+  overflow-x: auto;
+  background-color: var(--fondo);
+  position: sticky;
+  flex-shrink: 0;
+  top: 0; 
+  z-index: 1;
+  transition: box-shadow 0.2s ease;
+}
+
+.filtros.scrolled {
+  box-shadow: 0px 6px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+
+.filtros::-webkit-scrollbar {
+  display: none;
+}
+
+
+.boton-filtro {
+  position: relative;
+  display: inline-block;
+  background-color:var(--fondo);
+  padding: 1px 8px;
+  height: 25px;
+  border-radius: 15px;
+  border: 1.7px solid #000e3b;
+}
+
+h3 {
+  font-size: 12px;
+  color: var(--letra);
+  margin: 0px;
+}
+
+.boton-filtro.activo {
+  background-color: #000e3b;
+
+}
+
+.boton-filtro.activo h3 {
+  color:white;
+}
+
+.boton-filtro:hover {
+  background-color: #afb6d0;
+}
+
+.boton-filtro.activo:hover {
+  background-color: #000e3b;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 10px;
+  right: -3px;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+}
+

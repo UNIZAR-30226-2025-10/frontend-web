@@ -14,13 +14,11 @@ import { TokenService } from '../../services/token.service';
 import { ActualizarFotoPerfilService } from '../../services/actualizar-foto-perfil.service';
 import { SocketService } from '../../services/socket.service';
 import { ThemeService } from '../../services/theme.service';
-<<<<<<< Updated upstream
-=======
 import { NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { NotificationService } from '../../services/notification.service';
->>>>>>> Stashed changes
+
 
 @Component({
   selector: 'app-buscador',
@@ -36,17 +34,20 @@ export class BuscadorComponent implements OnInit, OnDestroy{
   foto: string = '';
 
   tieneNotificaciones: boolean=false;
-
+  estaEnPaginaNotificaciones = false;
 
   private searchQuerySubject: Subject<string> = new Subject(); 
   private subscription!: Subscription;
   private fotoSubscription!: Subscription;
 
+  tieneInvitaciones: boolean = false;
+  tieneNovedadesMusicales: boolean = false;
+  tieneInteracciones: boolean = false;
+  tieneSeguidores: boolean = false;
+  
+
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
-<<<<<<< Updated upstream
-  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService,private socketService: SocketService,private themeService: ThemeService) {}
-=======
   constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService,private socketService: SocketService,private themeService: ThemeService,private notificacionesService: NotificacionesService, private notificationService: NotificationService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -55,13 +56,14 @@ export class BuscadorComponent implements OnInit, OnDestroy{
       this.estaEnPaginaNotificaciones = event.url.includes('/notificaciones');
     });
   }
->>>>>>> Stashed changes
 
 
   ngOnInit() {
 
     this.previousUrl = this.router.url;
     this.foto = this.tokenService.getUser().fotoPerfil;
+
+    this.pedirNotificaciones();
 
     this.subscription = this.limpiarBuscadorService.limpiarBuscador$.subscribe(data => {
       if (data === true) {
@@ -124,11 +126,38 @@ export class BuscadorComponent implements OnInit, OnDestroy{
       }
     });
 
+    this.notificacionesService.hayNotificaciones$.subscribe(hay => {
+      this.tieneNotificaciones = hay;
+    });
+
     this.socketService.connect();
 
     this.socketService.listen('invite-to-playlist-ws').subscribe((data) => {
       console.log('Nueva invitación recibida:', data);
-      this.tieneNotificaciones = true; 
+      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+
+      if (this.estaEnPaginaNotificaciones) {
+        this.notificarNuevaInvitacion(data);
+      }
+    });
+
+    this.socketService.listen('novedad-musical-ws').subscribe((data) => {
+      console.log('Nueva novedad musical recibida:', data);
+      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+
+      if (this.estaEnPaginaNotificaciones) {
+        this.notificarNuevaNovedad(data);
+      }
+    });
+
+    // Respuesta o like a noizzy
+    this.socketService.listen('nueva-interaccion-ws').subscribe((data) => {
+      console.log('Nueva interaccion recibida:', data);
+      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+
+      if (this.estaEnPaginaNotificaciones) {
+        this.notificarNuevaInteraccion(data);
+      }
     });
 
     this.socketService.listen('nuevo-seguidor-ws').subscribe((data) => {
@@ -171,9 +200,6 @@ export class BuscadorComponent implements OnInit, OnDestroy{
     this.searchQuerySubject.next(this.searchQuery);
   }
 
-  verNotificaciones() {
-    this.tieneNotificaciones = false; 
-  }
 
   toggleTheme() {
     this.themeService.toggleTheme();
@@ -182,8 +208,6 @@ export class BuscadorComponent implements OnInit, OnDestroy{
   get isDarkMode() {
     return this.themeService.isDarkMode();
   }
-<<<<<<< Updated upstream
-=======
 
   notificarNuevaInvitacion(data: any): void {
     this.notificacionesService.notificarNuevaInvitacion(data);
@@ -240,7 +264,5 @@ export class BuscadorComponent implements OnInit, OnDestroy{
       }
     });
   }
-
->>>>>>> Stashed changes
 }
 

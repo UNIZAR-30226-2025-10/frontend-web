@@ -349,7 +349,6 @@ toggleFav(id: any) {
     this.dropdownLeftPosition = rect.left + window.scrollX -105;  // Calcula la posición left
   }
 
-
 }
 
 

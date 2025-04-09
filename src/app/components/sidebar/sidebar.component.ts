@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TokenService } from '../../services/token.service';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 
@@ -64,6 +65,14 @@ export class SidebarComponent {
         console.log("Seguidos recuperados con éxito");
       }
     });
+  }
+
+  navigateToMisNoizzys() {
+    this.router.navigate(['/home/mis-noizzys']);
+  }
+
+  navigateToSusNoizzys() {
+    this.router.navigate(['/home/noizzys']);
   }
   
 }

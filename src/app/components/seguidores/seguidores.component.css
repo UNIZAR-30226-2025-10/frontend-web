@@ -78,7 +78,7 @@ h3 {
     min-width: 140px;
 }
 .seguidorcard:hover {
-    background-color: #e9e6e6;
+    background-color: var(--hover);
 }
 
 a {

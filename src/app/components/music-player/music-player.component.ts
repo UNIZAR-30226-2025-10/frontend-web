@@ -332,7 +332,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     const volumeControl = document.querySelector('.barra_volumen') as HTMLInputElement;
     if (volumeControl) {
       const progressPercent = (this.volume / 100) * 100;
-      volumeControl.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000E3B ${progressPercent}%)`;
+      volumeControl.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%,var(--repro) ${progressPercent}%)`;
     }
   }
 
@@ -362,7 +362,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       const progressPercent = (this.currentTime / this.duration) * 100;
       const progressBar = document.querySelector('.progress-bar') as HTMLElement;
       if (progressBar) {
-        progressBar.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000e3b ${progressPercent}%)`;
+        progressBar.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%,var(--repro) ${progressPercent}%)`;
       }
 
 
@@ -428,7 +428,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       const volumeControl = document.querySelector('.barra_volumen') as HTMLInputElement;
       if (volumeControl) {
         const progressPercent = (this.volume / 100) * 100;
-        volumeControl.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, #000E3B ${progressPercent}%)`;
+        volumeControl.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%, var(--repro) ${progressPercent}%)`;
       }
 
       //Actualizamos el volumen en local storage

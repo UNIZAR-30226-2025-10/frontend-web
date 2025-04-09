@@ -86,7 +86,7 @@
 }
 
 .artist-card:hover, .card:hover {
-  background: rgb(230, 230, 230);
+  background:var(--hover);
   transform: scale(1.03); 
 }
 

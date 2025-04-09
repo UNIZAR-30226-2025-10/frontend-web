@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { NotificationService } from '../../services/notification.service';
 
@@ -30,20 +31,17 @@ export class SubirCancionComponent implements OnInit {
   file!: File; // Archivo seleccionado para la imagen
   nombreArchivo: string = '';
   albumCreado: boolean = false;
-<<<<<<< Updated upstream
 
-  constructor(private authService: AuthService,  private subirCloudinary: SubirCloudinary) {}
-=======
-  @ViewChild('tituloCancion') tituloCancionInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('artistasFt') artistasFtInput!: ElementRef<HTMLInputElement>;
   tokenService: any;
 
   constructor(private authService: AuthService,  private subirCloudinary: SubirCloudinary, private router: Router, private notificationService: NotificationService) {}
->>>>>>> Stashed changes
+  @ViewChild('tituloCancion') tituloCancionInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('artistasFt') artistasFtInput!: ElementRef<HTMLInputElement>;
+
 
   ngOnInit(): void {
-    this.cargarAlbumes(); // Cargar los álbumes al inicializar el componente
-    this.cargarEtiquetas(); // Cargar las etiquetas al inicializar el componente
+    this.cargarAlbumes(); 
+    this.cargarEtiquetas();
   }
 
   cargarAlbumes(): void {
@@ -76,7 +74,6 @@ export class SubirCancionComponent implements OnInit {
   selectAlbum(album: any): void {
     if (album.id === 'crear') {
       console.log('Crear Álbum seleccionado');
-      // Aquí puedes implementar lógica para la creación de un nuevo álbum
     } else {
       this.selectedAlbum = album.nombre; // Actualiza el álbum seleccionado
       this.selectedAlbumId = album.id; // Actualiza el ID seleccionado
@@ -101,8 +98,6 @@ export class SubirCancionComponent implements OnInit {
   }
 
   crearAlbum(): void {
-    console.log('Álbum creado:', this.nuevoAlbum);
-    // Aquí puedes enviar los datos del nuevo álbum al backend
     this.cerrarPopup(); // Cierra el popup después de crear el álbum
   }
 
@@ -117,14 +112,14 @@ export class SubirCancionComponent implements OnInit {
     event.preventDefault();
     event.stopPropagation();
     const target = event.target as HTMLElement;
-    target.classList.remove('drag-over'); // Elimina la clase de resaltado
+    target.classList.remove('drag-over'); 
   }
 
   onDrop(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
     const target = event.target as HTMLElement;
-    target.classList.remove('drag-over'); // Elimina la clase de resaltado
+    target.classList.remove('drag-over'); 
   
     if (this.archivoSeleccionado) {
       alert('Ya has subido un archivo. No puedes subir más.');
@@ -133,10 +128,9 @@ export class SubirCancionComponent implements OnInit {
   
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
       const archivo = event.dataTransfer.files[0];
-      const tiposValidos = ['audio/mpeg', 'audio/mp3']; // Tipos MIME válidos
+      const tiposValidos = ['audio/mpeg', 'audio/mp3']; 
       if (tiposValidos.includes(archivo.type)) {
         this.archivoSeleccionado = archivo; // Guarda el archivo seleccionado
-        console.log('Archivo seleccionado:', archivo);
       } else {
         alert('Por favor, sube un archivo MP3 válido.');
       }
@@ -152,16 +146,13 @@ export class SubirCancionComponent implements OnInit {
     console.log('Iniciando la carga de etiquetas...'); // Mensaje inicial
     this.authService.pedirEtiquetas().subscribe({
       next: (response) => {
-        console.log('Respuesta recibida del servicio:', response); // Verifica la respuesta completa
   
-        if (Array.isArray(response) && response.length > 0) {
-          console.log('Etiquetas encontradas:', response); // Verifica las etiquetas en la respuesta
+        if (Array.isArray(response.tags) && response.tags.length > 0) {
           // Mapea la lista de strings a un array de objetos con un id generado
-          this.etiquetas = response.map((tag: string, index: number) => ({
+          this.etiquetas = response.tags.map((tag: string, index: number) => ({
             id: index + 1, 
             nombre: tag    
           }));
-          console.log('Etiquetas procesadas:', this.etiquetas);
         } else {
           console.error('No se encontraron etiquetas en la respuesta'); 
         }
@@ -199,8 +190,6 @@ export class SubirCancionComponent implements OnInit {
     this.etiquetasSeleccionadas = selectedOptions.map(option => ({
       nombre: option.value // Usa el valor (nombre de la etiqueta)
     }));
-  
-    console.log('Etiquetas seleccionadas:', this.etiquetasSeleccionadas);
   }
 
   selectEtiqueta(etiqueta: any): void {
@@ -222,8 +211,6 @@ export class SubirCancionComponent implements OnInit {
         alert('Solo puedes seleccionar un máximo de 3 etiquetas.');
       }
     }
-  
-    console.log('Etiquetas seleccionadas:', this.etiquetasSeleccionadas);
   }
 
   toggleEtiquetaDropdown(): void {
@@ -249,7 +236,7 @@ export class SubirCancionComponent implements OnInit {
   // Cierra el modal para crear un álbum
   cerrarModalAlbum(): void {
     this.isModalAlbumOpen = false;
-    this.nuevoAlbum = { nombre: '', imagen: null }; // Reinicia los datos del álbum
+    this.nuevoAlbum = { nombre: '', imagen: null }; 
   }
 
   // Maneja la selección de un archivo mediante el input
@@ -262,11 +249,11 @@ export class SubirCancionComponent implements OnInit {
 
   // Valida el archivo seleccionado
   validarArchivo(archivo: File): void {
-    const tiposValidos = ['image/jpeg', 'image/png', 'image/jpg']; // Tipos MIME válidos
+    const tiposValidos = ['image/jpeg', 'image/png', 'image/jpg']; 
     if (tiposValidos.includes(archivo.type)) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.nuevoAlbum.imagen = e.target.result; // Asigna la imagen seleccionada
+        this.nuevoAlbum.imagen = e.target.result; 
         this.file = e.target.result;
         this.nombreArchivo = archivo.name; // Guarda el nombre del archivo
         this.mensajeError = ''; // Limpia el mensaje de error
@@ -274,8 +261,8 @@ export class SubirCancionComponent implements OnInit {
       reader.readAsDataURL(archivo);
     } else {
       this.mensajeError = 'Solo se permiten archivos JPEG, JPG o PNG.';
-      this.nuevoAlbum.imagen = null; // Limpia la imagen seleccionada
-      this.nombreArchivo = ''; // Limpia el nombre del archivo
+      this.nuevoAlbum.imagen = null; 
+      this.nombreArchivo = ''; 
     }
   }
 
@@ -286,8 +273,6 @@ export class SubirCancionComponent implements OnInit {
       return;
     }
 
-    // Aquí puedes agregar la lógica para guardar el álbum en el backend
-    console.log('Álbum creado:', this.nuevoAlbum);
     this.selectedAlbumImage = this.nuevoAlbum.imagen;
     this.selectedAlbum = this.nuevoAlbum.nombre;
     this.selectedAlbumId = 1;
@@ -301,21 +286,21 @@ export class SubirCancionComponent implements OnInit {
    // Maneja el evento de entrada en el campo de nombre del álbum
   onNombreAlbumInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
-    this.nuevoAlbum.nombre = inputElement.value; // Actualiza el nombre del álbum
+    this.nuevoAlbum.nombre = inputElement.value;
   }
 
   onDragOverImagen(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
     const target = event.target as HTMLElement;
-    target.classList.add('drag-over'); // Agrega una clase para resaltar el área
+    target.classList.add('drag-over'); 
   }
   
   onDragLeaveImagen(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
     const target = event.target as HTMLElement;
-    target.classList.remove('drag-over'); // Elimina la clase de resaltado
+    target.classList.remove('drag-over'); 
   }
   
   // Maneja la selección de un archivo mediante arrastrar y soltar
@@ -323,7 +308,7 @@ export class SubirCancionComponent implements OnInit {
     event.preventDefault();
     event.stopPropagation();
     const target = event.target as HTMLElement;
-    target.classList.remove('drag-over'); // Elimina la clase de resaltado
+    target.classList.remove('drag-over'); 
 
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
       const archivo = event.dataTransfer.files[0];
@@ -334,17 +319,31 @@ export class SubirCancionComponent implements OnInit {
   // Funcion final y subida a base de datos
   agregarCancion(nombreCancion: string, artistasFt: string): void {
     const listaArtistasFt = artistasFt.split(",");
-    console.log(listaArtistasFt);
-
     if(this.albumCreado) {
       this.subirCloudinary.uploadFile(this.file, 'albumes').pipe(
         switchMap(( url ) => {
-          console.log(`URL de la imagen subida: ${url}`);
-          return this.authService.crearAlbum(this.nuevoAlbum.nombre, url);
-          })
-          ).subscribe({
-          next: () => {
-          },
+          return this.authService.crearAlbum(this.selectedAlbum, url).pipe(
+            switchMap(() => {
+              return this.authService.pedirMisAlbumesArtista(); 
+            })
+          );
+        })
+      ).subscribe({
+        next: (response) => {
+          if (response && response.albumes) {
+            this.albumes = response.albumes;
+            console.log(this.albumes);
+            const albumEncontrado = this.albumes.find(album => album.nombre === this.selectedAlbum);
+            if (albumEncontrado) {
+              this.selectedAlbumId = albumEncontrado.id; 
+              this.albumCreado = false; 
+            } else {
+              console.error('No se encontró el álbum recién creado en la lista.');
+            }
+          } else {
+            console.error('No se encontraron álbumes en la respuesta.');
+          }
+        },
           error: (error) => {
             console.error("Error al guardar los nuevos datos de album:", error);
             // No esta logeado
@@ -362,22 +361,18 @@ export class SubirCancionComponent implements OnInit {
         });
     }
 
-    if (nombreCancion && listaArtistasFt) {
-      console.log(`Album: ${this.selectedAlbum}, ID: ${this.selectedAlbumId}\nTítulo de la canción: ${nombreCancion}\nEtiquetas: ${this.etiquetasSeleccionadas.map(etiqueta => etiqueta.nombre)}\nArtistas featured: ${listaArtistasFt}\n`);
-    } else {
-      console.log('Campos vacios');
-    }
-
-    this.mensajeError = '';
-
     this.subirCloudinary.uploadSong(this.archivoSeleccionado, 'canciones').pipe(
     switchMap(({ url, duration }) => {
-      console.log(`URL de la canción subida: ${url}`);
-      console.log(`Duración de la canción: ${duration} segundos`);
       return this.authService.crearCancion(nombreCancion, this.selectedAlbumId, duration, url, this.etiquetasSeleccionadas.map(etiqueta => etiqueta.nombre), listaArtistasFt);
       })
       ).subscribe({
         next: () => {
+          this.archivoSeleccionado = null!; 
+          this.etiquetasSeleccionadas = []; 
+          this.mensajeError = ''; 
+          this.tituloCancionInput.nativeElement.value = ''; 
+          if(this.artistasFtInput.nativeElement.value) {this.artistasFtInput.nativeElement.value = ''; }
+          this.router.navigate(['/home/miPerfilArtista']);
         },
         error: (error) => {
           console.error("Error al guardar los nuevos datos de cancion:", error);

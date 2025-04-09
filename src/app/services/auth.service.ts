@@ -818,6 +818,22 @@ export class AuthService {
       return this.http.get(`${this.apiUrl}/get-mis-canciones`, { headers: headers } );
     }
 
+    pedirNotificaciones(): Observable<any> {
+      const token = this.tokenService.getToken();
+  
+      if (!token) {
+        console.error('No se encontró el token');
+        return of({ error: 'No autorizado' });;
+      }
+  
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      });
+  
+      return this.http.get(`${this.apiUrl}/has-notificaciones`, { headers: headers } );
+    }
+
 
   pedirInvitaciones(): Observable<any> {
     const token = this.tokenService.getToken();
@@ -835,8 +851,6 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-invitaciones`, { headers: headers } );
   }
 
-<<<<<<< Updated upstream
-=======
   pedirNovedadesMusicales(): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -965,8 +979,6 @@ export class AuthService {
   
     return this.http.patch(`${this.apiUrl}/read-nuevo-seguidor`,body,{ headers });
   }
-
->>>>>>> Stashed changes
 
   pedirFirma(folder: any): Observable<any> {
     const token = this.tokenService.getToken();
@@ -1323,7 +1335,7 @@ export class AuthService {
     });
 
     const body = { nombre_album: nombreAlbum, fotoPortada: foto_url }
-    return this.http.post(`${this.apiUrl}/create-album"`, body,{ headers: headers } );
+    return this.http.post(`${this.apiUrl}/create-album`, body,{ headers: headers } );
   }
   
   changeFollow(nombreUsuario:any, siguiendo: boolean): Observable<any> {
@@ -1380,5 +1392,71 @@ export class AuthService {
 
   cambiarSesion(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/switch-session`, credentials);
+  }
+
+  pedirMisNoizzys(): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.get(`${this.apiUrl}/get-mis-noizzys`, { headers });
+  }
+
+  pedirSusNoizzys(nombreUsuario:any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.get(`${this.apiUrl}/get-noizzys?nombreUsuario=${nombreUsuario}`, { headers: headers } );
+  }
+
+  publicarNoizzy(texto: string, id: any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const body = { texto: texto, cancion: id }
+    return this.http.post(`${this.apiUrl}/post-noizzy`, body, { headers: headers } );
+  }
+
+  likearNoizzy(like: boolean, id: string): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const body = { like: like, id: id }
+    return this.http.put(`${this.apiUrl}/change-noizzy?`, {body}, { headers: headers } );
   }
 }

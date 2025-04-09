@@ -6,11 +6,8 @@ import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-<<<<<<< Updated upstream
-=======
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { NotificationService } from '../../services/notification.service';
->>>>>>> Stashed changes
 
 
 
@@ -21,15 +18,11 @@ import { NotificationService } from '../../services/notification.service';
   styleUrl: './notificaciones.component.css'
 })
 export class NotificacionesComponent {
-
   misInvitaciones: any[] = [];
+  nuevosSeguidores: any[] = [];
+  interacciones: any[] = [];
+  nuevaMusica: any[] = [];
 
-<<<<<<< Updated upstream
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router,private route: ActivatedRoute){}
-
-  ngOnInit(): void {
-    this.pedirInvitaciones();
-=======
 
   hayInvitaciones = false;
   hayInteracciones = false;
@@ -77,15 +70,6 @@ export class NotificacionesComponent {
     );
   }
 
-  ngOnDestroy(): void {
-    /*if (this.novedadesLeidas) {
-      //this.QuitarNovedades();
-    }
-
-    if (this.interaccionesLeidas) {
-      //this.InteraccionesLeidas();
-    }*/
-  }
 
   cargarNotificaciones(filtro: string): void {    
     switch(filtro) {
@@ -102,7 +86,6 @@ export class NotificacionesComponent {
         this.pedirNuevosSeguidores();
         break;
     }
->>>>>>> Stashed changes
   }
 
   pedirInvitaciones(): void {
@@ -126,6 +109,7 @@ export class NotificacionesComponent {
         },
         complete: () => {
           console.log("Invitaciones recuperadas con éxito");
+          this.notificacionesService.setCategoriaLeida('invitaciones');
         }
       });
   }
@@ -176,8 +160,6 @@ export class NotificacionesComponent {
     });
   }
 
-<<<<<<< Updated upstream
-=======
   pedirNuevaMusica(): void {
     this.authService.pedirNovedadesMusicales()
       .subscribe({
@@ -429,5 +411,4 @@ export class NotificacionesComponent {
   }
   
 
->>>>>>> Stashed changes
 }

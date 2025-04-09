@@ -1,8 +1,8 @@
 <div class="dentro-sidebar">
     <!-- Sección fija (sin scroll) -->
     <div class="fixed-section">
-        <div class="user-me_icon">
-            <div class="user-me"><img [src]="foto && foto !== 'DEFAULT' ? foto : 'nouser.png'" ></div>
+        <div class="user-me_icon" (click)="navigateToMisNoizzys()">
+            <div class="user-me" ><img [src]="foto && foto !== 'DEFAULT' ? foto : 'nouser.png'" ></div>
         </div>
     </div>
 
@@ -10,7 +10,7 @@
     <div class="scrollable-section" (scroll)="onScroll($event)">
         <div class="user-icons">
             <div *ngFor="let user of seguidos">
-                <a [routerLink]="['/home/perfil', user.nombreUsuario]"> 
+                <a [routerLink]="['/home/noizzys', user.nombreUsuario]"> 
                     <img [src]="user.fotoPerfil && user.fotoPerfil !== 'DEFAULT' ? user.fotoPerfil : 'nouser.png'" [alt]="user.nombreUsuario">
                 </a>
             </div>
