@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router'; 
+import { NotificationService } from '../../services/notification.service';
 
 interface Album {
   nombre: string;
@@ -64,8 +65,9 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
   file!: File;
 
   usuarios: any[]= [];
+  tokenService: any;
 
-  constructor( private route: ActivatedRoute, private location: Location, private authService: AuthService, private subirCloudinary: SubirCloudinary, private router: Router) {
+  constructor( private route: ActivatedRoute, private location: Location, private authService: AuthService, private subirCloudinary: SubirCloudinary, private router: Router, private notificationService: NotificationService) {
     Chart.register(...registerables);
   }
 
@@ -110,6 +112,14 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
       },
       error: (error) => {
         console.error("Error al recibir los datos del álbum:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Datos recibidos con éxito");
@@ -235,6 +245,14 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
         },
         error: (error) => {
           console.error("Error al recibir los perfiles que han dado me gusta a la cancion:", error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Perfiles recibidos con éxito");
@@ -283,6 +301,14 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
         },
         error: (error) => {
           console.error("Error al guardar los nuevos datos:", error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
           this.nombreActual = this.album.nombre;
           this.fotoNueva = this.foto;
         },
@@ -302,6 +328,14 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
           console.error("Error al guardar los nuevos datos:", error);
           this.nombreActual = this.album.nombre;
           this.fotoNueva = this.foto;
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Datos guardados con éxito");
@@ -347,6 +381,14 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
       },
       error: (error) => {
         console.error("Error al eliminar el álbum:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Álbum eliminado con éxito");

@@ -7,6 +7,7 @@ import { LimpiarBuscadorService } from '../../services/limpiar-buscador.service'
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-resultados',
@@ -25,8 +26,9 @@ export class ResultadosComponent implements OnInit {
   filtroActivo: string = 'todo';
 
   @Output() trackClicked = new EventEmitter<any>();
+  tokenService: any;
 
-  constructor(private route: ActivatedRoute, private resultadosService: ResultadosService, private playerService: PlayerService,  private LimpiarBuscadorService: LimpiarBuscadorService, private location: Location, private router: Router) {}
+  constructor(private route: ActivatedRoute, private resultadosService: ResultadosService, private playerService: PlayerService,  private LimpiarBuscadorService: LimpiarBuscadorService, private location: Location, private router: Router,private notificationService: NotificationService) {}
 
   ngOnInit() {
 
@@ -48,6 +50,14 @@ export class ResultadosComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al autenticar:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');

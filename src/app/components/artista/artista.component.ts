@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FavoritosService } from '../../services/favoritos.service';
+import { NotificationService } from '../../services/notification.service';
 
 
 interface datosArtista {
@@ -66,8 +67,9 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
   openDropdown: number | null = null;
   dropdownTopPosition: number = 0; 
   dropdownLeftPosition: number = 0;
+  router: any;
 
-  constructor(private tokenService: TokenService, private authService: AuthService, private route: ActivatedRoute, private favoritosService: FavoritosService) {}
+  constructor(private tokenService: TokenService, private authService: AuthService, private route: ActivatedRoute, private favoritosService: FavoritosService,private notificationService: NotificationService) {}
 
   ngOnInit() {
 
@@ -95,6 +97,14 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
       },
       error: (error) => {
         console.error("Error al guardar los nuevos datos:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Datos guardados con éxito");
@@ -122,6 +132,14 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
       },
       error: (error) => {
         console.error('Error en alguna de las peticiones principales:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
 
@@ -253,6 +271,14 @@ toggleSeguir() {
       },
       error: (error) => {
         console.error('Error al seguir o dejar de seguir', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Cambio completado con éxito');
@@ -278,6 +304,14 @@ toggleFav(id: any) {
       },
       error: (error) => {
         console.error("Error al guardar en favoritos:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Canción añadida o quitada de favoritos con éxito");

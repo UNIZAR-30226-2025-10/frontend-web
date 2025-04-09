@@ -7,6 +7,7 @@ import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, switchMap, tap } from 'rxjs';
+import { NotificationService } from '../../services/notification.service';
 
 interface datosOyente {
   nombre: string;
@@ -45,61 +46,7 @@ export class PerfilComponent implements OnInit{
 
   @ViewChild('barraSuperior', { static: false }) topBar!: ElementRef<HTMLElement>;
 
-  constructor(private el: ElementRef, private authService: AuthService, private tokenService: TokenService, private router: Router,  private route: ActivatedRoute){}
-
-  misPlaylist = [
-    {
-        fotoPortada: "logo_noizz.png",
-        nombre: "Rock Clásico"
-    },
-    {
-        fotoPortada: "logo_noizz.png",
-        nombre: "Pop Hits"
-    },
-    {
-        fotoPortada: "logo_noizz.png",
-        nombre: "Indie Vibes"
-    }
-  ];
-
-  seguidos = [
-    {
-        fotoPerfil: "logo_noizz.png",
-        nombre: "Rock Clásico"
-    },
-    {
-        fotoPerfil: "logo_noizz.png",
-        nombre: "Pop Hits"
-    },
-    {
-        fotoPerfil: "logo_noizz.png",
-        nombre: "Indie Vibes"
-    },
-    {
-      fotoPerfil: "logo_noizz.png",
-      nombre: "Rock Clásico"
-    },
-    {
-        fotoPerfil: "logo_noizz.png",
-        nombre: "Pop Hits"
-    },
-    {
-        fotoPerfil: "logo_noizz.png",
-        nombre: "Indie Vibes"
-    },
-    {
-      fotoPerfil: "logo_noizz.png",
-      nombre: "Rock Clásico"
-    },
-    {
-        fotoPerfil: "logo_noizz.png",
-        nombre: "Pop Hits"
-    },
-    {
-        fotoPerfil: "logo_noizz.png",
-        nombre: "Indie Vibes"
-    }
-  ];
+  constructor(private el: ElementRef, private authService: AuthService, private tokenService: TokenService, private router: Router,  private route: ActivatedRoute, private notificationService: NotificationService){}
 
   ngOnInit(): void {
     this.mostrarBarra =  false;
@@ -153,6 +100,14 @@ export class PerfilComponent implements OnInit{
       },
       error: (error) => {
         console.error('Error en alguna de las peticiones:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Todas las peticiones completadas');
@@ -169,6 +124,14 @@ export class PerfilComponent implements OnInit{
       },
       error: (error) => {
         console.error('Error al seguir o dejar de seguir', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Cambio completado con éxito');

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { NotificationService } from '../../services/notification.service';
+
 
 
 
@@ -19,8 +21,10 @@ export class EstadisticasCancionComponent implements OnInit{
   verPlaylists: boolean=false;
   verMeGustas: boolean=false;
   eliminarModalIsOpen:boolean = false;
+  router: any;
+  tokenService: any;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private location: Location) {}
+  constructor(private authService: AuthService, private route: ActivatedRoute, private location: Location,private notificationService: NotificationService) {}
 
   usuarios : any[] = [];
   playlists: any[] = []; 
@@ -49,6 +53,14 @@ export class EstadisticasCancionComponent implements OnInit{
       },
       error: (error) => {
         console.error("Error al recibir los datos de la cancion:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Datos de la cancion recibidos con éxito");
@@ -80,6 +92,14 @@ export class EstadisticasCancionComponent implements OnInit{
         },
         error: (error) => {
           console.error("Error al recibir los perfiles que han dado me gusta a la cancion:", error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Perfiles recibidos con éxito");
@@ -105,6 +125,14 @@ export class EstadisticasCancionComponent implements OnInit{
         },
         error: (error) => {
           console.error("Error al recibir las playlists donde está la cancion:", error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Playlists recibidas con éxito");
@@ -129,6 +157,14 @@ export class EstadisticasCancionComponent implements OnInit{
       },
       error: (error) => {
         console.error("Error al eliminar la canción:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Canción eliminada con éxito");

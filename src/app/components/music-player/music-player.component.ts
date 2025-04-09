@@ -8,6 +8,7 @@ import { TokenService } from '../../services/token.service';
 import { ProgressService } from '../../services/progress.service';
 import { FavoritosService } from '../../services/favoritos.service';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../services/notification.service';
 
 
 
@@ -49,7 +50,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   secondsListened: number = 0;  // Segundos reales escuchados
   lastTime: number = 0;         // Último tiempo registrado para detectar adelantos
 
-  constructor(private playerService: PlayerService, private authService:AuthService, private tokenService : TokenService, private progressService: ProgressService, private favoritosService: FavoritosService, private router: Router){}
+  constructor(private playerService: PlayerService, private authService:AuthService, private tokenService : TokenService, private progressService: ProgressService, private favoritosService: FavoritosService, private router: Router,private notificationService: NotificationService){}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
@@ -240,6 +241,14 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error en la petición:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');
@@ -271,6 +280,14 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error en la petición:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');
@@ -361,6 +378,14 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error al registrar la reproducción:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -418,6 +443,14 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error al actualizar el volumen:', error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log('Volumen actualizado con éxito');
@@ -439,6 +472,14 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error en la petición:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');

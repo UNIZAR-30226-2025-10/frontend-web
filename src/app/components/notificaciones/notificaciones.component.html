@@ -15,17 +15,80 @@
                   <p class="texto-secundario">
                       Podrás añadir canciones a esta lista de {{ invitacion.nombreUsuario }}
                   </p>
+<<<<<<< Updated upstream
+=======
+                </div>
+                <div class="notificacion-acciones">
+                  <button class="btn-escuchar" (click)="verNovedades(novedad)">Escuchar</button>
+                </div>
+>>>>>>> Stashed changes
               </div>
               <div class="notificacion-acciones">
                   <button class="btn-unirse" (click)="aceptarInvitacion(invitacion.id)">Unirme a la lista</button>
                   <button class="btn-cancelar" (click)="rechazarInvitacion(invitacion.id)">Rechazar solicitud</button>
               </div>
+<<<<<<< Updated upstream
+=======
+        </div>
+
+        <div *ngIf="filtroActivo === 'interacciones'">
+            <div *ngIf="interacciones.length > 0" class="notificaciones-lista">
+              <div *ngFor="let interaccion of interacciones" class="notificacion-item">
+                <div class="notificacion-imagen">
+                  <img [src]="interaccion.fotoUsuario || 'nouser.png'" alt="Avatar de usuario" class="playlist-cover" style="border-radius: 50%;">
+                </div>
+                <div class="notificacion-contenido">
+                  <p style="font-weight:bold;margin-top:7px;margin-bottom: 10px;font-size:18px;">
+                    {{ interaccion.nombreUsuario }} {{ interaccion.tipo === 'respuesta' ? ' ha respondido a tu Noizzy ' : ' le ha dado me gusta a tu Noizzy ' }} 
+                  </p>
+                  <p class="texto-secundario">
+                    {{ interaccion.texto }}
+                  </p>
+                </div>
+                <div class="notificacion-acciones">
+                  <button class="btn-ver" (click)="verInteraccion(interaccion.noizzy)" >Ver</button>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="interacciones.length === 0" class="sin-notificaciones">
+              <p>No tienes interacciones nuevas</p>
+            </div>
+>>>>>>> Stashed changes
           </div>
       </div>
 
+<<<<<<< Updated upstream
       <!-- Mensaje cuando no hay notificaciones -->
       <div *ngIf="misInvitaciones.length === 0" class="sin-notificaciones">
           <p>No tienes notificaciones nuevas</p>
       </div>
   </div>
+=======
+          <div *ngIf="filtroActivo === 'nuevosSeguidores'">
+            <div *ngIf="nuevosSeguidores.length > 0" class="notificaciones-lista">
+              <div *ngFor="let seguidor of nuevosSeguidores" class="notificacion-item">
+                <div class="notificacion-imagen">
+                  <img [src]="seguidor.fotoUsuario || 'nouser.png'" alt="Avatar de usuario" class="playlist-cover">
+                </div>
+                <div class="notificacion-contenido">
+                  <p style="font-weight:bold;margin-top:7px;margin-bottom: 10px;font-size:18px;">
+                    {{ seguidor.nombreUsuario }} ha comenzado a seguirte
+                  </p>
+                  <p class="texto-secundario">
+                    {{ seguidor.fechaSeguimiento | date:'dd/MM/yyyy' }}
+                  </p>
+                </div>
+                <div class="notificacion-acciones">
+                  <button class="btn-ver-perfil" (click)="verSeguidor(seguidor)">Ver perfil</button>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="nuevosSeguidores.length === 0" class="sin-notificaciones">
+              <p>No tienes nuevos seguidores</p>
+            </div>
+          </div>
+        
+    </div>
+    </div>
+>>>>>>> Stashed changes
 </div>

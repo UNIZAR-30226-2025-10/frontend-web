@@ -29,8 +29,6 @@ export class AdminComponent implements OnInit{
       },
       error: (error) => {
         console.log('Error en la solicitud', error);
-
-
       },
       complete: () => {
         console.log('Petición completada');

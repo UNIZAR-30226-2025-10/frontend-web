@@ -301,6 +301,14 @@ export class PlaylistComponent {
       },
       error: (error) => {
         console.error("Error al guardar en favoritos:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Canción añadida a favoritos con éxito");
@@ -371,6 +379,14 @@ export class PlaylistComponent {
       },
       error: (error) => {
         console.error("Error al obtener los datos de la playlist:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Playlist recuperada con éxito");
@@ -392,6 +408,14 @@ export class PlaylistComponent {
         } else {
           console.error("Error al añadir la canción a la playlist:", error);
         }
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Cancion añadida con éxito");
@@ -409,6 +433,14 @@ export class PlaylistComponent {
       },
       error: (error) => {
         console.error("Error al obtener eliminar la cancion de la playlist:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Cancion eliminada con éxito");
@@ -434,6 +466,14 @@ export class PlaylistComponent {
         },
         error: (error) => {
           console.error("Error al obtener las playlists:", error);
+          // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
         },
         complete: () => {
           console.log("Playlists recuperadas con éxito");
@@ -457,6 +497,14 @@ export class PlaylistComponent {
         },
         error: (error) => {
           console.error("Error al obtener los seguidores:", error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Seguidores recuperados con éxito");
@@ -473,6 +521,14 @@ export class PlaylistComponent {
         },
         error: (error) => {
           console.error("Error al enviar la solicitud");
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Solicitud enviada con éxito");
@@ -494,6 +550,14 @@ export class PlaylistComponent {
         },
         error: (error) => {
           console.error("Error al expulsar al usuario de la playlist");
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Usuario expulsado con éxito");
@@ -510,6 +574,14 @@ export class PlaylistComponent {
         },
         error: (error) => {
           console.error("Error al eliminar la playlist");
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Playlist eliminada con éxito");
@@ -526,6 +598,14 @@ export class PlaylistComponent {
         },
         error: (error) => {
           console.error("Error al cambiar la privacidad de la playlist");
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Privacidad cambiada con éxito");
@@ -541,6 +621,14 @@ export class PlaylistComponent {
       },
       error: (error) => {
         console.error("Error al abandonar la playlist:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Playlist abandonada con éxito");
@@ -578,6 +666,14 @@ export class PlaylistComponent {
           error: (error) => {
             console.error("Error al guardar los nuevos datos:", error);
             this.nombreActual = this.playlist.playlist.nombrePlaylist
+            // No esta logeado
+            if (error.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           },
           complete: () => {
             console.log("Datos guardados con éxito");
@@ -593,6 +689,14 @@ export class PlaylistComponent {
           error: (error) => {
             console.error("Error al guardar los nuevos datos:", error);
             this.nombreActual = this.playlist.playlist.nombrePlaylist;
+            // No esta logeado
+            if (error.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           },
           complete: () => {
             console.log("Datos guardados con éxito");
@@ -630,6 +734,14 @@ export class PlaylistComponent {
           error: (error) => {
             console.error("Error al buscar invitados:", error);
             this.searchedInvitados = [];
+            // No esta logeado
+            if (error.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           }
         });
     }
@@ -654,6 +766,14 @@ export class PlaylistComponent {
           error: (error) => {
             console.error("Error al buscar canciones:", error);
             this.searchResults = [];
+            // No esta logeado
+            if (error.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           }
         });
       
@@ -679,6 +799,14 @@ export class PlaylistComponent {
           },
           error: (error) => {
             console.error("Error al crear la playlist", error);
+            // No esta logeado
+            if (error.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           },
           complete: () => {
             console.log("Playlist creada con éxito");
@@ -696,6 +824,14 @@ export class PlaylistComponent {
           },
           error: (error) => {
             console.error("Error al crear la playlist:", error);
+            // No esta logeado
+            if (error.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           },
           complete: () => {
             console.log("Playlist creada con éxito");

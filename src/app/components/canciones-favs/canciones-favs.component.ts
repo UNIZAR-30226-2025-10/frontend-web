@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NotificationService } from '../../services/notification.service';
 
 
 interface Cancion {
@@ -31,8 +32,10 @@ export class CancionesFavsComponent implements OnInit {
   dropdownTopPosition: number = 0; 
   dropdownLeftPosition: number = 0;
   hoverIndex: number | null = null;
+  tokenService: any;
+  router: any;
   
-  constructor(private authService: AuthService, private route: ActivatedRoute) {}
+  constructor(private authService: AuthService, private route: ActivatedRoute,private notificationService: NotificationService) {}
 
   ngOnInit(): void {
 
@@ -60,6 +63,14 @@ export class CancionesFavsComponent implements OnInit {
       },
       error: (error) => {
         console.error("Error al recibir los datos de las canciones:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Datos de las canciones recibidos con éxito");

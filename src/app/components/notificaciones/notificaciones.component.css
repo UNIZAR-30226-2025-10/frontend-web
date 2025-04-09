@@ -74,7 +74,11 @@
   margin-right: 10px;
 }
 
+<<<<<<< Updated upstream
 .btn-unirse, .btn-cancelar {
+=======
+.btn-unirse, .btn-cancelar,.btn-escuchar, .btn-ver, .btn-ver-perfil {
+>>>>>>> Stashed changes
   padding: 8px 15px;
   border: none;
   border-radius: 30px;
@@ -83,12 +87,20 @@
   transition: background-color 0.3s ease;
 }
 
+<<<<<<< Updated upstream
 .btn-unirse {
+=======
+.btn-unirse, .btn-escuchar,.btn-ver, .btn-ver-perfil {
+>>>>>>> Stashed changes
   background-color: var(--controles);
   color: white;
 }
 
+<<<<<<< Updated upstream
 .btn-unirse:hover {
+=======
+.btn-unirse:hover, .btn-ver:hover, .btn-escuchar:hover, .btn-ver-perfil:hover {
+>>>>>>> Stashed changes
   background-color: #000e3ba7;
 }
 

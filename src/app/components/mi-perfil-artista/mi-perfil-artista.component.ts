@@ -10,6 +10,7 @@ import { switchMap } from 'rxjs/operators';
 import { PlayerService } from '../../services/player.service';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { ActualizarFotoPerfilService } from '../../services/actualizar-foto-perfil.service';
+import { NotificationService } from '../../services/notification.service';
 
 
 interface misDatos {
@@ -56,7 +57,7 @@ export class MiPerfilArtistaComponent implements OnInit {
   isPasswordNuevaVisible: boolean = false;
   isPasswordIntroducida: boolean = false;
 
-  constructor(private authService: AuthService, private tokenService: TokenService,  private router: Router, private playerService: PlayerService, private subirCloudinary: SubirCloudinary, private actFotoService: ActualizarFotoPerfilService){}
+  constructor(private authService: AuthService, private tokenService: TokenService,  private router: Router, private playerService: PlayerService, private subirCloudinary: SubirCloudinary, private actFotoService: ActualizarFotoPerfilService,private notificationService: NotificationService){}
 
   ngOnInit(): void {
 
@@ -77,6 +78,14 @@ export class MiPerfilArtistaComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al pedir los datos del artista:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
 
@@ -100,6 +109,14 @@ export class MiPerfilArtistaComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error en alguna de las peticiones:', error);
+       // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Todas las peticiones completadas');
@@ -190,6 +207,14 @@ export class MiPerfilArtistaComponent implements OnInit {
           this.nombreArtisticoActual = this.oyente.nombreArtistico;
           this.biografiaActual = this.oyente.biografia;
           this.fotoNueva = this.foto;
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Datos guardados con éxito");
@@ -218,6 +243,14 @@ export class MiPerfilArtistaComponent implements OnInit {
             this.oyente.nombreArtistico = this.nombreArtisticoActual;
             this.oyente.biografia = this.biografiaActual;
             this.fotoNueva = this.foto;
+            // No esta logeado
+            if (error.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           },
           complete: () => {
             console.log("Datos guardados con éxito");
@@ -241,6 +274,14 @@ export class MiPerfilArtistaComponent implements OnInit {
             this.nombreActual = this.oyente.nombreUsuario;
             this.nombreArtisticoActual = this.oyente.nombreArtistico;
             this.biografiaActual = this.oyente.biografia;
+            // No esta logeado
+            if (error.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           },
           complete: () => {
             console.log("Datos guardados con éxito");
@@ -287,6 +328,14 @@ export class MiPerfilArtistaComponent implements OnInit {
       },
       error: (error) => {
         console.error("Error al cambiar la contraseña:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Contraseña guardada con éxito");
@@ -323,6 +372,14 @@ export class MiPerfilArtistaComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error al guardar el progreso:', error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log('Petición completada');
@@ -341,6 +398,14 @@ export class MiPerfilArtistaComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error al guardar el progreso:', error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log('Petición completada');
@@ -360,6 +425,14 @@ export class MiPerfilArtistaComponent implements OnInit {
       error: (error) => {
         this.mensajeError = error.error.error
         console.error('Error al eliminar la cuenta:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');

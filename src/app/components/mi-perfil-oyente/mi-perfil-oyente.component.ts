@@ -74,6 +74,14 @@ export class MiPerfilOyenteComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al pedir los datos del oyente:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
 
@@ -92,6 +100,14 @@ export class MiPerfilOyenteComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error en alguna de las peticiones:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Todas las peticiones completadas');
@@ -185,6 +201,14 @@ export class MiPerfilOyenteComponent implements OnInit {
           console.error("Error al guardar los nuevos datos:", error);
           this.nombreActual = this.oyente.nombre;
           this.fotoNueva = this.foto;
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Datos guardados con éxito");
@@ -209,6 +233,14 @@ export class MiPerfilOyenteComponent implements OnInit {
             console.error("Error al guardar los nuevos datos:", error);
             this.nombreActual = this.oyente.nombre;
             this.fotoNueva = this.foto;
+            // No esta logeado
+            if (error.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           },
           complete: () => {
             console.log("Datos guardados con éxito");
@@ -229,6 +261,14 @@ export class MiPerfilOyenteComponent implements OnInit {
           error: (error) => {
             console.error("Error al guardar los nuevos datos:", error);
             this.nombreActual = this.oyente.nombre;
+            // No esta logeado
+            if (error.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           },
           complete: () => {
             console.log("Datos guardados con éxito");
@@ -275,6 +315,14 @@ export class MiPerfilOyenteComponent implements OnInit {
       },
       error: (error) => {
         console.error("Error al cambiar la contraseña:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Contraseña guardada con éxito");
@@ -301,6 +349,14 @@ export class MiPerfilOyenteComponent implements OnInit {
                   },
                   error: (error) => {
                     console.error("Error al obtener las playlists:", error);
+                    // No esta logeado
+                    if (error.status === 401) {
+                      this.tokenService.clearStorage();
+                      this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                      setTimeout(() => {
+                        this.router.navigate(['/login']);
+                      }, 3000); 
+                    }
                   },
                   complete: () => {
                     console.log("Playlists recuperadas con éxito");
@@ -316,6 +372,14 @@ export class MiPerfilOyenteComponent implements OnInit {
             },
             error: (error) => {
                 console.error("Error al crear la playlist", error);
+                // No esta logeado
+                if (error.status === 401) {
+                  this.tokenService.clearStorage();
+                  this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                  setTimeout(() => {
+                    this.router.navigate(['/login']);
+                  }, 3000); 
+                }
             }
         });
     } else {
@@ -330,6 +394,14 @@ export class MiPerfilOyenteComponent implements OnInit {
                   },
                   error: (error) => {
                     console.error("Error al obtener las playlists:", error);
+                    // No esta logeado
+                    if (error.status === 401) {
+                      this.tokenService.clearStorage();
+                      this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                      setTimeout(() => {
+                        this.router.navigate(['/login']);
+                      }, 3000); 
+                    }
                   },
                   complete: () => {
                     console.log("Playlists recuperadas con éxito");
@@ -345,6 +417,14 @@ export class MiPerfilOyenteComponent implements OnInit {
             },
             error: (error) => {
                 console.error("Error al crear la playlist:", error);
+                // No esta logeado
+                if (error.status === 401) {
+                  this.tokenService.clearStorage();
+                  this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                  setTimeout(() => {
+                    this.router.navigate(['/login']);
+                  }, 3000); 
+                }
             }
         });
     }
@@ -397,6 +477,14 @@ onFileSelectedPlaylist(event:any) {
         },
         error: (error) => {
           console.error('Error al guardar el progreso:', error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log('Petición completada');
@@ -415,6 +503,14 @@ onFileSelectedPlaylist(event:any) {
         },
         error: (error) => {
           console.error('Error al guardar el progreso:', error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log('Petición completada');
@@ -434,6 +530,14 @@ onFileSelectedPlaylist(event:any) {
       error: (error) => {
         this.mensajeError = error.error.error
         console.error('Error al eliminar la cuenta:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');

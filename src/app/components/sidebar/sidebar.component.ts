@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TokenService } from '../../services/token.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,8 +14,9 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SidebarComponent {
   @ViewChild('userIconsContainer') userIconsContainer!: ElementRef;
+  router: any;
 
-  constructor(private authService: AuthService,private tokenService: TokenService){}
+  constructor(private authService: AuthService,private tokenService: TokenService, private notificationService: NotificationService){}
 
   foto: string ='';
 
@@ -49,6 +51,14 @@ export class SidebarComponent {
       },
       error: (error) => {
         console.error("Error al recuperar los seguidos:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Seguidos recuperados con éxito");

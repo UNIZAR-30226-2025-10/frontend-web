@@ -14,6 +14,13 @@ import { TokenService } from '../../services/token.service';
 import { ActualizarFotoPerfilService } from '../../services/actualizar-foto-perfil.service';
 import { SocketService } from '../../services/socket.service';
 import { ThemeService } from '../../services/theme.service';
+<<<<<<< Updated upstream
+=======
+import { NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { NotificacionesService } from '../../services/notificaciones.service';
+import { NotificationService } from '../../services/notification.service';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-buscador',
@@ -37,7 +44,18 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
   @Output() searchResults = new EventEmitter<any>(); // Emitirá los resultados al componente padre
 
+<<<<<<< Updated upstream
   constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService,private socketService: SocketService,private themeService: ThemeService) {}
+=======
+  constructor(private router: Router, private sidebarService: SidebarService, private resultadosService: ResultadosService, private limpiarBuscadorService: LimpiarBuscadorService, private authService: AuthService, private tokenService: TokenService,  private actFotoService: ActualizarFotoPerfilService,private socketService: SocketService,private themeService: ThemeService,private notificacionesService: NotificacionesService, private notificationService: NotificationService) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      // Comprobar si está en la página de notificaciones
+      this.estaEnPaginaNotificaciones = event.url.includes('/notificaciones');
+    });
+  }
+>>>>>>> Stashed changes
 
 
   ngOnInit() {
@@ -71,6 +89,15 @@ export class BuscadorComponent implements OnInit, OnDestroy{
       }),
       catchError(error => {
         console.error('Error al obtener los datos', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000);
+        }
+        
         return [];
       })
     ).subscribe({
@@ -85,6 +112,14 @@ export class BuscadorComponent implements OnInit, OnDestroy{
         this.router.navigate(['/home/resultados'], { queryParams: { search: this.searchQuery } });
       },
       error: (error) => {
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
         console.error('Error al obtener los datos', error);
       }
     });
@@ -96,6 +131,14 @@ export class BuscadorComponent implements OnInit, OnDestroy{
       this.tieneNotificaciones = true; 
     });
 
+    this.socketService.listen('nuevo-seguidor-ws').subscribe((data) => {
+      console.log('Nuevo seguidor recibido:', data);
+      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+
+      if (this.estaEnPaginaNotificaciones) {
+        this.notificarNuevoSeguidor(data);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -139,5 +182,65 @@ export class BuscadorComponent implements OnInit, OnDestroy{
   get isDarkMode() {
     return this.themeService.isDarkMode();
   }
+<<<<<<< Updated upstream
+=======
+
+  notificarNuevaInvitacion(data: any): void {
+    this.notificacionesService.notificarNuevaInvitacion(data);
+  }
+
+  notificarNuevaInteraccion(data: any): void {
+    this.notificacionesService.notificarNuevaInteraccion(data);
+  }
+
+  notificarNuevaNovedad(data: any): void {
+    this.notificacionesService.notificarNuevaNovedad(data);
+  }
+
+  notificarNuevoSeguidor(data: any): void {
+    this.notificacionesService.notificarNuevoSeguidor(data);
+  }
+
+  pedirNotificaciones() {
+    this.authService.pedirNotificaciones()
+    .subscribe({
+      next: (response) => {   
+        this.tieneInvitaciones = response.invitaciones;
+        this.tieneNovedadesMusicales = response["novedades-musicales"];
+        this.tieneInteracciones = response.interacciones;
+        this.tieneSeguidores = response.seguidores;
+        
+        this.tieneNotificaciones = 
+          this.tieneInvitaciones || 
+          this.tieneNovedadesMusicales || 
+          this.tieneInteracciones || 
+          this.tieneSeguidores;
+        console.log('Notificaciones recibidas:', response);
+
+        this.notificacionesService.actualizarNotificaciones(
+          response.invitaciones,
+          response["novedades-musicales"],
+          response.interacciones,
+          response.seguidores
+        );
+      },
+      error: (error) => {
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
+        console.error('Error al pedir las notificaciones', error);
+      },
+      complete: () => {
+        console.log('Notificaciones recuperadas con éxito');
+      }
+    });
+  }
+
+>>>>>>> Stashed changes
 }
 

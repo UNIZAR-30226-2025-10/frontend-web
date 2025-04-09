@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { switchMap } from 'rxjs/operators';
+import { NotificationService } from '../../services/notification.service';
 
 interface Album {
   nombre: string;
@@ -68,7 +69,8 @@ export class AlbumComponent implements OnInit, OnDestroy {
 
   nombre: string = '';
   fotoNueva!: string;
-  file:  File | null = null;;
+  file:  File | null = null;router: any;
+;
 
   album: Album = { nombre: '', fotoPortada: '', nombreArtisticoArtista: '', fechaPublicacion: '', duracion: 0, reproducciones: 0, favs: 0, canciones: []};
 
@@ -89,7 +91,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
       }
   
 
-  constructor(private route: ActivatedRoute, private playerService: PlayerService, private el: ElementRef,private authService:AuthService, private favoritosService: FavoritosService, private tokenService: TokenService,private subirCloudinary: SubirCloudinary) {}
+  constructor(private route: ActivatedRoute, private playerService: PlayerService, private el: ElementRef,private authService:AuthService, private favoritosService: FavoritosService, private tokenService: TokenService,private subirCloudinary: SubirCloudinary,private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     const albumId = this.route.snapshot.paramMap.get('id'); 
@@ -165,6 +167,14 @@ export class AlbumComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error al autenticar:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');
@@ -239,6 +249,14 @@ export class AlbumComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error("Error al guardar en favoritos:", error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Canción añadida o quitada de favoritos con éxito");
@@ -275,6 +293,14 @@ export class AlbumComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error("Error al obtener las playlists:", error);
+          // No esta logeado
+          if (error.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Playlists recuperadas con éxito");
@@ -300,6 +326,14 @@ export class AlbumComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error("Error al obtener añadir la cancion a la playlist:", error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log("Cancion añadida con éxito");
@@ -378,6 +412,14 @@ export class AlbumComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               console.error("Error al crear la playlist", error);
+              // No esta logeado
+              if (error.status === 401) {
+                this.tokenService.clearStorage();
+                this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                setTimeout(() => {
+                  this.router.navigate(['/login']);
+                }, 3000); 
+              }
             },
             complete: () => {
               console.log("Playlist creada con éxito");
@@ -395,6 +437,14 @@ export class AlbumComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               console.error("Error al crear la playlist:", error);
+              // No esta logeado
+              if (error.status === 401) {
+                this.tokenService.clearStorage();
+                this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                setTimeout(() => {
+                  this.router.navigate(['/login']);
+                }, 3000); 
+              }
             },
             complete: () => {
               console.log("Playlist creada con éxito");

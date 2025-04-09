@@ -7,6 +7,7 @@ import { forkJoin } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
 import { ActivatedRoute } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { NotificationService } from '../../services/notification.service';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class HomeComponent implements OnInit {
 
   @Output() trackClicked = new EventEmitter<any>();
 
-  constructor(private route: ActivatedRoute,private authService:AuthService, private tokenService : TokenService, private router: Router, private playerService: PlayerService) {}
+  constructor(private route: ActivatedRoute,private authService:AuthService, private tokenService : TokenService, private router: Router, private playerService: PlayerService, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
 
@@ -46,6 +47,14 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error en alguna de las peticiones principales:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   
@@ -60,6 +69,14 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error cargando recomendaciones:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
