@@ -67,7 +67,7 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
   dropdownTopPosition: number = 0; 
   dropdownLeftPosition: number = 0;
 
-  constructor(private tokenService: TokenService, private authService: AuthService, private route: ActivatedRoute, private favoritosService: FavoritosService) {}
+  constructor(private tokenService: TokenService, private authService: AuthService, private router: Router, private route: ActivatedRoute, private favoritosService: FavoritosService) {}
 
   ngOnInit() {
 
@@ -314,7 +314,6 @@ toggleFav(id: any) {
     this.dropdownTopPosition = rect.bottom + window.scrollY + 185;  // Calcula la posición top
     this.dropdownLeftPosition = rect.left + window.scrollX -105;  // Calcula la posición left
   }
-
 
 }
 

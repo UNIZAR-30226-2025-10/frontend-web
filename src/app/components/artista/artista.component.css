@@ -147,8 +147,8 @@ h4 {
     outline: none;
 }
 .btn-noizz {
-    height: 30px;
-    width: 130px;
+    height: auto;
+    width: auto;
     margin-left: 4px;
     border-radius: 20px;
     background-color: var(--controles);
