@@ -410,5 +410,4 @@ export class NotificacionesComponent {
     });
   }
   
-
 }

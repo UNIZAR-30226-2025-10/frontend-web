@@ -134,7 +134,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
     this.socketService.listen('invite-to-playlist-ws').subscribe((data) => {
       console.log('Nueva invitación recibida:', data);
-      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+      this.tieneNotificaciones = true;
 
       if (this.estaEnPaginaNotificaciones) {
         this.notificarNuevaInvitacion(data);
@@ -143,7 +143,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
     this.socketService.listen('novedad-musical-ws').subscribe((data) => {
       console.log('Nueva novedad musical recibida:', data);
-      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+      this.tieneNotificaciones = true;
 
       if (this.estaEnPaginaNotificaciones) {
         this.notificarNuevaNovedad(data);
@@ -153,7 +153,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
     // Respuesta o like a noizzy
     this.socketService.listen('nueva-interaccion-ws').subscribe((data) => {
       console.log('Nueva interaccion recibida:', data);
-      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+      this.tieneNotificaciones = true;
 
       if (this.estaEnPaginaNotificaciones) {
         this.notificarNuevaInteraccion(data);
@@ -162,7 +162,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
     this.socketService.listen('nuevo-seguidor-ws').subscribe((data) => {
       console.log('Nuevo seguidor recibido:', data);
-      this.tieneNotificaciones = !this.estaEnPaginaNotificaciones;
+      this.tieneNotificaciones = true;
 
       if (this.estaEnPaginaNotificaciones) {
         this.notificarNuevoSeguidor(data);
