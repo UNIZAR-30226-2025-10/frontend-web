@@ -80,20 +80,8 @@ a {
     height: 80px;
     border-radius: 50%;
     z-index:900;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    margin-top: 5px;
-    margin-bottom: 10px;
-}
 
-.user-me img:hover {
-    transform: scale(1.1);
-    margin-top: 2px;
 }
-
 
 .scrollable-section img:hover {
     transform: scale(1.05);
@@ -113,11 +101,6 @@ a {
         height: 60px;
     }
 
-    .user-me_icon img{
-        width: 60px;
-        height: 60px;
-        transition: transform 0.2s ease;
-    }
 }
 
 
