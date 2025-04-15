@@ -8,19 +8,22 @@
     width: 100%;  
   }
 
+
+
  
   .subir-cancion-container h2 {
     all: unset; /* Elimina todos los estilos heredados */
     margin: 0; /* Restablece el margen */
     padding: 0; /* Restablece el padding */
     font-size: 24px; /* Define un tamaño de fuente específico */
-    margin: 0 auto; /* Centra el campo en su contenedor */
+    margin: 0 auto; 
     margin-left: 5%;
     margin-bottom: 15%;
     font-size: 24px;
     font-weight: bold;
     color: var(--letra);
   }
+
 
    
   .album-selection {
@@ -87,7 +90,7 @@ select:focus {
 }
 
 .custom-dropdown {
-  margin: 0 auto; /* Centra el campo en su contenedor */
+  margin: 0 auto; 
   margin-top: 15px;
   margin-bottom: 15px;
   position: relative;
@@ -104,7 +107,7 @@ select:focus {
   justify-content: space-between;
   padding: 10px;
   font-size: 16px;
-  color: #888;
+  color: var(--letra3);
   background-color: var(--campos); 
 }
 
@@ -211,7 +214,7 @@ select {
   padding: 20px;
   text-align: center;
   border-radius: 8px;
-  color: #888;
+  color: var(--letra3);
   background-color: var(--campos);
 }
 
@@ -232,7 +235,7 @@ button:hover {
 /* Cambia el color del placeholder */
 .campo input::placeholder,
 .campo textarea::placeholder {
-  color: #888 !important; 
+  color: var(--letra3) !important; 
   opacity: 1; 
 
 }
@@ -241,35 +244,35 @@ button:hover {
 /* Compatibilidad con navegadores antiguos */
 .campo input::-webkit-input-placeholder,
 .campo textarea::-webkit-input-placeholder {
-  color: #888 !important; /* Para navegadores basados en WebKit (Chrome, Safari) */
+  color: var(--letra3) !important; /* Para navegadores basados en WebKit (Chrome, Safari) */
 }
 
 .campo input:-ms-input-placeholder,
 .campo textarea:-ms-input-placeholder {
-  color: #888 !important; /* Para Internet Explorer 10-11 */
+  color: var(--letra3) !important; /* Para Internet Explorer 10-11 */
 }
 
 .campo input::-ms-input-placeholder,
 .campo textarea::-ms-input-placeholder {
-  color: #888 !important; /* Para Microsoft Edge */
+  color: var(--letra3) !important; /* Para Microsoft Edge */
 }
 
 .file-upload {
-  border: 2px dashed #6f6f6f;
+  border: 2px dashed var(--letra3);
   padding: 20px;
   text-align: center;
   border-radius: 8px;
-  color: #888;
+  color: var(--letra3);
   background-color: var(--campos);
   transition: background-color 0.3s ease;
 }
 
 .file-upload2 {
-  border: 2px dashed #6f6f6f;
+  border: 2px dashed var(--letra3);
   padding: 20px;
   text-align: center;
   border-radius: 8px;
-  color: #888;
+  color: var(--letra3);
   background-color: var(--campos);
   transition: background-color 0.3s ease;
 }
@@ -289,7 +292,7 @@ button:hover {
 .file-upload span {
   display: block;
   font-size: 14px;
-  color: #888;
+  color: var(--letra3);
   word-wrap: break-word; 
 }
 

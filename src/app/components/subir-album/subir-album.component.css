@@ -107,7 +107,7 @@ input{
     justify-content: space-between;
     padding: 10px;
     font-size: 16px;
-    color: #888;
+    color: var(--letra3);
     background-color: var(--campos);
   }
   
@@ -208,11 +208,11 @@ input{
   }
   
   .file-upload {
-    border: 2px dashed #6f6f6f;
+    border: 2px dashed var(--letra3);
     padding: 20px;
     text-align: center;
     border-radius: 8px;
-    color:#888;
+    color:var(--letra3);
   }
   
   button {
@@ -232,7 +232,7 @@ input{
   /* Cambia el color del placeholder */
   .campo input::placeholder,
   .campo textarea::placeholder {
-    color: #888 !important; 
+    color: var(--letra3) !important; 
     opacity: 1; 
   }
   
@@ -240,35 +240,35 @@ input{
   /* Compatibilidad con navegadores antiguos */
   .campo input::-webkit-input-placeholder,
   .campo textarea::-webkit-input-placeholder {
-    color: #888 !important; /* Para navegadores basados en WebKit (Chrome, Safari) */
+    color: var(--letra3) !important; /* Para navegadores basados en WebKit (Chrome, Safari) */
   }
   
   .campo input:-ms-input-placeholder,
   .campo textarea:-ms-input-placeholder {
-    color: #888 !important; /* Para Internet Explorer 10-11 */
+    color: var(--letra3) !important; /* Para Internet Explorer 10-11 */
   }
   
   .campo input::-ms-input-placeholder,
   .campo textarea::-ms-input-placeholder {
-    color: #888 !important; /* Para Microsoft Edge */
+    color: var(--letra3) !important; /* Para Microsoft Edge */
   }
   
   .file-upload {
-    border: 2px dashed #6f6f6f;
+    border: 2px dashed var(--letra3);
     padding: 20px;
     text-align: center;
     border-radius: 8px;
     background-color: var(--campos);
-    color:#888;
+    color:var(--letra3);
     transition: background-color 0.3s ease;
   }
   
   .file-upload2 {
-    border: 2px dashed #6f6f6f;
+    border: 2px dashed var(--letra3);
     padding: 20px;
     text-align: center;
     border-radius: 8px;
-    color: #6f6f6f;
+    color: var(--letra3);
   }
   
   .file-upload2.drag-over {
@@ -286,7 +286,7 @@ input{
   .file-upload span {
     display: block;
     font-size: 14px;
-    color:#888;;
+    color: var(--letra3);;
     word-wrap: break-word; 
   }
   

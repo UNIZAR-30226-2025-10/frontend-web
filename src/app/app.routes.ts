@@ -30,6 +30,7 @@ import { SubirCancionComponent } from './components/subir-cancion/subir-cancion.
 import { SubirAlbumComponent } from './components/subir-album/subir-album.component';
 import { MisNoizzysComponent } from './components/mis-noizzys/mis-noizzys.component';
 import { SusNoizzysComponent } from './components/sus-noizzys/sus-noizzys.component';
+import { NoizzitosComponent } from './components/noizzitos/noizzitos.component';
 
 
 
@@ -66,7 +67,8 @@ export const routes: Routes = [
       { path: 'notificaciones', component: NotificacionesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'mis-noizzys', component: MisNoizzysComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'noizzys/:nombreUsuario', component: SusNoizzysComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
-      { path: 'cancionesFavs/:nombreUsuario', component: CancionesFavsComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } }
+      { path: 'cancionesFavs/:nombreUsuario', component: CancionesFavsComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'noizzitos/:id', component: NoizzitosComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } }
     ]
   }
 ];

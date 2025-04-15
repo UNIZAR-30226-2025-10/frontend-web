@@ -24,8 +24,9 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 25px;
     transition: box-shadow 0.2s ease;
+    transition: transform 0.2s;
 }
 
 .fixed-section.scrolled {
@@ -84,13 +85,12 @@ a {
     height: 80px;
     border-radius: 50%;
     cursor: pointer;
-    transition: transform 0.2s ease;
     margin-top: 5px;
     margin-bottom: 10px;
 }
 
 .user-me img:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
     margin-top: 2px;
 }
 
@@ -116,8 +116,16 @@ a {
     .user-me_icon img{
         width: 60px;
         height: 60px;
-        transition: transform 0.2s ease;
     }
+}
+
+.barra_horizontal {
+    width: 80%;
+    height: 1px;
+    background-color: #555;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 

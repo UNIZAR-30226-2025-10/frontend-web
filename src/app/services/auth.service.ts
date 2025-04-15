@@ -1443,7 +1443,24 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/post-noizzy`, body, { headers: headers } );
   }
 
-  likearNoizzy(like: boolean, id: string): Observable<any> {
+  likearNoizzy(like: any, noizzy: any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const body = { like: like, noizzy: noizzy }
+    return this.http.put(`${this.apiUrl}/change-like`, body, { headers: headers } );
+  }
+
+  buscadorNoizzy(query: string): Observable<any> {
     const token = this.tokenService.getToken();
   
     if (!token) {
@@ -1456,7 +1473,57 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
   
-    const body = { like: like, id: id }
-    return this.http.put(`${this.apiUrl}/change-noizzy?`, {body}, { headers: headers } );
+    return this.http.get(`${this.apiUrl}/search-for-noizzy?termino=${query}`, { headers });
+  }
+
+  pedirDatosNoizzys(id:any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.get(`${this.apiUrl}/get-datos-noizzy?id=${id}`, { headers: headers } );
+  }
+
+  publicarNoizzito(texto: string, id: any, idNoizzy: any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const body = { texto: texto, cancion: id, noizzy: idNoizzy}
+    return this.http.post(`${this.apiUrl}/post-noizzito`, body, { headers: headers } );
+  }
+
+
+  borrarNoizzy(id: string): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const body = { id: id }
+    return this.http.delete(`${this.apiUrl}/delete-noizzy`, { body, headers } );
   }
 }

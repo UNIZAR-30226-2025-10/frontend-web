@@ -20,6 +20,7 @@
     --hover: rgb(230, 230, 230);
     --campos:#D2D1D1;
     --aleatorio_activo:#8CA4FF;
+    --letra3: #4E4C4C;
   }
   
   .dark-theme {
@@ -39,6 +40,7 @@
     --hover: #6d6b6b;
     --campos:#000000;
     --aleatorio_activo:white;
+    --letra3: white;
   }
   
   button{
