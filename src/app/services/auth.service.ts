@@ -1222,7 +1222,7 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-tags`, { headers: headers } );
   }
 
-  crearCancion(nombre: string, album_id: number, duracion: number, audio_url: string, tags: string[], artistasFt: string[]): Observable<any> {
+  crearCancion(nombre: string, album_id: number, duracion: number, audio_url: string, tags: string[], artistasFt: string[], notificar: boolean): Observable<any> {
     const token = this.tokenService.getToken();
 
     if (!token) {
@@ -1235,7 +1235,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    const body = { nombre: nombre, album_id: album_id, duracion: duracion, audio_url: audio_url, tags: tags , artistasFt: artistasFt};
+    const body = { nombre: nombre, album_id: album_id, duracion: duracion, audio_url: audio_url, tags: tags , artistasFt: artistasFt, notificar};
 
     return this.http.post(`${this.apiUrl}/create-cancion`, body,{ headers: headers } );
   }
@@ -1321,7 +1321,7 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-playlists?nombreUsuario=${nombreUsuario}`, { headers: headers } );
   }
 
-  crearAlbum(nombreAlbum: string, foto_url: string): Observable<any> {
+  crearAlbum(nombreAlbum: string, foto_url: string, notificar: boolean): Observable<any> {
     const token = this.tokenService.getToken();
 
     if (!token) {
@@ -1334,7 +1334,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    const body = { nombre_album: nombreAlbum, fotoPortada: foto_url }
+    const body = { nombre_album: nombreAlbum, fotoPortada: foto_url, notificar: notificar }
     return this.http.post(`${this.apiUrl}/create-album`, body,{ headers: headers } );
   }
   

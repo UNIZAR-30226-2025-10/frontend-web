@@ -335,7 +335,7 @@ export class SubirAlbumComponent implements OnInit {
       albumObservable = this.subirCloudinary.uploadFile(this.file, 'albumes').pipe(
         switchMap((url) => {
           console.log("Foto subida");
-          return this.authService.crearAlbum(this.selectedAlbum, url);
+          return this.authService.crearAlbum(this.selectedAlbum, url, true);
         }),
         switchMap(() => this.authService.pedirMisAlbumesArtista()),
         map((response) => {
@@ -364,7 +364,7 @@ export class SubirAlbumComponent implements OnInit {
         return this.subirCloudinary.uploadSong(this.archivoSeleccionado, 'canciones');
       }),
       switchMap(({ url, duration }) => {
-        return this.authService.crearCancion(nombreCancion, this.selectedAlbumId, duration, url, this.etiquetasSeleccionadas.map(etiqueta => etiqueta.nombre), listaArtistasFt);
+        return this.authService.crearCancion(nombreCancion, this.selectedAlbumId, duration, url, this.etiquetasSeleccionadas.map(etiqueta => etiqueta.nombre), listaArtistasFt, false);
       })
     ).subscribe({
       next: () => {

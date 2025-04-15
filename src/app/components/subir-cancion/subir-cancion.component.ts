@@ -322,7 +322,7 @@ export class SubirCancionComponent implements OnInit {
     if(this.albumCreado) {
       this.subirCloudinary.uploadFile(this.file, 'albumes').pipe(
         switchMap(( url ) => {
-          return this.authService.crearAlbum(this.selectedAlbum, url).pipe(
+          return this.authService.crearAlbum(this.selectedAlbum, url, true).pipe(
             switchMap(() => {
               return this.authService.pedirMisAlbumesArtista(); 
             })
@@ -336,7 +336,6 @@ export class SubirCancionComponent implements OnInit {
             const albumEncontrado = this.albumes.find(album => album.nombre === this.selectedAlbum);
             if (albumEncontrado) {
               this.selectedAlbumId = albumEncontrado.id; 
-              this.albumCreado = false; 
             } else {
               console.error('No se encontró el álbum recién creado en la lista.');
             }
@@ -363,10 +362,11 @@ export class SubirCancionComponent implements OnInit {
 
     this.subirCloudinary.uploadSong(this.archivoSeleccionado, 'canciones').pipe(
     switchMap(({ url, duration }) => {
-      return this.authService.crearCancion(nombreCancion, this.selectedAlbumId, duration, url, this.etiquetasSeleccionadas.map(etiqueta => etiqueta.nombre), listaArtistasFt);
+      return this.authService.crearCancion(nombreCancion, this.selectedAlbumId, duration, url, this.etiquetasSeleccionadas.map(etiqueta => etiqueta.nombre), listaArtistasFt, !this.albumCreado);
       })
       ).subscribe({
         next: () => {
+          this.albumCreado = false; 
           this.archivoSeleccionado = null!; 
           this.etiquetasSeleccionadas = []; 
           this.mensajeError = ''; 

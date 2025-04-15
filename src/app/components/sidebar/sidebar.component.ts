@@ -15,9 +15,8 @@ import { NotificationService } from '../../services/notification.service';
 })
 export class SidebarComponent {
   @ViewChild('userIconsContainer') userIconsContainer!: ElementRef;
-  router: any;
 
-  constructor(private authService: AuthService,private tokenService: TokenService, private notificationService: NotificationService){}
+  constructor(private authService: AuthService, private router: Router, private tokenService: TokenService, private notificationService: NotificationService){}
 
   foto: string ='';
 

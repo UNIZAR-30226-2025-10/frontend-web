@@ -67,9 +67,8 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
   openDropdown: number | null = null;
   dropdownTopPosition: number = 0; 
   dropdownLeftPosition: number = 0;
-  router: any;
 
-  constructor(private tokenService: TokenService, private authService: AuthService, private route: ActivatedRoute, private favoritosService: FavoritosService,private notificationService: NotificationService) {}
+  constructor(private tokenService: TokenService, private router: Router, private authService: AuthService, private route: ActivatedRoute, private favoritosService: FavoritosService,private notificationService: NotificationService) {}
 
   ngOnInit() {
 
