@@ -31,7 +31,7 @@
             <button class="btn-noizz" (click)="toggleSeguir()">
                 <h5 style="margin: 0px;">{{ oyente.siguiendo ? 'Siguiendo' : 'Seguir' }} </h5>
             </button> 
-            <button class="btn-noizz">
+            <button class="btn-noizz" [routerLink]="['/home/noizzys', oyente.nombre]">
                 <h5 style="margin: 0px;">Ver Más Noizzys</h5>
             </button>                       
         </div>

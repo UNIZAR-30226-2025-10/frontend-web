@@ -1,16 +1,99 @@
 <div class="Noizzys-container">
       <!-- Lista de Noizzys -->
-  <div *ngFor="let noizzy of noizzys" class="noizzy-card">
-    <div class="noizzy-header">
-      <img [src]="noizzys" alt="Avatar" class="avatar" />
-      <span class="username">{{ noizzy.nombreUsuario }}</span>
+  <div *ngIf="noizzys.length === 0">
+    <p>No hay Noizzys</p>
+  </div>
+  <div *ngFor="let noizzy of noizzys">
+    <div class="noizzy-card" [routerLink]="['/home/noizzitos', noizzy.id]">
+      <div class="noizzy-header">
+        <img [src]="noizzy.fotoPerfil && noizzy.fotoPerfil !== 'DEFAULT' ? noizzy.fotoPerfil : 'nouser.png'" alt="Avatar" class="avatar" />
+        <span class="username">{{ noizzy.nombreUsuario }}</span>
+      </div>
+      <div class="noizzy-content">
+        <p>{{ noizzy.texto }}</p>
+        <!-- Mostrar información de la canción si está asociada -->
+        <div *ngIf="noizzy.cancion" class="cancion-info" (click)="playSong(noizzy.cancion); $event.stopPropagation()">
+          <img [src]="noizzy.cancion.fotoPortada || 'default-image.png'" alt="{{ noizzy.cancion.nombre }}" class="cancion-imagen" />
+          <p class="cancion-nombre">{{ noizzy.cancion.nombre}} - {{ noizzy.cancion.nombreArtisticoArtista }}</p>
+        </div>
+      </div>
+      <div class="noizzy-footer">
+        <button class="btn-like" (click)="darLike(noizzy.like, noizzy.id)">👍 {{ noizzy.num_likes }}</button>
+        <button class="btn-comment" (click)="abrirModalNoizzito(noizzy.id); $event.stopPropagation()">💬 {{ noizzy.num_comentarios }}</button>
+      </div>
     </div>
-    <div class="noizzy-content">
-      <p>{{ noizzy.texto }}</p>
+  </div>
+
+      <!-- PopUp de responder Noizzito -->
+  <div *ngIf="isModalNoizzitoOpen" class="modal-overlay">
+    <div class="modal-content">
+      <div class="cabecera">
+        <p style="font-size: 20px; color: var(--letra); margin-top: 23px; font-weight: bold;">Publicar Noizzito</p>
+        <button (click)="cerrarModalNoizzito()" class="btn-cerrar"><i class="fas fa-times"></i></button>
+      </div>
+  
+      <div class="atributos" style="display: flex; flex-direction: column; gap: 15px;">
+        <div class="campo">
+          <textarea
+            id="textoNoizzito"
+            [value]="textoPostNoizzito"
+            (input)="onTextoNoizzitoInput($event)"
+            placeholder="Escribe tu Noizzito aquí..."
+            rows="4"
+          ></textarea>
+        </div>
+        <!-- Toggle que se muestra al seleccionar una canción -->
+        <div *ngIf="cancionSeleccionada" class="toggle-seleccion">
+          <p><strong>Canción seleccionada:</strong> {{ cancionSeleccionada.nombre }} - {{ cancionSeleccionada.nombreArtisticoArtista }}</p>
+        </div>
+        <!-- Botón dinámico -->
+        <button 
+        *ngIf="!cancionSeleccionada; else eliminarBoton" 
+        (click)="abrirModalCancion()" 
+        class="btn-guardar1">
+        Añadir Canción
+      </button>
+      <ng-template #eliminarBoton>
+        <button 
+          (click)="eliminarCancionSeleccionada()" 
+          class="btn-eliminar">
+          Eliminar Canción
+        </button>
+      </ng-template>
+        <div style="display: flex; justify-content: space-between;">
+          <button (click)="publicarNoizzito()" class="btn-guardar2">Publicar</button>
+        </div>
+      </div>
     </div>
-    <div class="noizzy-footer">
-      <button class="btn-like">👍 {{ noizzy.num_likes }}</button>
-      <button class="btn-comment">💬 {{ noizzy.num_comentarios }}</button>
+    <!-- Segundo popup para "Añadir Canción" -->
+    <div *ngIf="isModalCancionOpen" class="modal-overlay">
+      <div class="modal-content">
+        <div class="cabecera">
+          <p style="font-size: 20px; color: var(--letra); margin-top: 23px; font-weight: bold;">Buscar Canción</p>
+          <button (click)="cerrarModalCancion()" class="btn-cerrar"><i class="fas fa-times"></i></button>
+        </div>
+    
+        <div class="atributos" style="display: flex; flex-direction: column; gap: 15px;">
+          <div class="campo-buscador">
+            <input
+              type="text"
+              (input)="onBusquedaCancionInput($event)"
+              placeholder="Introduce el nombre de la canción"
+            />
+          </div>
+    
+          
+    
+          <div *ngIf="resultadosBusqueda.length > 0" class="resultados-busqueda">
+            <div *ngFor="let cancion of resultadosBusqueda" (click)="seleccionarCancion(cancion)" class="resultado-item">
+              <img [src]="cancion.fotoPortada || 'default-image.png'" alt="{{ cancion.nombre }}" class="resultado-imagen" />
+              <div class=resultado-texto>
+                <p>{{ cancion.nombre }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
