@@ -1,0 +1,16 @@
+<div class="Noizzys-container">
+      <!-- Lista de Noizzys -->
+  <div *ngFor="let noizzy of noizzys" class="noizzy-card">
+    <div class="noizzy-header">
+      <img [src]="noizzys" alt="Avatar" class="avatar" />
+      <span class="username">{{ noizzy.nombreUsuario }}</span>
+    </div>
+    <div class="noizzy-content">
+      <p>{{ noizzy.texto }}</p>
+    </div>
+    <div class="noizzy-footer">
+      <button class="btn-like">👍 {{ noizzy.num_likes }}</button>
+      <button class="btn-comment">💬 {{ noizzy.num_comentarios }}</button>
+    </div>
+  </div>
+</div>

@@ -1394,5 +1394,69 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/switch-session`, credentials);
   }
 
+  pedirMisNoizzys(): Observable<any> {
+    const token = this.tokenService.getToken();
   
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.get(`${this.apiUrl}/get-mis-noizzys`, { headers });
+  }
+
+  pedirSusNoizzys(nombreUsuario:any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.get(`${this.apiUrl}/get-noizzys?nombreUsuario=${nombreUsuario}`, { headers: headers } );
+  }
+
+  publicarNoizzy(texto: string, id: any): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const body = { texto: texto, cancion: id }
+    return this.http.post(`${this.apiUrl}/post-noizzy`, body, { headers: headers } );
+  }
+
+  likearNoizzy(like: boolean, id: string): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const body = { like: like, id: id }
+    return this.http.put(`${this.apiUrl}/change-noizzy?`, {body}, { headers: headers } );
+  }
 }
