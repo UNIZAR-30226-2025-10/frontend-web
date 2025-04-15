@@ -315,6 +315,7 @@ export class NotificacionesComponent {
         },
         complete: () => {
           console.log("Seguidores recuperados con éxito");
+          this.notificacionesService.setCategoriaLeida('seguidores');
         }
       });
   }
