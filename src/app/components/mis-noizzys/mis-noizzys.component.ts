@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { NotificationService } from '../../services/notification.service';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-mis-noizzys',
@@ -33,10 +34,17 @@ export class MisNoizzysComponent implements OnInit {
   noizzyContestado: any = '';
 
 
-  constructor(private authService: AuthService,private playerService: PlayerService, private notificationService: NotificationService) {}
+  constructor(private authService: AuthService,private playerService: PlayerService, private notificationService: NotificationService,private socketService: SocketService) {}
 
   ngOnInit(): void {
     this.cargarMisNoizzys();
+
+    this.socketService.listen('actualizar-noizzy-ws').subscribe((data) => {
+      console.log('Nueva interaccion recibida:', data);
+      if(data.mio){
+        this.noizzys.unshift(data);
+      }
+    });
   }
 
   cargarMisNoizzys(): void {
@@ -106,7 +114,7 @@ export class MisNoizzysComponent implements OnInit {
         this.textoPostNoizzy = '';
         this.idPostNoizzy = null;
         this.cancionSeleccionada = null; // Limpia la canción seleccionada
-        this.cargarMisNoizzys();
+        //this.cargarMisNoizzys();
         this.cerrarModalNoizzy();
       },
       error: (err) => {

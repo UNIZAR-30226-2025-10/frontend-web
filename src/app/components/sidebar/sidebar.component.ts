@@ -47,7 +47,6 @@ export class SidebarComponent {
         this.seguidos.splice(userIndex, 1);
         this.seguidos.unshift(user);
       }
-      this.notificacionesService.emitirNuevoNoizzy(data);
     });
   
   }

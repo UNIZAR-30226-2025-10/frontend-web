@@ -49,10 +49,12 @@ export class NoizzitosComponent implements OnInit {
         this.cargarDatosNoizzy(); // Carga los datos del Noizzy
       });
 
-      // Respuesta o like a noizzy
-      this.socketService.listen('nueva-interaccion-ws').subscribe((data) => {
+      
+      this.socketService.listen('actualizar-noizzito-ws').subscribe((data) => {
         console.log('Nueva interaccion recibida:', data);
-        this.noizzitos.unshift(data);
+        if(this.noizzyID==data.noizzy){
+          this.noizzitos.unshift(data);
+        }
       });
     }
 
