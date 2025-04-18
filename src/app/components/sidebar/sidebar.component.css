@@ -177,15 +177,55 @@ a {
   }
 
 
-@media (max-width: 768px) {
-    .scrollable-section img {
+  @media (max-width: 768px) {
+    .scrollable-section img,
+    .user-me img,
+    .user-image-wrapper,
+    .user-hover-container,
+    .user-container {
         width: 60px;
         height: 60px;
     }
 
-    .user-me_icon img{
+    .user-me {
+        font-size: 12px;
         width: 60px;
         height: 60px;
+    }
+
+    .notification-dot {
+        width: 10px;
+        height: 10px;
+        top: 3px;
+        right: 3px;
+    }
+
+    .username {
+        font-size: 10px;
+    }
+
+    .main-content.sidebar-open {
+        margin-left: 100px;
+    }
+
+    .barra_horizontal {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .scrollable-section {
+        gap: 5px;
+        padding: 0 2px;
+    }
+
+    .dentro-sidebar {
+        padding: 5px;
+    }
+
+    a {
+        font-size: 8px;
+        text-align: center;
     }
 }
 

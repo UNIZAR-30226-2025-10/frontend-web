@@ -38,7 +38,7 @@ export class NoizzitosComponent implements OnInit {
     user: any = null;
 
     private destroy$ = new Subject<void>();
-    constructor(private authService: AuthService, private tokenService: TokenService, private route: ActivatedRoute, private playerService: PlayerService,private notificationService: NotificationService,  private location: Location, private socketService: SocketService) {}
+    constructor(private authService: AuthService,  private router: Router,private tokenService: TokenService, private route: ActivatedRoute, private playerService: PlayerService,private notificationService: NotificationService,  private location: Location, private socketService: SocketService) {}
 
     ngOnInit(): void {
       this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
@@ -72,6 +72,14 @@ export class NoizzitosComponent implements OnInit {
             },
             error: (err) => {
                 console.error('Error al cargar el Noizzy:', err);
+                // No esta logeado
+                if (err.status === 401) {
+                  this.tokenService.clearStorage();
+                  this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                  setTimeout(() => {
+                    this.router.navigate(['/login']);
+                  }, 3000); 
+                }
             }
         });
     }
@@ -83,6 +91,14 @@ export class NoizzitosComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error al dar like:', err);
+            // No esta logeado
+            if (err.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           }
         });
     }
@@ -130,6 +146,14 @@ export class NoizzitosComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error al publicar el Noizzito:', err);
+            // No esta logeado
+            if (err.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           }
         });
     }
@@ -151,6 +175,14 @@ export class NoizzitosComponent implements OnInit {
             },
             error: (err) => {
               console.error('Error al buscar canciones:', err);
+              // No esta logeado
+              if (err.status === 401) {
+                this.tokenService.clearStorage();
+                this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                setTimeout(() => {
+                  this.router.navigate(['/login']);
+                }, 3000); 
+              }
             }
           });
         }
@@ -180,6 +212,14 @@ export class NoizzitosComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error al buscar canciones:', err);
+            // No esta logeado
+            if (err.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+            }
           }
         });
     }
@@ -196,6 +236,14 @@ export class NoizzitosComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error al buscar canciones:', err);
+            // No esta logeado
+            if (err.status === 401) {
+              this.tokenService.clearStorage();
+              this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 3000); 
+        }
           }
         });
     }
@@ -227,6 +275,14 @@ export class NoizzitosComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al eliminar el Noizzy:', err);
+          // No esta logeado
+          if (err.status === 401) {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         }
       });
     }

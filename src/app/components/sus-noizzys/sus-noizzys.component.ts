@@ -9,6 +9,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { SocketService } from '../../services/socket.service';
+import { TokenService } from '../../services/token.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-sus-noizzys',
@@ -31,7 +33,7 @@ export class SusNoizzysComponent implements OnInit {
   busquedaCancion: string = ''; 
 
   private destroy$ = new Subject<void>();
-  constructor(private authService: AuthService,private route: ActivatedRoute, private playerService: PlayerService, private notificacionesService:NotificacionesService,private socketService: SocketService) {}
+  constructor(private authService: AuthService,private tokenService: TokenService,private route: ActivatedRoute, private router: Router, private playerService: PlayerService, private notificacionesService:NotificacionesService,private socketService: SocketService,private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
@@ -58,6 +60,14 @@ export class SusNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar los Noizzys:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -69,6 +79,14 @@ export class SusNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al dar like:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -113,6 +131,14 @@ export class SusNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al publicar el Noizzito:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -138,6 +164,14 @@ export class SusNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al buscar canciones:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -154,6 +188,14 @@ export class SusNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al buscar canciones:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }

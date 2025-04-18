@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs/operators';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { NotificationService } from '../../services/notification.service';
 import { SocketService } from '../../services/socket.service';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-mis-noizzys',
@@ -34,7 +35,7 @@ export class MisNoizzysComponent implements OnInit {
   noizzyContestado: any = '';
 
 
-  constructor(private authService: AuthService,private playerService: PlayerService, private notificationService: NotificationService,private socketService: SocketService) {}
+  constructor(private authService: AuthService,private tokenService: TokenService,private playerService: PlayerService, private notificationService: NotificationService,private socketService: SocketService,private router: Router) {}
 
   ngOnInit(): void {
     this.cargarMisNoizzys();
@@ -54,6 +55,14 @@ export class MisNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar los Noizzys:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -65,6 +74,14 @@ export class MisNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al dar like:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -119,6 +136,14 @@ export class MisNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al publicar el Noizzy:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -140,6 +165,14 @@ export class MisNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al publicar el Noizzito:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -170,6 +203,14 @@ export class MisNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al buscar canciones:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -186,6 +227,14 @@ export class MisNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al buscar canciones:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
@@ -207,6 +256,14 @@ export class MisNoizzysComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al buscar canciones:', err);
+          // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
         }
       });
     }
@@ -226,6 +283,14 @@ export class MisNoizzysComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al eliminar el Noizzy:', err);
+        // No esta logeado
+        if (err.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       }
     });
   }
