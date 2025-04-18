@@ -6,6 +6,8 @@ import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
+import { SocketService } from '../../services/socket.service';
+import { NotificacionesService } from '../../services/notificaciones.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,16 +18,37 @@ import { NotificationService } from '../../services/notification.service';
 export class SidebarComponent {
   @ViewChild('userIconsContainer') userIconsContainer!: ElementRef;
 
-  constructor(private authService: AuthService, private router: Router, private tokenService: TokenService, private notificationService: NotificationService){}
+  constructor(private authService: AuthService, private router: Router, private tokenService: TokenService, private notificationService: NotificationService,private socketService: SocketService,private notificacionesService: NotificacionesService ){}
 
   foto: string ='';
 
   seguidos: any[] = [];
+  usuariosConNotificacion: string[] = [];
+
 
   ngOnInit(): void {
 
     this.foto = this.tokenService.getUser().fotoPerfil;
     this.pedirSeguidos()
+
+    this.socketService.connect();
+
+    this.socketService.listen('new-noizzy-ws').subscribe((data: any) => {
+      const userIndex = this.seguidos.findIndex(user => user.nombreUsuario === data.nombreUsuario);
+
+      if (userIndex !== -1) {
+        //Si no tiene ya notificacion lo añado
+        if (!this.usuariosConNotificacion.includes(data.nombreUsuario)) {
+          this.usuariosConNotificacion.push(data.nombreUsuario);
+        }
+        
+        //Si tiene notificacion lo pongo el primero
+        const user = this.seguidos[userIndex];
+        this.seguidos.splice(userIndex, 1);
+        this.seguidos.unshift(user);
+      }
+      this.notificacionesService.emitirNuevoNoizzy(data);
+    });
   
   }
 
@@ -70,8 +93,16 @@ export class SidebarComponent {
     this.router.navigate(['/home/mis-noizzys']);
   }
 
-  navigateToSusNoizzys() {
-    this.router.navigate(['/home/noizzys']);
+  navigateToSusNoizzys(nombreUsuario: string) {
+    this.router.navigate(['/home/noizzys',nombreUsuario]);
+    this.quitarNotificacion(nombreUsuario);
+  }
+
+  quitarNotificacion(nombreUsuario: string) {
+    const index = this.usuariosConNotificacion.indexOf(nombreUsuario);
+    if (index !== -1) {
+      this.usuariosConNotificacion.splice(index, 1);
+    }
   }
   
 }

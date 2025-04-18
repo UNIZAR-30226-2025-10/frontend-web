@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NotificacionesService } from '../../services/notificaciones.service';
 
 @Component({
   selector: 'app-sus-noizzys',
@@ -29,13 +30,18 @@ export class SusNoizzysComponent implements OnInit {
   busquedaCancion: string = ''; 
 
   private destroy$ = new Subject<void>();
-  constructor(private authService: AuthService,private route: ActivatedRoute, private playerService: PlayerService) {}
+  constructor(private authService: AuthService,private route: ActivatedRoute, private playerService: PlayerService, private notificacionesService:NotificacionesService,) {}
 
   ngOnInit(): void {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.nombreUsuario = params['nombreUsuario']; 
       this.cargarSusNoizzys(this.nombreUsuario);
     });;
+
+    this.notificacionesService.noizzyNuevo$.subscribe(noizzyNuevo => {
+      this.noizzys.unshift(noizzyNuevo);
+      console.log('llega',noizzyNuevo)
+    });
   }
 
   ngOnDestroy(): void {

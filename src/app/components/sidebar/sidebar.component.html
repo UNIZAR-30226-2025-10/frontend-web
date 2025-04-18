@@ -9,11 +9,17 @@
     <!-- Sección con scroll -->
     <div class="scrollable-section" (scroll)="onScroll($event)">
         <div class="user-icons">
-            <div *ngFor="let user of seguidos">
-                <a [routerLink]="['/home/noizzys', user.nombreUsuario]"> 
-                    <img [src]="user.fotoPerfil && user.fotoPerfil !== 'DEFAULT' ? user.fotoPerfil : 'nouser.png'" [alt]="user.nombreUsuario">
-                </a>
+            <div *ngFor="let user of seguidos" class="user-container">
+              <a (click)="navigateToSusNoizzys(user.nombreUsuario)">
+                <div class="user-image-wrapper">
+                  <img [src]="user.fotoPerfil && user.fotoPerfil !== 'DEFAULT' ? user.fotoPerfil : 'nouser.png'" [alt]="user.nombreUsuario">
+                  <div *ngIf="usuariosConNotificacion.includes(user.nombreUsuario)" class="notification-dot"></div>
+                  <div class="overlay">
+                    <span class="username">{{ user.nombreUsuario }}</span>
+                  </div>
+                </div>
+              </a>
             </div>
-        </div>
+          </div>          
     </div>
 </div>

@@ -2,50 +2,58 @@
     <!-- Noizzy principal -->
     <div class="noizzy-card">
       <div class="noizzy-header">
-        <img [src]="noizzy.fotoPerfil && noizzy.fotoPerfil !== 'DEFAULT' ? noizzy.fotoPerfil : 'nouser.png'" alt="Avatar" class="avatar" />
-        <span class="username">{{ noizzy.nombreUsuario }}</span>
+        <img [src]="noizzy.fotoPerfil && noizzy.fotoPerfil !== 'DEFAULT' ? noizzy.fotoPerfil : 'nouser.png'" alt="Avatar" class="avatar" [routerLink]="['/home/perfil', noizzy.nombreUsuario]"/>
+        <span class="username" [routerLink]="['/home/perfil', noizzy.nombreUsuario]">{{ noizzy.nombreUsuario }}</span>
+        <button *ngIf="noizzy.mio" class="btn-erase" (click)="eraseNoizzy(noizzyID,true); $event.stopPropagation()">
+          <i class="far fa-trash-alt"></i>
+        </button>
       </div>
       <div class="noizzy-content">
         <p>{{ noizzy.texto }}</p>
         <div *ngIf="noizzy.cancion" class="cancion-info" (click)="playSong(noizzy.cancion); $event.stopPropagation()">
           <img [src]="noizzy.cancion.fotoPortada || 'default-image.png'" alt="{{ noizzy.cancion.nombre }}" class="cancion-imagen" />
-          <p class="cancion-nombre">{{ noizzy.cancion.nombre}} - {{ noizzy.cancion.nombreArtisticoArtista }}</p>
+          <div class="cancion-detalle">
+            <p class="cancion-nombre">{{ noizzy.cancion.nombre}}</p>
+            <p class="cancion-artista">{{ noizzy.cancion.nombreArtisticoArtista }}</p>
+          </div>
         </div>
       </div>
       <div class="noizzy-footer">
-        <button class="btn-like" (click)="darLike(noizzy.like, noizzyID); $event.stopPropagation()">👍 {{ noizzy.num_likes }}</button>
-        <button class="btn-comment" (click)="abrirModalNoizzito(noizzyID); $event.stopPropagation()">💬 {{ noizzy.num_comentarios }}</button>
+        <button class="btn-like" (click)="darLike(noizzy.like, noizzyID); $event.stopPropagation()"><i [ngClass]="noizzy.like ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'"></i> {{ noizzy.num_likes }}</button>
+        <button class="btn-comment" (click)="abrirModalNoizzito(noizzyID); $event.stopPropagation()"><i class="far fa-comment-dots"></i> {{ noizzy.num_comentarios }}</button>
       </div>
       <!-- Título de comentarios -->
+      <div *ngIf="noizzitos.length > 0">
         <h3>Comentarios</h3>
     
         <!-- Lista de Noizzitos -->
-        <div *ngIf="noizzitos.length === 0">
-          <p>No hay Noizzitos</p>
-        </div>
         <div *ngFor="let noizzito of noizzitos">
           <div class="noizzito-card" [routerLink]="['/home/noizzitos', noizzito.id]">
               <div class="noizzito-header">
-                  <img [src]="noizzito.fotoPerfil && noizzito.fotoPerfil !== 'DEFAULT' ? noizzito.fotoPerfil : 'nouser.png'" alt="Avatar" class="avatar" />
-                  <span class="username">{{ noizzito.nombreUsuario }}</span>
-                  <div *ngIf="noizzito.nombreUsuario === user.nombreUsuario">
-                    <button class="btn-erase" (click)="eraseNoizzy(noizzito.id); $event.stopPropagation()">🗑️</button>
-                  </div>
+                  <img [src]="noizzito.fotoPerfil && noizzito.fotoPerfil !== 'DEFAULT' ? noizzito.fotoPerfil : 'nouser.png'" alt="Avatar" class="avatar"  [routerLink]="['/home/perfil', noizzito.nombreUsuario]"/>
+                  <span class="username"  [routerLink]="['/home/perfil', noizzito.nombreUsuario]">{{ noizzito.nombreUsuario }}</span>
+                  <button *ngIf="noizzito.mio" class="btn-erase" (click)="eraseNoizzy(noizzito.id,false); $event.stopPropagation()">
+                    <i class="far fa-trash-alt"></i>
+                  </button>
               </div>
               <div class="noizzito-content">
                   <p>{{ noizzito.texto }}</p>
                   <div *ngIf="noizzito.cancion" class="cancion-info" (click)="playSong(noizzito.cancion); $event.stopPropagation()">
                     <img [src]="noizzito.cancion.fotoPortada || 'default-image.png'" alt="{{ noizzito.cancion.nombre }}" class="cancion-imagen" />
-                    <p class="cancion-nombre">{{ noizzito.cancion.nombre}} - {{ noizzito.cancion.nombreArtisticoArtista }}</p>
+                    <div class="cancion-detalle">
+                      <p class="cancion-nombre">{{ noizzito.cancion.nombre}}</p>
+                      <p class="cancion-artista">{{ noizzito.cancion.nombreArtisticoArtista }}</p>
+                    </div>
                   </div>
               </div>
               <div class="noizzito-footer">
-                <button class="btn-like" (click)="darLike(noizzito.like, noizzito.id); $event.stopPropagation()">👍 {{ noizzito.num_likes }}</button>
-                <button class="btn-comment" (click)="abrirModalNoizzito(noizzito.id); $event.stopPropagation()">💬 {{ noizzito.num_comentarios }}</button>
+                <button class="btn-like" (click)="darLike(noizzito.like, noizzito.id); $event.stopPropagation()"><i [ngClass]="noizzito.like ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'"></i> {{ noizzito.num_likes }}</button>
+                <button class="btn-comment" (click)="abrirModalNoizzito(noizzito.id); $event.stopPropagation()"><i class="far fa-comments"></i> {{ noizzito.num_comentarios }}</button>
               </div>
           </div>
         </div>
     </div>
+  </div>
     <!-- aqui empieza el segundo popup con el prmero de Noizzito" -->
   <div *ngIf="isModalNoizzitoOpen" class="modal-overlay">
     <div class="modal-content">

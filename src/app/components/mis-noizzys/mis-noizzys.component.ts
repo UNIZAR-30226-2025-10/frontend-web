@@ -6,6 +6,7 @@ import { PlayerService } from '../../services/player.service';
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-mis-noizzys',
@@ -32,7 +33,7 @@ export class MisNoizzysComponent implements OnInit {
   noizzyContestado: any = '';
 
 
-  constructor(private authService: AuthService,private playerService: PlayerService) {}
+  constructor(private authService: AuthService,private playerService: PlayerService, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.cargarMisNoizzys();
@@ -213,6 +214,7 @@ export class MisNoizzysComponent implements OnInit {
     this.authService.borrarNoizzy(idNoizzy).subscribe({
       next: (response) => {
         this.cargarMisNoizzys(); 
+        this.notificationService.showSuccess('Noizzy eliminado');
       },
       error: (err) => {
         console.error('Error al eliminar el Noizzy:', err);

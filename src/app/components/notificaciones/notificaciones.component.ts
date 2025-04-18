@@ -245,7 +245,7 @@ export class NotificacionesComponent {
       .subscribe({
         next: (response) => {
           console.log('Respuesta completa:', response);   
-          this.interacciones = response || [];
+          this.interacciones = response.resultado || [];
         },
         error: (error) => {
           console.error("Error al obtener las interacciones:", error);
@@ -385,7 +385,7 @@ export class NotificacionesComponent {
   }
 
   irNoizzy(id: string) {
-    //this.router.navigate(['/home/noizzy', id]);
+    this.router.navigate(['/home/noizzitos', id]);
   }
 
   seguirUsuario(id:any) {

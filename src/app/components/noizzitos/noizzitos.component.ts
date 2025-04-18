@@ -8,6 +8,10 @@ import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NotificationService } from '../../services/notification.service';
+import { Location } from '@angular/common';
+import { SocketService } from '../../services/socket.service';
+
 
 @Component({
   selector: 'app-nizzitos',
@@ -34,7 +38,7 @@ export class NoizzitosComponent implements OnInit {
     user: any = null;
 
     private destroy$ = new Subject<void>();
-    constructor(private authService: AuthService, private tokenService: TokenService, private route: ActivatedRoute, private playerService: PlayerService) {}
+    constructor(private authService: AuthService, private tokenService: TokenService, private route: ActivatedRoute, private playerService: PlayerService,private notificationService: NotificationService,  private location: Location, private socketService: SocketService) {}
 
     ngOnInit(): void {
       this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
@@ -43,7 +47,13 @@ export class NoizzitosComponent implements OnInit {
         this.isModalNoizzitoOpen = false;
         this.isModalCancionOpen = false;
         this.cargarDatosNoizzy(); // Carga los datos del Noizzy
-      });;
+      });
+
+      // Respuesta o like a noizzy
+      this.socketService.listen('nueva-interaccion-ws').subscribe((data) => {
+        console.log('Nueva interaccion recibida:', data);
+        this.noizzitos.unshift(data);
+      });
     }
 
     ngOnDestroy(): void {
@@ -54,6 +64,7 @@ export class NoizzitosComponent implements OnInit {
     cargarDatosNoizzy() {
         this.authService.pedirDatosNoizzys(this.noizzyID).subscribe({
             next: (response) => {
+                console.log(response)
                 this.noizzy = response;
                 this.noizzitos = this.noizzy.noizzitos;
             },
@@ -202,10 +213,15 @@ export class NoizzitosComponent implements OnInit {
       this.playerService.setTrack(cancion); // Cambia la canción actual
     }
 
-    eraseNoizzy(idNoizzy: string): void {
+    eraseNoizzy(idNoizzy: string,volver:boolean): void {
       this.authService.borrarNoizzy(idNoizzy).subscribe({
         next: (response) => {
-          this.cargarDatosNoizzy(); 
+          this.notificationService.showSuccess('Noizzy eliminado');
+          if(volver){
+            this.location.back();
+          }else{
+            this.cargarDatosNoizzy(); 
+          }
         },
         error: (err) => {
           console.error('Error al eliminar el Noizzy:', err);

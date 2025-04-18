@@ -52,8 +52,8 @@ a {
 
 /* 🔹 Icono de usuario */
 .scrollable-section img {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     cursor: pointer;
     transition: transform 0.2s;
@@ -67,8 +67,8 @@ a {
     text-align: center;
     font-size: 14px;
     color: black;
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -95,9 +95,6 @@ a {
 }
 
 
-.scrollable-section img:hover {
-    transform: scale(1.05);
-}
 
 .main-content {
     transition: margin-left 0.3s ease-in-out;
@@ -106,6 +103,79 @@ a {
 .main-content.sidebar-open {
     margin-left: 150px; /* Ajusta según el ancho del sidebar */
 }
+
+.user-hover-container,
+.user-container {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    margin-bottom: 15px;
+}
+
+
+
+.user-image-wrapper {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+}
+
+.notification-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 15px;
+    height: 15px;
+    background-color: red;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.user-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    margin: 0; /* quitar márgenes para no romper el contenedor */
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* oscurecer */
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* no bloquea clics en la imagen */
+}
+
+.username {
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    padding: 4px;
+    font-weight: bold;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+.user-image-wrapper:hover .overlay {
+    opacity: 1;
+}
+
+.user-image-wrapper:hover {
+    transform: scale(1.05);
+  }
+
 
 @media (max-width: 768px) {
     .scrollable-section img {
@@ -124,7 +194,7 @@ a {
     height: 1px;
     background-color: #555;
     border-radius: 5px;
-    margin-top: 10px;
+    margin-top: 0px;
     margin-bottom: 20px;
 }
 

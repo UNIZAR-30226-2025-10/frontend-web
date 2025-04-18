@@ -32,11 +32,15 @@ export class NotificacionesService {
   private nuevaNovedadSource = new Subject<any>();
   private nuevoSeguidorSource = new Subject<any>();
 
+  private noizzyNuevoSource = new Subject<any>();
+
   // Observables para eventos en tiempo real
   nuevaInvitacion$ = this.nuevaInvitacionSource.asObservable();
   nuevaInteraccion$ = this.nuevaInteraccionSource.asObservable();
   nuevaNovedad$ = this.nuevaNovedadSource.asObservable();
   nuevoSeguidor$ = this.nuevoSeguidorSource.asObservable();
+
+  noizzyNuevo$ = this.noizzyNuevoSource.asObservable();
 
   // Notificaciones en tiempo real
   notificarNuevaInvitacion(invitacion: any) {
@@ -66,6 +70,11 @@ export class NotificacionesService {
     this.seguidoresSubject.next(true);
     this.actualizarNotificacionGlobal();
   }
+
+  emitirNuevoNoizzy(data: any) {
+    this.noizzyNuevoSource.next(data);
+  }
+
 
   // Marcar categorías como leídas
   setCategoriaLeida(categoria: 'interacciones' | 'novedades' | 'seguidores' | 'invitaciones') {
