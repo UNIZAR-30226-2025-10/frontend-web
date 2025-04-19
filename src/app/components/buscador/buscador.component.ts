@@ -230,7 +230,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
     .subscribe({
       next: (response) => {   
         this.tieneInvitaciones = response.invitaciones;
-        this.tieneNovedadesMusicales = response["novedades-musicales"];
+        this.tieneNovedadesMusicales = response.novedadesMusicales;
         this.tieneInteracciones = response.interacciones;
         this.tieneSeguidores = response.seguidores;
         
@@ -243,7 +243,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
         this.notificacionesService.actualizarNotificaciones(
           response.invitaciones,
-          response["novedades-musicales"],
+          response.novedadesMusicales,
           response.interacciones,
           response.seguidores
         );

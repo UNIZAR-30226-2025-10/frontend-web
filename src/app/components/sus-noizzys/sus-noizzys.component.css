@@ -123,6 +123,7 @@ input{
   font-size: 14px;
   color: var(--letra3);
   margin-bottom: 10px;
+  overflow: hidden;
 }
 
 .noizzy-footer {
@@ -353,6 +354,7 @@ textarea {
   border: 1.2px solid #D2D1D1;
   box-sizing: border-box;
   overflow: hidden;
+  max-width: 100%;
 }
 .cancion-info:hover {
   background-color: var(--hover);

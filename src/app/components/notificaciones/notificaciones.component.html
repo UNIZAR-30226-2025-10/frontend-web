@@ -68,6 +68,7 @@
             <div class="notificacion-acciones">
               <button class="btn-escuchar" (click)="verNovedades(novedad)">Escuchar</button>
             </div>
+            <button (click)="quitarNovedades(novedad)" class="btn-cerrar"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div *ngIf="nuevaMusica.length === 0" class="sin-notificaciones">
@@ -91,6 +92,7 @@
             <div class="notificacion-acciones">
               <button class="btn-ver" (click)="verInteraccion(interaccion.noizzy)">Ver</button>
             </div>
+            <button (click)="InteraccionesLeidas(interaccion.noizzy)" class="btn-cerrar"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div *ngIf="interacciones.length === 0" class="sin-notificaciones">
@@ -116,6 +118,7 @@
             <div class="notificacion-acciones">
               <button class="btn-ver-perfil" (click)="verSeguidor(seguidor)">Ver perfil</button>
             </div>
+            <button (click)="quitarNuevoSeguidor(seguidor.nombreUsuario)" class="btn-cerrar"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div *ngIf="nuevosSeguidores.length === 0" class="sin-notificaciones">

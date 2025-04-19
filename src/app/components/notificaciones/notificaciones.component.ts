@@ -187,6 +187,10 @@ export class NotificacionesComponent {
 
   verNovedades(novedad:any): void {
     this.irAlbum(novedad.id);
+    this.quitarNovedades(novedad);
+  }
+
+  quitarNovedades(novedad:any): void {
     if (novedad.tipo === 'cancion') {
       this.QuitarNovedadesCancion(novedad.id);
     } else if (novedad.tipo === 'album') {
