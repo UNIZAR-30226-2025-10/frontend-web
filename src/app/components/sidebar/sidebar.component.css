@@ -1,9 +1,9 @@
 .dentro-sidebar { 
     box-sizing: border-box;
-    display: flex; /* Asegura que el contenedor sea flexible */
-    flex-direction: column; /* Organiza los elementos en columna */
-    align-items: center; /* Centra los elementos horizontalmente */
-    justify-content: center; /* Centra los elementos verticalmente */  
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;   
     height: 100%;
 }
 
@@ -33,11 +33,10 @@ a {
     box-shadow: 0px 6px 6px -2px rgba(0, 0, 0, 0.2);
 }
 
-
 /* Sección con scroll */
 .scrollable-section {
-    flex-grow: 1; /* Permite que ocupe el espacio disponible */
-    overflow-y: auto; /* Permite scroll */
+    flex-grow: 1; 
+    overflow-y: auto; 
     display: flex;
     flex-direction: column;
     gap: 3px;
@@ -86,7 +85,7 @@ a {
     border-radius: 50%;
     cursor: pointer;
     margin-top: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 13px;
 }
 
 .user-me img:hover {
@@ -101,23 +100,24 @@ a {
 }
 
 .main-content.sidebar-open {
-    margin-left: 150px; /* Ajusta según el ancho del sidebar */
+    margin-left: 150px; 
 }
 
 .user-hover-container,
 .user-container {
     position: relative;
-    width: 90px;
-    height: 90px;
-    margin-bottom: 15px;
+    width: 80px;
+    height: 80px;
+    margin-top: 4px;
+    margin-bottom: 18px;
 }
 
 
 
 .user-image-wrapper {
     position: relative;
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
 }
 
@@ -133,13 +133,13 @@ a {
 }
 
 .user-image-wrapper img {
-    width: 100%;
-    height: 100%;
+    width: 80px;
+    height: 80px;
     object-fit: cover;
     display: block;
     border-radius: 50%;
     transition: transform 0.3s ease;
-    margin: 0; /* quitar márgenes para no romper el contenedor */
+    margin: 0;
 }
 
 .overlay {
@@ -148,14 +148,14 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* oscurecer */
+    background-color: rgba(0, 0, 0, 0.4); 
     opacity: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     transition: opacity 0.3s ease;
-    pointer-events: none; /* no bloquea clics en la imagen */
+    pointer-events: none; 
 }
 
 .username {

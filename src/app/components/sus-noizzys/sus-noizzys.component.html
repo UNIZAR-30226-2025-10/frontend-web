@@ -14,14 +14,11 @@
         <!-- Mostrar información de la canción si está asociada -->
         <div *ngIf="noizzy.cancion" class="cancion-info" (click)="playSong(noizzy.cancion); $event.stopPropagation()">
           <img [src]="noizzy.cancion.fotoPortada || 'default-image.png'" alt="{{ noizzy.cancion.nombre }}" class="cancion-imagen" />
-          <div class="cancion-detalle">
-            <p class="cancion-nombre">{{ noizzy.cancion.nombre}}</p>
-            <p class="cancion-artista">{{ noizzy.cancion.nombreArtisticoArtista }}</p>
-          </div>
+          <p class="cancion-nombre">{{ noizzy.cancion.nombre}} - {{ noizzy.cancion.nombreArtisticoArtista }}</p>
         </div>
       </div>
       <div class="noizzy-footer">
-        <button class="btn-like" (click)="darLike(noizzy.like, noizzy.id)"><i [ngClass]="noizzy.like ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'"></i> {{ noizzy.num_likes }}</button>
+        <button class="btn-like" (click)="darLike(noizzy.like, noizzy.id); $event.stopPropagation()"><i [ngClass]="noizzy.like ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'"></i> {{ noizzy.num_likes }}</button>
         <button class="btn-comment" (click)="abrirModalNoizzito(noizzy.id); $event.stopPropagation()"><i class="far fa-comment-dots"></i> {{ noizzy.num_comentarios }}</button>
       </div>
     </div>
