@@ -90,12 +90,12 @@ export class MiPerfilArtistaComponent implements OnInit {
     });
 
     forkJoin({
-      misCanciones: this.authService.pedirMisCancionesArtista(),
-      misAlbumes: this.authService.pedirMisAlbumesArtista(),
-      topArtistas: this.authService.pedirTopArtistas(),
+      misCanciones: this.authService.pedirMisCancionesArtistaLimitado(15),
+      misAlbumes: this.authService.pedirMisAlbumesArtistaLimitado(15),
+      topArtistas: this.authService.pedirTopArtistas(), 
       ultimasCanciones: this.authService.pedirHistorialCanciones(),
-      misPlaylists: this.authService.pedirMisPlaylists(),
-      seguidos: this.authService.pedirMisSeguidos()
+      misPlaylists: this.authService.pedirMisPlaylistsLimitado(15),
+      seguidos: this.authService.pedirMisSeguidos() //faltaria limitarlo
 
     }).subscribe({
       next: (response) => {   

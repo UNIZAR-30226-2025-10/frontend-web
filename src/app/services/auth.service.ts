@@ -10,7 +10,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class AuthService {
 
-  private apiUrl = 'https://api-noizz.onrender.com';
+  private apiUrl = 'http://localhost:5000';
 
   constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) {}
 
@@ -226,6 +226,22 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-historial-artistas`, { headers: headers } );
   }
 
+  pedirTopArtistasLimitado(limite: number): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-historial-artistas?limite=${limite}`, { headers: headers });
+  }
+
   pedirColeccionesRecientes(): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -258,6 +274,22 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-historial-canciones`, { headers: headers } );
   }
 
+  pedirHistorialCancionesLimitado(limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-historial-canciones?limite=${limite}`, { headers: headers } );
+  }
+
   pedirMisPlaylists(): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -272,6 +304,22 @@ export class AuthService {
     });
 
     return this.http.get(`${this.apiUrl}/get-mis-playlists`, { headers: headers } );
+  }
+
+  pedirMisPlaylistsLimitado(limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-mis-playlists?limite=${limite}`, { headers: headers } );
   }
 
   pedirRecomendaciones(): Observable<any> {
@@ -510,6 +558,22 @@ export class AuthService {
     });
 
     return this.http.get(`${this.apiUrl}/get-mis-albumes`, { headers: headers } );
+  }
+
+  pedirMisAlbumesArtistaLimitado(limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-mis-albumes?limite=${limite}`, { headers: headers } );
   }
 
   crearPlaylist(foto: File | string,nombre:string): Observable<any> {
@@ -816,6 +880,22 @@ export class AuthService {
       });
   
       return this.http.get(`${this.apiUrl}/get-mis-canciones`, { headers: headers } );
+    }
+
+    pedirMisCancionesArtistaLimitado(limite:number): Observable<any> {
+      const token = this.tokenService.getToken();
+  
+      if (!token) {
+        console.error('No se encontró el token');
+        return of({ error: 'No autorizado' });;
+      }
+  
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      });
+  
+      return this.http.get(`${this.apiUrl}/get-mis-canciones?limite=${limite}`, { headers: headers } );
     }
 
     pedirNotificaciones(): Observable<any> {
@@ -1289,6 +1369,23 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-seguidos?nombreUsuario=${nombreUsuario}`, { headers: headers } );
   }
 
+  pedirSeguidosOtroLimitado(nombreUsuario:any,limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+    
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-seguidos?nombreUsuario=${nombreUsuario}&limite=${limite}`, { headers: headers } );
+  }
+
   pedirSeguidoresOtro(nombreUsuario:any): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -1305,6 +1402,23 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-seguidores?nombreUsuario=${nombreUsuario}`, { headers: headers } );
   }
 
+  
+  pedirSeguidoresOtroLimitado(nombreUsuario:any,limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-seguidores?nombreUsuario=${nombreUsuario}&limite=${limite}`, { headers: headers } );
+  }
+
   pedirPlaylistsPublicasOtro(nombreUsuario:any): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -1319,6 +1433,23 @@ export class AuthService {
     });
 
     return this.http.get(`${this.apiUrl}/get-playlists?nombreUsuario=${nombreUsuario}`, { headers: headers } );
+  }
+
+  pedirPlaylistsPublicasOtroLimitado(nombreUsuario:any,limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/get-playlists?nombreUsuario=${nombreUsuario}&limite=${limite}`, { headers: headers } );
+    
   }
 
   crearAlbum(nombreAlbum: string, foto_url: string, notificar: boolean): Observable<any> {

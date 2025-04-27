@@ -31,7 +31,12 @@ import { SubirAlbumComponent } from './components/subir-album/subir-album.compon
 import { MisNoizzysComponent } from './components/mis-noizzys/mis-noizzys.component';
 import { SusNoizzysComponent } from './components/sus-noizzys/sus-noizzys.component';
 import { NoizzitosComponent } from './components/noizzitos/noizzitos.component';
-
+import { TopArtistasComponent } from './components/top-artistas/top-artistas.component';
+import { MisPlaylistComponent } from './components/mis-playlist/mis-playlist.component';
+import { HistorialCancionesComponent } from './components/historial-canciones/historial-canciones.component';
+import { PlaylistsPublicasComponent } from './components/playlists-publicas/playlists-publicas.component';  
+import { MisCancionesComponent } from './components/mis-canciones/mis-canciones.component';
+import { MisAlbumesComponent } from './components/mis-albumes/mis-albumes.component';
 
 
 export const routes: Routes = [
@@ -60,7 +65,9 @@ export const routes: Routes = [
       { path: 'playlist/:id', component: PlaylistComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'estadisticasCancion/:id', component: EstadisticasCancionComponent,  canActivate: [authGuard], data: { roles: 'artista' }},
       { path: 'estadisticasAlbum/:id', component: EstadisticasAlbumComponent,  canActivate: [authGuard], data: { roles: 'artista' }},
+      { path: 'seguidos/:nombreUsuario', component: SeguidosComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'seguidos', component: SeguidosComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'seguidores/:nombreUsuario', component: SeguidoresComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'seguidores', component: SeguidoresComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'subir-album', component: SubirAlbumComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'subir-cancion', component: SubirCancionComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
@@ -68,7 +75,13 @@ export const routes: Routes = [
       { path: 'mis-noizzys', component: MisNoizzysComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'noizzys/:nombreUsuario', component: SusNoizzysComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'cancionesFavs/:nombreUsuario', component: CancionesFavsComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
-      { path: 'noizzitos/:id', component: NoizzitosComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } }
+      { path: 'noizzitos/:id', component: NoizzitosComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'top-artistas', component: TopArtistasComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'mis-playlist', component: MisPlaylistComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'historial-canciones', component: HistorialCancionesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'playlists-publicas/:nombreUsuario', component: PlaylistsPublicasComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'mis-canciones', component: MisCancionesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'mis-albumes', component: MisAlbumesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
     ]
   }
 ];

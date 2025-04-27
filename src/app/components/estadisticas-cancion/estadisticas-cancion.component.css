@@ -275,6 +275,21 @@ h4 {
     background-color: #7587c8e0;
   }
 
+  a {
+    text-decoration: none;
+    color: inherit;
+    display: contents;
+  }
+  
+  a:focus,
+  a:active,
+  a:hover {
+    outline: none;
+    text-decoration: none;
+    color: inherit;
+  }
+
+
 
 
 
@@ -302,7 +317,6 @@ h4 {
     .btn-album {
         font-size: 13px;
     }
-
   }
 
   @media (max-width: 550px) {

@@ -1,0 +1,35 @@
+<div class="top-div">
+    <div class="column2">
+      <div class="header-content">
+        <h3>Playlists publicas de {{user}}</h3>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bottom-div">
+    <div *ngIf="Playlists!= null && Playlists.length > 0">
+      <div class="playlists">
+        <div *ngFor="let playlist of Playlists" class="playlistcard">
+          <a [routerLink]="['/home/playlist', playlist.id]">
+            <img 
+              class="playlist-img" 
+              [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" 
+              [alt]="playlist.nombre"
+            >
+            <strong>{{ playlist.nombre }}</strong>
+          </a>
+        </div>
+      </div>
+    </div>
+  
+    <div *ngIf="Playlists.length === 0">
+      <p style="margin-left: 3%;color:var(--letra)">No tiene ninguna playlist pública.</p>
+    </div>
+  </div>
+  
+      
+  
+    
+      
+  
+    

@@ -1,0 +1,28 @@
+<div class="top-div">
+    <div class="column2">
+      <div class="header-content">
+        <h3>Top artistas recientes</h3>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bottom-div">
+    <div *ngIf="ultimosArtistas!=null">
+      <div class="artistas">
+        <div *ngFor="let artista of ultimosArtistas" class="artistacard">
+          <a [routerLink]="['/home/artista', artista.nombreUsuario]">
+            <img class="artista-img" [src]="artista.fotoPerfil && artista.fotoPerfil !== 'DEFAULT' ? artista.fotoPerfil : 'nouser.png'" [alt]="artista.nombreArtistico">
+            <strong>{{ artista.nombreUsuario }}</strong>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="ultimosArtistas.length === 0">
+        <p style="margin-left: 3%;color:var(--letra)">Aún no has escuchado a ningun artista.</p>
+      </div>
+</div>
+  
+    
+
+  

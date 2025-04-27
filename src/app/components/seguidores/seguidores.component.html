@@ -3,7 +3,7 @@
       <div class="header-content">
         <h3>Seguidores</h3>
       </div>
-      <div class="filters">
+      <div class="filters" *ngIf="usuario == null">
         <span class="filter" [ngClass]="{'active': isActive('all')}" data-filter="all" (click)="filterFollows('all')">Todos</span>
         <span class="filter" [ngClass]="{'active': isActive('artists')}" data-filter="artists" (click)="filterFollows('artists')">Solo artistas</span>
       </div>

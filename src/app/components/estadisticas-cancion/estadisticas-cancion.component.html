@@ -70,12 +70,14 @@
             <div *ngIf="privadas != 0"> <p style="margin:0px; margin-left: 30px; font-size: 13px;">+ {{privadas}} {{ privadas === 1 ? ' playlist privada' : ' playlists privadas' }}</p></div>
             <div *ngIf="playlists.length > 0">
                 <div class="container">       
-                    <div *ngFor="let playlist of playlists; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                        <div class="dentro-card">
-                            <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
-                            <strong>{{ playlist.nombre }}</strong>
-                            <p style="margin:0px;">{{ playlist.creador }}</p>
-                        </div>  
+                    <div *ngFor="let playlist of playlists; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                        <a [routerLink]="['/home/playlist',playlist.id]">
+                            <div class="dentro-card">
+                                <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
+                                <strong>{{ playlist.nombre }}</strong>
+                                <p style="margin:0px;">{{ playlist.creador }}</p>
+                            </div> 
+                        </a> 
                     </div>
                 </div>
             </div>

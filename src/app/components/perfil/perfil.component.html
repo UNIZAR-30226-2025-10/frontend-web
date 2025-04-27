@@ -37,20 +37,26 @@
         </div>
 
         <div *ngIf="ultimoNoizzy.texto != ''">
-            <div class="noizzy">
-                <div class="perfilNoizzy">
-                    <img [src]="oyente.foto && oyente.foto!== 'DEFAULT' ? oyente.foto : 'nouser.png'" alt="Foto de perfil" class="logo">
-                </div>
-                <div class="textos">
-                    <p style="margin-bottom: 5px; color:#000e3b">{{ this.oyente.nombre}}</p>
-                    <p style="margin:0; word-wrap: break-word; overflow-wrap: break-word;">{{ultimoNoizzy.texto}}</p>
-                    <div class="btns-noizzy">
-                        <button class="btns" (click)="toggleLike()">
-                            <i [ngClass]="ultimoNoizzy.like ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'"></i>
-                        </button>
-                        <button class="btns">
-                            <i class="far fa-comments"></i>
-                        </button>
+            <div class="ultimoNoizzy">
+                <div class="noizzy-card" [routerLink]="['/home/noizzitos', ultimoNoizzy.id]">
+                    <div class="noizzy-header">
+                    <img [src]="oyente.foto && oyente.foto !== 'DEFAULT' ? oyente.foto : 'nouser.png'" alt="Avatar" class="avatar" />
+                    <span class="username" (click)="$event.stopPropagation()">{{ currentUser }}</span>
+                    </div>
+                    <div class="noizzy-content">
+                    <p>{{ ultimoNoizzy.texto }}</p>
+                    <!-- Mostrar información de la canción si está asociada -->
+                    <div *ngIf="ultimoNoizzy.cancion" class="cancion-info">
+                        <img [src]="ultimoNoizzy.cancion.fotoPortada || 'default-image.png'" alt="{{ ultimoNoizzy.cancion.nombre }}" class="cancion-imagen" />
+                        <div class="cancion-detalle">
+                        <p class="cancion-nombre">{{ ultimoNoizzy.cancion.nombre}}</p>
+                        <p class="cancion-artista">{{ ultimoNoizzy.cancion.nombreArtisticoArtista }}</p>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="noizzy-footer">
+                    <button class="btn-like"><i [ngClass]="ultimoNoizzy.like ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'"></i>  {{ ultimoNoizzy.num_likes }}</button>
+                    <button class="btn-comment" ><i class="far fa-comments"></i> {{ ultimoNoizzy.num_comentarios }}</button>
                     </div>
                 </div>
             </div>
@@ -59,8 +65,8 @@
         <div *ngIf="suNumeroPlaylistsPublicas > 0">
             <div class="titulo">
                 <h2 style="margin-bottom: 10px; margin-top: 25px;"><strong>Playlists públicas</strong></h2>
-                <a [routerLink]="['/misPlaylists']">
-                    <h4 style="margin-top: 25px; font-size: 13px;">Mostrar todas</h4>
+                <a [routerLink]="['/home/playlists-publicas', oyente.nombre]">
+                    <h4 class="linkMostrarMas" style="margin-top: 25px; font-size: 13px;">Mostrar todas</h4>
                 </a>
             </div>
 
@@ -79,15 +85,21 @@
         <div *ngIf="susSeguidores.length > 0">
             <div class="titulo">
                 <h2 style="margin-bottom: 10px; margin-top: 25px;"><strong>Seguidores</strong></h2>
-                <a [routerLink]="['/misSeguidos']">
-                    <h4 style="margin-top: 25px; font-size: 13px; margin-right: 15px;">Mostrar todos</h4>
+                <a [routerLink]="['/home/seguidores',currentUser]">
+                    <h4 class="linkMostrarMas" style="margin-top: 25px; font-size: 13px; margin-right: 15px;">Mostrar todos</h4>
                 </a>
             </div>
 
             <div class="container">       
-                <div *ngFor="let seguido of susSeguidores; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                    <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombreUsuario">
-                    <strong>{{ seguido.nombreUsuario }}</strong>
+                <div *ngFor="let seguido of susSeguidores; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">   
+                    <a *ngIf="seguido.tipo === 'artista'" [routerLink]="['/home/artista', seguido.nombreUsuario]">       
+                        <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombreUsuario">
+                        <strong>{{ seguido.nombreUsuario }}</strong>
+                    </a>
+                    <a *ngIf="seguido.tipo === 'oyente'"  (click)="navigateToProfile(seguido.nombreUsuario)">       
+                        <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombreUsuario">
+                        <strong>{{ seguido.nombreUsuario }}</strong>
+                    </a>
                 </div>
             </div>
         </div>
@@ -95,15 +107,21 @@
         <div *ngIf="susSeguidos.length > 0">
             <div class="titulo">
                 <h2 style="margin-bottom: 10px; margin-top: 25px;"><strong>Seguidos</strong></h2>
-                <a [routerLink]="['/misSeguidos']">
-                    <h4 style="margin-top: 25px; font-size: 13px; margin-right: 15px;">Mostrar todos</h4>
+                <a [routerLink]="['/home/seguidos',currentUser]">
+                    <h4 class="linkMostrarMas" style="margin-top: 25px; font-size: 13px; margin-right: 15px;">Mostrar todos</h4>
                 </a>
             </div>
 
             <div class="container">       
-                <div *ngFor="let seguido of susSeguidos; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                    <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombreUsuario">
-                    <strong>{{ seguido.nombreUsuario }}</strong>
+                <div *ngFor="let seguido of susSeguidos; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">
+                    <a *ngIf="seguido.tipo === 'artista'" [routerLink]="['/home/artista', seguido.nombreUsuario]">               
+                        <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombreUsuario">
+                        <strong>{{ seguido.nombreUsuario }}</strong>
+                    </a>
+                    <a *ngIf="seguido.tipo === 'oyente'"  (click)="navigateToProfile(seguido.nombreUsuario)">       
+                        <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombreUsuario">
+                        <strong>{{ seguido.nombreUsuario }}</strong>
+                    </a>
                 </div>
             </div>
         </div>

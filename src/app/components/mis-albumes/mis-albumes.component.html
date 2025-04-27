@@ -1,0 +1,24 @@
+<div class="top-div">
+  <div class="column2">
+    <div class="header-content">
+      <h3>Mis álbumes</h3>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-div">
+<div *ngIf="misAlbumes != null && misAlbumes.length > 0">
+  <div class="albumes">
+    <div *ngFor="let album of misAlbumes" class="albumcard" [routerLink]="['/home/estadisticasAlbum', album.id]">
+      <img [src]="album.fotoPortada && album.fotoPortada !== 'DEFAULT' ? album.fotoPortada  : 'nouser.png'" [alt]="album.nombre"  class="album-img">
+      <div class="album-info">
+        <strong>{{ album.nombre }}</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="misAlbumes.length === 0">
+  <p style="margin-left: 3%;color:var(--letra)">No tienes ningún álbum.</p>
+</div>
+</div>

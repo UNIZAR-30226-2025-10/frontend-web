@@ -86,9 +86,9 @@ export class MiPerfilOyenteComponent implements OnInit {
     });
 
     forkJoin({
-      ultimosArtistas: this.authService.pedirTopArtistas(),
-      misPlaylists: this.authService.pedirMisPlaylists(),
-      ultimasCanciones: this.authService.pedirHistorialCanciones(),
+      ultimosArtistas: this.authService.pedirTopArtistasLimitado(15),
+      misPlaylists: this.authService.pedirMisPlaylistsLimitado(15),
+      ultimasCanciones: this.authService.pedirHistorialCancionesLimitado(15),
       seguidos: this.authService.pedirMisSeguidos()
     }).subscribe({
       next: (response) => {   
@@ -96,7 +96,6 @@ export class MiPerfilOyenteComponent implements OnInit {
         this.ultimasCanciones = response.ultimasCanciones.historial_canciones;
         this.misPlaylists = response.misPlaylists.playlists;
         
-
       },
       error: (error) => {
         console.error('Error en alguna de las peticiones:', error);

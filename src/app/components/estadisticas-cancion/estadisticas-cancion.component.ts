@@ -4,13 +4,14 @@ import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { NotificationService } from '../../services/notification.service';
+import { RouterModule } from '@angular/router';
 
 
 
 
 @Component({
   selector: 'app-estadisticas-cancion',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './estadisticas-cancion.component.html',
   styleUrl: './estadisticas-cancion.component.css'
 })

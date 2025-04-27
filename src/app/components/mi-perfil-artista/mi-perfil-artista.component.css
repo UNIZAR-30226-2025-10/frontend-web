@@ -1,5 +1,4 @@
 
-  /* Div superior que es fijo */
   .top-div {
     height: auto;
     background-color: var(--cabecera); /* Fondo de ejemplo */
@@ -10,6 +9,15 @@
     display: grid;
     grid-template-columns: 1fr 4fr 2fr; /* Divide en 3 columnas de igual tamaño */
     padding: 12px 8px;
+  }
+
+  .linkMostrarMas {
+    text-decoration: none;
+  }
+  
+  .linkMostrarMas:hover {
+    text-decoration: underline;
+    color: var(--letra);
   }
 
   .column1 {

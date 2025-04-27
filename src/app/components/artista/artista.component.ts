@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FavoritosService } from '../../services/favoritos.service';
 import { NotificationService } from '../../services/notification.service';
+import { PlayerService } from '../../services/player.service';
 
 
 interface datosArtista {
@@ -68,7 +69,7 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
   dropdownTopPosition: number = 0; 
   dropdownLeftPosition: number = 0;
 
-  constructor(private tokenService: TokenService, private router: Router, private authService: AuthService, private route: ActivatedRoute, private favoritosService: FavoritosService,private notificationService: NotificationService) {}
+  constructor(private playerService: PlayerService,private tokenService: TokenService, private router: Router, private authService: AuthService, private route: ActivatedRoute, private favoritosService: FavoritosService,private notificationService: NotificationService) {}
 
   ngOnInit() {
 
@@ -346,6 +347,10 @@ toggleFav(id: any) {
     const rect = button.getBoundingClientRect();  // Obtiene la posición del botón
     this.dropdownTopPosition = rect.bottom + window.scrollY + 185;  // Calcula la posición top
     this.dropdownLeftPosition = rect.left + window.scrollX -105;  // Calcula la posición left
+  }
+
+  onTrackClick(track: any) {
+    this.playerService.setTrack(track);
   }
 
 }

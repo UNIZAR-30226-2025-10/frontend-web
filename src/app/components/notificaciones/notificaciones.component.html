@@ -105,7 +105,7 @@
         <div *ngIf="nuevosSeguidores.length > 0" class="notificaciones-lista">
           <div *ngFor="let seguidor of nuevosSeguidores" class="notificacion-item">
             <div class="notificacion-imagen">
-              <img [src]="seguidor.fotoUsuario || 'nouser.png'" alt="Avatar de usuario" class="playlist-cover">
+              <img [src]="seguidor.fotoUsuario || 'nouser.png'" alt="Avatar de usuario" class="playlist-cover" style="border-radius: 50%;">
             </div>
             <div class="notificacion-contenido">
               <p style="font-weight:bold;margin-top:7px;margin-bottom: 10px;font-size:18px;">

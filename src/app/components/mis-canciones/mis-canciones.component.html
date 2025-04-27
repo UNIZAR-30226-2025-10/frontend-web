@@ -1,0 +1,38 @@
+<div class="top-div">
+    <div class="column2">
+      <div class="header-content">
+        <h3>Mis canciones</h3>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bottom-div">
+    <div *ngIf="misCanciones!= null && misCanciones.length > 0">
+      <div class="canciones">
+        <div *ngFor="let cancion of misCanciones" class="cancioncard" [routerLink]="['/home/estadisticasCancion', cancion.id]" >
+          <img 
+            class="cancion-img" 
+            [src]="cancion.fotoPortada" 
+            [alt]="cancion.nombre"
+          >
+          <div class="cancion-info">
+            <strong>{{ cancion.nombre }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div *ngIf="misCanciones.length === 0">
+        <p style="margin-left: 3%;color:var(--letra)">No tienes ninguna canción.</p>
+      </div>
+  </div>
+  
+
+
+  
+      
+  
+    
+      
+  
+    
