@@ -1,0 +1,28 @@
+<div class="top-div">
+    <div class="column2">
+      <div class="header-content">
+        <h3>Usuarios que le han dado me gusta a tu canción</h3>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bottom-div">
+    <div *ngIf="usuarios!=null">
+      <div class="usuarios">
+        <div *ngFor="let usuario of usuarios" class="usuariocard">
+          <a [routerLink]="['/home/perfil', usuario.nombreUsuario]">
+            <img [src]="usuario.fotoPerfil && usuario.fotoPerfil !== 'DEFAULT' ? usuario.fotoPerfil  : 'nouser.png'" [alt]="usuario.nombreUsuario" class="usuario-img">
+            <strong>{{ usuario.nombreUsuario }}</strong>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="usuarios.length === 0">
+        <p style="margin-left: 3%;color:var(--letra)">Ningún usuario le ha dado me gusta a tu canción</p>
+      </div>
+</div>
+  
+    
+
+  

@@ -172,7 +172,7 @@
     <div *ngIf="topArtistas.length > 0">
         <div class="titulo">
             <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Top artistas recientes</strong></h2>
-            <a [routerLink]="['/topArtistas']">
+            <a [routerLink]="['/home/top-artistas']">
                 <h4 class="linkMostrarMas" style="margin-top: 18px; font-size: 13px; margin-right: 15px;">Mostrar todos</h4>
             </a>
         </div>
@@ -191,7 +191,7 @@
     <div *ngIf="ultimasCanciones.length > 0">
         <div class="titulo">
             <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Historial de canciones</strong></h2>
-            <a [routerLink]="['/historialCanciones']">
+            <a [routerLink]="['/home/historial-canciones']">
                 <h4 class="linkMostrarMas" style="margin-top: 18px; font-size: 13px; margin-right: 15px;">Mostrar todas</h4>
             </a>
         </div>
@@ -222,29 +222,6 @@
                     <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
                     <strong>{{ playlist.nombre }}</strong>
                 </div>          
-            </div>
-        </div>
-    </div>
-
-    <!--MIS SEGUIDOS-->
-    <div *ngIf="seguidos.length > 0">
-        <div class="titulo">
-            <h2 style="margin-bottom: 10px; margin-top: 20px;"><strong>Mis seguidos</strong></h2>
-            <a [routerLink]="['/home/seguidos']">
-                <h4 class="linkMostrarMas" style="margin-top: 18px; font-size: 13px; margin-right: 15px;">Mostrar todos</h4>
-            </a>
-        </div>
-
-        <div class="container">       
-            <div *ngFor="let seguido of seguidos; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
-                <a *ngIf="seguido.tipo === 'oyente'" [routerLink]="['/home/perfil', seguido.nombreUsuario]"> 
-                    <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombre">
-                    <strong>{{ seguido.nombreUsuario }}</strong>
-                </a>
-                <a *ngIf="seguido.tipo === 'artista'" [routerLink]="['/home/artista', seguido.nombreUsuario]"> 
-                    <img [src]="seguido.fotoPerfil && seguido.fotoPerfil !== 'DEFAULT' ? seguido.fotoPerfil  : 'nouser.png'" [alt]="seguido.nombre">
-                    <strong>{{ seguido.nombreUsuario }}</strong>
-                </a>
             </div>
         </div>
     </div>

@@ -48,7 +48,6 @@ export class HistorialCancionesComponent {
   }
 
   onTrackClick(track: any) {
-    // En lugar de emitir el evento, llamamos al servicio para actualizar el track
     this.playerService.setTrack(track);
   }
 

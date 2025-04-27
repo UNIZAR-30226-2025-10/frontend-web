@@ -9,13 +9,13 @@ import { ActivatedRoute } from '@angular/router';
 import { TokenService } from '../../services/token.service';
 
 @Component({
-  selector: 'app-playlists-con-cancion',
+  selector: 'app-usuarios-likes-album',
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './playlists-con-cancion.component.html',
-  styleUrl: './playlists-con-cancion.component.css'
+  templateUrl: './usuarios-likes-album.component.html',
+  styleUrl: './usuarios-likes-album.component.css'
 })
-export class PlaylistsConCancionComponent {
-  Playlists: any[] = [];
+export class UsuariosLikesAlbumComponent {
+  usuarios: any[] = [];
   cancion: string = '';
 
   constructor(private route: ActivatedRoute, private authService: AuthService,private tokenService: TokenService,private router: Router,private notificationService: NotificationService){}
@@ -25,17 +25,17 @@ export class PlaylistsConCancionComponent {
     if (id) {
       this.cancion = id;
     }
-    this.pedirPlaylists();
+    this.pedirUsuarios();
   }
 
-  pedirPlaylists(): void {
-    this.authService.pedirPlaylistsContienenCancion(this.cancion)
+  pedirUsuarios(): void {
+    this.authService.pedirMeGustasAlbum(this.cancion)
       .subscribe({
         next: (response) => {
-          this.Playlists = response.playlists_publicas;
+          this.usuarios = response.oyentes_favs;
         },
         error: (error) => {
-          console.error("Error al obtener las playlists:", error);
+          console.error("Error al recibir los perfiles que han dado me gusta al album:", error);
           // No esta logeado
           if (error.status === 401) {
             this.tokenService.clearStorage();

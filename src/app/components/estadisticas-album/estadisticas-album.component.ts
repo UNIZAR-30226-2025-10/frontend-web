@@ -9,6 +9,7 @@ import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router'; 
 import { NotificationService } from '../../services/notification.service';
+import { RouterModule } from '@angular/router';
 
 interface Album {
   nombre: string;
@@ -36,7 +37,7 @@ interface Cancion {
 
 @Component({
   selector: 'app-estadisticas-album',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RouterModule],
   templateUrl: './estadisticas-album.component.html',
   styleUrl: './estadisticas-album.component.css'
 })
@@ -259,7 +260,7 @@ export class EstadisticasAlbumComponent implements OnInit, AfterViewChecked {
 
   abrirMeGustas() {
     if (this.usuarios.length === 0) {
-      this.authService.pedirMeGustasAlbum(this.currentIdAlbum)
+      this.authService.pedirMeGustasAlbumLimitado(this.currentIdAlbum,15)
       .subscribe({
         next: (response) => { 
           this.usuarios = response.oyentes_favs;

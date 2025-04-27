@@ -9,14 +9,6 @@
     font-family: 'Poppins', sans-serif;
     color: var(--letra);
   }
-
-  strong {
-    width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-align: left;
-  }
   
   .header-content {
     display: flex;
@@ -32,7 +24,7 @@
     padding: 0 0 20px 0;
   }
   
-  .playlists {
+  .usuarios {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -43,7 +35,7 @@
     padding: 0 35px;
   }
   
-  .playlistcard {
+  .usuariocard {
     color: var(--letra);
     display: flex;
     flex-direction: column;
@@ -55,14 +47,14 @@
     transition: background-color 0.3s ease;
   }
   
-  .playlistcard:hover {
+  .usuariocard:hover {
     background-color: var(--hover);
   }
   
-  .playlist-img {
+  .usuario-img {
     height: 100px;
     width: 100px;
-    border-radius: 8px;
+    border-radius: 50%;
     margin: 10px 0;
     object-fit: cover;
   }

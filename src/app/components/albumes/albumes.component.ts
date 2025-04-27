@@ -9,33 +9,34 @@ import { ActivatedRoute } from '@angular/router';
 import { TokenService } from '../../services/token.service';
 
 @Component({
-  selector: 'app-playlists-con-cancion',
+  selector: 'app-albumes',
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './playlists-con-cancion.component.html',
-  styleUrl: './playlists-con-cancion.component.css'
+  templateUrl: './albumes.component.html',
+  styleUrl: './albumes.component.css'
 })
-export class PlaylistsConCancionComponent {
-  Playlists: any[] = [];
-  cancion: string = '';
+export class AlbumesComponent {
+
+  albumes: any[] = [];
+  artista: string = '';
 
   constructor(private route: ActivatedRoute, private authService: AuthService,private tokenService: TokenService,private router: Router,private notificationService: NotificationService){}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id'); 
-    if (id) {
-      this.cancion = id;
+    const nombreUsuario = this.route.snapshot.paramMap.get('nombreUsuario'); 
+    if (nombreUsuario) {
+      this.artista = nombreUsuario;
     }
-    this.pedirPlaylists();
+    this.pedirAlbumes();
   }
 
-  pedirPlaylists(): void {
-    this.authService.pedirPlaylistsContienenCancion(this.cancion)
+  pedirAlbumes(): void {
+    this.authService.pedirAlbumesOtroArtista(this.artista)
       .subscribe({
         next: (response) => {
-          this.Playlists = response.playlists_publicas;
+          this.albumes = response.albumes;
         },
         error: (error) => {
-          console.error("Error al obtener las playlists:", error);
+          console.error("Error al obtener los albumes del artista:", error);
           // No esta logeado
           if (error.status === 401) {
             this.tokenService.clearStorage();
@@ -49,4 +50,5 @@ export class PlaylistsConCancionComponent {
         }
       });
   }
+
 }

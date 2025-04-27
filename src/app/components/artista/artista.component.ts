@@ -112,8 +112,8 @@ export class ArtistaComponent implements OnInit, AfterViewInit {
     });
 
     forkJoin({
-      albumes: this.authService.pedirAlbumesOtroArtista(this.currentUser),
-      canciones: this.authService.pedirCancionesOtroArtista(this.currentUser),
+      albumes: this.authService.pedirAlbumesOtroArtistaLimitado(this.currentUser,15),
+      canciones: this.authService.pedirCancionesOtroArtistaLimitado(this.currentUser,15),
       cancionesPopulares: this.authService.pedirCancionesPopularesOtroArtista(this.currentUser),
       numeroFavs: this.authService.pedirNumeroCancionesFavsArtista(this.currentUser)
 
@@ -351,6 +351,13 @@ toggleFav(id: any) {
 
   onTrackClick(track: any) {
     this.playerService.setTrack(track);
+  }
+
+  mostrarMasCanciones() { 
+    this.router.navigate(['/home/canciones', this.currentUser]);
+  }
+  mostrarMasDiscos() { 
+    this.router.navigate(['/home/albumes', this.currentUser]);
   }
 
 }

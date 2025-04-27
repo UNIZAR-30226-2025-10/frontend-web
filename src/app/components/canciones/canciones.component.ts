@@ -7,35 +7,37 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { TokenService } from '../../services/token.service';
+import { PlayerService } from '../../services/player.service';
 
 @Component({
-  selector: 'app-playlists-con-cancion',
+  selector: 'app-canciones',
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './playlists-con-cancion.component.html',
-  styleUrl: './playlists-con-cancion.component.css'
+  templateUrl: './canciones.component.html',
+  styleUrl: './canciones.component.css'
 })
-export class PlaylistsConCancionComponent {
-  Playlists: any[] = [];
-  cancion: string = '';
+export class CancionesComponent {
 
-  constructor(private route: ActivatedRoute, private authService: AuthService,private tokenService: TokenService,private router: Router,private notificationService: NotificationService){}
+  canciones: any[] = [];
+  artista: string = '';
+
+  constructor(private route: ActivatedRoute, private playerService: PlayerService, private authService: AuthService,private tokenService: TokenService,private router: Router,private notificationService: NotificationService){}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id'); 
-    if (id) {
-      this.cancion = id;
+    const nombreUsuario = this.route.snapshot.paramMap.get('nombreUsuario'); 
+    if (nombreUsuario) {
+      this.artista = nombreUsuario;
     }
-    this.pedirPlaylists();
+    this.pedirCanciones();
   }
 
-  pedirPlaylists(): void {
-    this.authService.pedirPlaylistsContienenCancion(this.cancion)
+  pedirCanciones(): void {
+    this.authService.pedirCancionesOtroArtista(this.artista)
       .subscribe({
         next: (response) => {
-          this.Playlists = response.playlists_publicas;
+          this.canciones = response.canciones;
         },
         error: (error) => {
-          console.error("Error al obtener las playlists:", error);
+          console.error("Error al obtener las canciones del artista:", error);
           // No esta logeado
           if (error.status === 401) {
             this.tokenService.clearStorage();
@@ -49,4 +51,9 @@ export class PlaylistsConCancionComponent {
         }
       });
   }
+
+  onTrackClick(track: any) {
+    this.playerService.setTrack(track);
+  }
+
 }

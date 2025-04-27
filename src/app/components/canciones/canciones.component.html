@@ -1,0 +1,38 @@
+<div class="top-div">
+    <div class="column2">
+      <div class="header-content">
+        <h3>Canciones de {{artista}}</h3>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bottom-div">
+    <div *ngIf="canciones!= null && canciones.length > 0">
+      <div class="canciones">
+        <div *ngFor="let cancion of canciones" class="cancioncard" (click)="onTrackClick(cancion)">
+          <img 
+            class="cancion-img" 
+            [src]="cancion.fotoPortada" 
+            [alt]="cancion.nombre"
+          >
+          <div class="cancion-info">
+            <strong>{{ cancion.nombre }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div *ngIf="canciones.length === 0">
+        <p style="margin-left: 3%;color:var(--letra)">Este artista no tiene ninguna canción.</p>
+      </div>
+  </div>
+  
+
+
+  
+      
+  
+    
+      
+  
+    

@@ -63,13 +63,13 @@
                 <div *ngIf="verMeGustas"><button class="btn-detalles" (click)="cerrarMeGustas()">Ocultar</button></div>
             </div>
             <div class="mostrar" *ngIf="verMeGustas">
-                <button class="btn-detalles">Mostrar todos</button>
+                <button class="btn-detalles" [routerLink]="['/home/usuarios-likes-album', currentIdAlbum]">Mostrar todos</button>
             </div>
         </div>
         <div *ngIf="verMeGustas">
             <div *ngIf="usuarios.length > 0">
                 <div class="container">       
-                    <div *ngFor="let usuario of usuarios; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                    <div *ngFor="let usuario of usuarios; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }" [routerLink]="['/home/perfil', usuario.nombreUsuario]">          
                         <img [src]="usuario.fotoPerfil && usuario.fotoPerfil !== 'DEFAULT' ? usuario.fotoPerfil  : 'nouser.png'" [alt]="usuario.nombreUsuario">
                         <strong>{{ usuario.nombreUsuario }}</strong>
                     </div>

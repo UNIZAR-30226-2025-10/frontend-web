@@ -9,14 +9,6 @@
     font-family: 'Poppins', sans-serif;
     color: var(--letra);
   }
-
-  strong {
-    width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-align: left;
-  }
   
   .header-content {
     display: flex;
@@ -32,7 +24,7 @@
     padding: 0 0 20px 0;
   }
   
-  .playlists {
+  .canciones {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -43,30 +35,52 @@
     padding: 0 35px;
   }
   
-  .playlistcard {
+  .cancioncard {
     color: var(--letra);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5px 20px;
+    text-align: center;
+    padding: 10px;
     border-radius: 12px;
     width: 150px;
     min-width: 140px;
     transition: background-color 0.3s ease;
-  }
-  
-  .playlistcard:hover {
+    }
+
+    .cancioncard:hover {
     background-color: var(--hover);
-  }
+    }
   
-  .playlist-img {
+
+  .cancion-img {
     height: 100px;
     width: 100px;
     border-radius: 8px;
     margin: 10px 0;
     object-fit: cover;
   }
+
   
+  .cancion-info {
+    display: flex;
+    width: 105px;
+    flex-direction: column;
+    align-items:flex-start;
+    justify-content: flex-start;
+    flex-grow: 1; 
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  
+  .cancion-info strong,
+  .cancion-info p {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+  }
   a {
     text-decoration: none;
     color: inherit;

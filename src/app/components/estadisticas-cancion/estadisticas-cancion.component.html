@@ -42,13 +42,13 @@
                 <div *ngIf="verMeGustas"><button class="btn-detalles" (click)="cerrarMeGustas()">Ocultar</button></div>
             </div>
             <div class="mostrar" *ngIf="verMeGustas">
-                <button class="btn-detalles" style="margin:0px;">Mostrar todos</button>
+                <button class="btn-detalles" style="margin:0px;" [routerLink]="['/home/usuarios-likes', currentIdCancion]">Mostrar todos</button>
             </div>
         </div>
         <div *ngIf="verMeGustas">
             <div *ngIf="usuarios.length > 0">
                 <div class="container">       
-                    <div *ngFor="let usuario of usuarios; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
+                    <div *ngFor="let usuario of usuarios; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }" [routerLink]="['/home/perfil', usuario.nombreUsuario]" >          
                         <img [src]="usuario.fotoPerfil && usuario.fotoPerfil !== 'DEFAULT' ? usuario.fotoPerfil  : 'nouser.png'" [alt]="usuario.nombreUsuario">
                         <strong>{{ usuario.nombreUsuario }}</strong>
                     </div>
@@ -63,7 +63,7 @@
                 <div *ngIf="verPlaylists"><button class="btn-detalles" (click)="cerrarPlaylists()">Ocultar</button></div>
             </div>
             <div class="mostrar" *ngIf="verPlaylists">
-                <button class="btn-detalles" style="margin:0px;">Mostrar todas</button>
+                <button class="btn-detalles" style="margin:0px;" [routerLink]="['/home/playlists-con-cancion', currentIdCancion]" >Mostrar todas</button>
             </div>
         </div>
         <div *ngIf="verPlaylists">

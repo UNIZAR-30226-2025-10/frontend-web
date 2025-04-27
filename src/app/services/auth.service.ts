@@ -786,6 +786,22 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-albumes?nombreUsuario=${nombreUsuario}`, { headers: headers });
   }
 
+  pedirAlbumesOtroArtistaLimitado(nombreUsuario:any,limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(`${this.apiUrl}/get-albumes?nombreUsuario=${nombreUsuario}&limite=${limite}`, { headers: headers });
+  }
+
   pedirCancionesOtroArtista(nombreUsuario:any): Observable<any> {
     const token = this.tokenService.getToken();
   
@@ -800,6 +816,22 @@ export class AuthService {
     });
 
     return this.http.get(`${this.apiUrl}/get-canciones?nombreUsuario=${nombreUsuario}`, { headers: headers });
+  }
+
+  pedirCancionesOtroArtistaLimitado(nombreUsuario:any, limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(`${this.apiUrl}/get-canciones?nombreUsuario=${nombreUsuario}&limite=${limite}`, { headers: headers });
   }
 
   pedirCancionesPopularesOtroArtista(nombreUsuario:any): Observable<any> {
@@ -1238,6 +1270,23 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/get-estadisticas-favs?id=${id}`, { headers: headers });
   }
 
+  
+  pedirMeGustasCancionLimitado(id: any,limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(`${this.apiUrl}/get-estadisticas-favs?id=${id}&limite=${limite}`, { headers: headers });
+  }
+
   pedirPlaylistsContienenCancion(id: any): Observable<any> {
     const token = this.tokenService.getToken();
   
@@ -1252,6 +1301,22 @@ export class AuthService {
     });
 
     return this.http.get(`${this.apiUrl}/get-estadisticas-playlists?id=${id}`, { headers: headers });
+  }
+
+  pedirPlaylistsContienenCancionLimitado(id: any,limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(`${this.apiUrl}/get-estadisticas-playlists?id=${id}&limite=${limite}`, { headers: headers });
   }
 
   incrementarReproduccionesCancion(): Observable<any> {
@@ -1350,6 +1415,22 @@ export class AuthService {
     });
 
     return this.http.get(`${this.apiUrl}/get-estadisticas-album-favs?id=${id}`, { headers: headers });
+  }
+
+  pedirMeGustasAlbumLimitado(id:any,limite:number): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(`${this.apiUrl}/get-estadisticas-album-favs?id=${id}&limite=${limite}`, { headers: headers });
   }
 
   pedirSeguidosOtro(nombreUsuario:any): Observable<any> {

@@ -39,7 +39,6 @@ export class MiPerfilArtistaComponent implements OnInit {
   topArtistas: any[] = [];
   ultimasCanciones: any[] = [];
   misPlaylists: any[] = [];
-  seguidos: any[] = [];
 
   mensajeError = '';
   credentials= {contrasenya:''};
@@ -92,11 +91,9 @@ export class MiPerfilArtistaComponent implements OnInit {
     forkJoin({
       misCanciones: this.authService.pedirMisCancionesArtistaLimitado(15),
       misAlbumes: this.authService.pedirMisAlbumesArtistaLimitado(15),
-      topArtistas: this.authService.pedirTopArtistas(), 
-      ultimasCanciones: this.authService.pedirHistorialCanciones(),
+      topArtistas: this.authService.pedirTopArtistasLimitado(15), 
+      ultimasCanciones: this.authService.pedirHistorialCancionesLimitado(15),
       misPlaylists: this.authService.pedirMisPlaylistsLimitado(15),
-      seguidos: this.authService.pedirMisSeguidos() //faltaria limitarlo
-
     }).subscribe({
       next: (response) => {   
         this.misCanciones = response.misCanciones.canciones;
@@ -104,8 +101,7 @@ export class MiPerfilArtistaComponent implements OnInit {
         this.topArtistas = response.topArtistas.historial_artistas;
         this.ultimasCanciones = response.ultimasCanciones.historial_canciones;
         this.misPlaylists = response.misPlaylists.playlists;
-        this.seguidos = response.seguidos.seguidos;
-        console.log(this.topArtistas);
+        console.log('todo',response);
       },
       error: (error) => {
         console.error('Error en alguna de las peticiones:', error);

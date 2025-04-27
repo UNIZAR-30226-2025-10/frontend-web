@@ -121,6 +121,7 @@
     padding: 15px;
     margin-bottom: 15px;
     background-color: var(--dropdown);
+    cursor: pointer;
   }
   
   .noizzy-header {
@@ -166,10 +167,6 @@
     cursor: pointer;
   }
   
-  .btn-like:hover,
-  .btn-comment:hover {
-    background-color: var(--hover);
-  }
 
   .textos {
     max-width: 100%;

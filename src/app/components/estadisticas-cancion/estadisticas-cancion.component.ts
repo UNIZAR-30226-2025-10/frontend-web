@@ -85,7 +85,7 @@ export class EstadisticasCancionComponent implements OnInit{
 
   abrirMeGustas() {
     if (this.usuarios.length === 0) {
-      this.authService.pedirMeGustasCancion(this.currentIdCancion)
+      this.authService.pedirMeGustasCancionLimitado(this.currentIdCancion,15)
       .subscribe({
         next: (response) => { 
           this.usuarios = response.oyentes_favs;
@@ -117,7 +117,7 @@ export class EstadisticasCancionComponent implements OnInit{
 
   abrirPlaylists() {
     if (this.playlists.length === 0) {
-      this.authService.pedirPlaylistsContienenCancion(this.currentIdCancion)
+      this.authService.pedirPlaylistsContienenCancionLimitado(this.currentIdCancion,15)
       .subscribe({
         next: (response) => { 
           this.playlists = response.playlists_publicas;

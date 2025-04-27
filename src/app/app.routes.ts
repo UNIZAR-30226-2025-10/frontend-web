@@ -37,6 +37,11 @@ import { HistorialCancionesComponent } from './components/historial-canciones/hi
 import { PlaylistsPublicasComponent } from './components/playlists-publicas/playlists-publicas.component';  
 import { MisCancionesComponent } from './components/mis-canciones/mis-canciones.component';
 import { MisAlbumesComponent } from './components/mis-albumes/mis-albumes.component';
+import { PlaylistsConCancionComponent } from './components/playlists-con-cancion/playlists-con-cancion.component';
+import { UsuariosLikesAlbumComponent } from './components/usuarios-likes-album/usuarios-likes-album.component';
+import { UsuariosLikesComponent } from './components/usuarios-likes/usuarios-likes.component';
+import { CancionesComponent } from './components/canciones/canciones.component';
+import { AlbumesComponent } from './components/albumes/albumes.component';
 
 
 export const routes: Routes = [
@@ -82,6 +87,11 @@ export const routes: Routes = [
       { path: 'playlists-publicas/:nombreUsuario', component: PlaylistsPublicasComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'mis-canciones', component: MisCancionesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
       { path: 'mis-albumes', component: MisAlbumesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'playlists-con-cancion/:id', component: PlaylistsConCancionComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'usuarios-likes-album/:id', component: UsuariosLikesAlbumComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'usuarios-likes/:id', component: UsuariosLikesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'canciones/:nombreUsuario', component: CancionesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
+      { path: 'albumes/:nombreUsuario', component: AlbumesComponent,  canActivate: [authGuard], data: { roles: ['oyente', 'artista'] } },
     ]
   }
 ];

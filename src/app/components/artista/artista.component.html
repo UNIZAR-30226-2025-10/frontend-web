@@ -73,11 +73,16 @@
             <div class="discografia">
                 <h2 style="font-size: 20px; margin-top: 20px; margin-left: 50px;"><strong>Discografía</strong></h2>
                 <div class="opciones">
-                    <button class="boton-filtro" (click)="cambiarFiltro('canciones')" [ngClass]="{ 'activo': filtroActivo === 'canciones' }">
-                        <h3>Canciones</h3>
-                    </button>
-                    <button class="boton-filtro" (click)="cambiarFiltro('discos')" [ngClass]="{ 'activo': filtroActivo === 'discos' }">
-                        <h3>Discos y EPs</h3>
+                    <div class="botones-izquierda">
+                        <button class="boton-filtro" (click)="cambiarFiltro('canciones')" [ngClass]="{ 'activo': filtroActivo === 'canciones' }">
+                            <h3>Canciones</h3>
+                        </button>
+                        <button class="boton-filtro" (click)="cambiarFiltro('discos')" [ngClass]="{ 'activo': filtroActivo === 'discos' }">
+                            <h3>Discos y EPs</h3>
+                        </button>
+                    </div>
+                    <button class="linkMostrarMas" (click)="filtroActivo === 'canciones' ? mostrarMasCanciones() : mostrarMasDiscos()">
+                        <h3>Mostrar todos</h3>
                     </button>
                 </div>
                 <div *ngIf="filtroActivo === 'canciones'">
