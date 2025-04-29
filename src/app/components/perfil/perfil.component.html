@@ -36,27 +36,27 @@
             </button>                       
         </div>
 
-        <div *ngIf="ultimoNoizzy.texto != ''">
+        <div *ngIf="ultimoNoizzy?.texto != ''">
             <div class="ultimoNoizzy">
-                <div class="noizzy-card" [routerLink]="['/home/noizzitos', ultimoNoizzy.id]">
+                <div class="noizzy-card" [routerLink]="['/home/noizzitos', ultimoNoizzy?.id]">
                     <div class="noizzy-header">
                     <img [src]="oyente.foto && oyente.foto !== 'DEFAULT' ? oyente.foto : 'nouser.png'" alt="Avatar" class="avatar" />
                     <span class="username" (click)="$event.stopPropagation()">{{ currentUser }}</span>
                     </div>
                     <div class="noizzy-content">
-                    <p>{{ ultimoNoizzy.texto }}</p>
+                    <p>{{ ultimoNoizzy?.texto }}</p>
                     <!-- Mostrar información de la canción si está asociada -->
-                    <div *ngIf="ultimoNoizzy.cancion" class="cancion-info">
-                        <img [src]="ultimoNoizzy.cancion.fotoPortada || 'default-image.png'" alt="{{ ultimoNoizzy.cancion.nombre }}" class="cancion-imagen" />
+                    <div *ngIf="ultimoNoizzy?.cancion" class="cancion-info">
+                        <img [src]="ultimoNoizzy?.cancion.fotoPortada || 'default-image.png'" alt="{{ ultimoNoizzy?.cancion.nombre }}" class="cancion-imagen" />
                         <div class="cancion-detalle">
-                        <p class="cancion-nombre">{{ ultimoNoizzy.cancion.nombre}}</p>
-                        <p class="cancion-artista">{{ ultimoNoizzy.cancion.nombreArtisticoArtista }}</p>
+                            <p class="cancion-nombre">{{ ultimoNoizzy?.cancion.nombre}}</p>
+                            <p class="cancion-artista">{{ ultimoNoizzy?.cancion.nombreArtisticoArtista }}</p>
                         </div>
                     </div>
                     </div>
                     <div class="noizzy-footer">
-                    <button class="btn-like"><i [ngClass]="ultimoNoizzy.like ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'"></i>  {{ ultimoNoizzy.num_likes }}</button>
-                    <button class="btn-comment" ><i class="far fa-comments"></i> {{ ultimoNoizzy.num_comentarios }}</button>
+                    <button class="btn-like"><i [ngClass]="ultimoNoizzy?.like ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'"></i>  {{ ultimoNoizzy?.num_likes }}</button>
+                    <button class="btn-comment" ><i class="far fa-comments"></i> {{ ultimoNoizzy?.num_comentarios }}</button>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
             <div class="container">       
                 <div *ngFor="let playlist of susPlaylistsPublicas; let i = index" class="card" [ngClass]="{ 'primer-elemento': i === 0 }">
                     <div class="dentro-card">
-                        <a [routerLink]="['/home/playlist', playlist.id]"> 
+                        <a [routerLink]="['/home/playlist', playlist?.id]"> 
                             <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" [alt]="playlist.nombre"> 
                             <strong>{{ playlist.nombre}}</strong>
                         </a>

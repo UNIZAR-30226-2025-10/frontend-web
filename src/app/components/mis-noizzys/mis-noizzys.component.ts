@@ -43,6 +43,8 @@ export class MisNoizzysComponent implements OnInit {
     this.socketService.listen('actualizar-noizzy-ws').subscribe((data) => {
       console.log('Nueva interaccion recibida:', data);
       if(data.mio){
+        data.num_comentarios=0;
+        data.num_likes=0;
         this.noizzys.unshift(data);
       }
     });

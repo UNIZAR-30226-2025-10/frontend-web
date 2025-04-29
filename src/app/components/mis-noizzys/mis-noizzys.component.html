@@ -14,7 +14,7 @@
     <div class="noizzy-card" [routerLink]="['/home/noizzitos', noizzy.id]">
       <div class="noizzy-header">
         <img [src]="noizzy.fotoPerfil && noizzy.fotoPerfil !== 'DEFAULT' ? noizzy.fotoPerfil : 'nouser.png'" alt="Avatar" class="avatar" />
-        <span class="username" (click)="$event.stopPropagation()">{{ noizzy.nombreUsuario }}</span>
+        <span class="username" (click)="$event.stopPropagation()">{{ noizzy.nombre }}</span>
         <button class="btn-erase" (click)="eraseNoizzy(noizzy.id); $event.stopPropagation()"><i class="far fa-trash-alt"></i></button>
       </div>
       <div class="noizzy-content">

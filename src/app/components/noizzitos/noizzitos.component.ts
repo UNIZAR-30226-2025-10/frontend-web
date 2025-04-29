@@ -43,16 +43,18 @@ export class NoizzitosComponent implements OnInit {
     ngOnInit(): void {
       this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
         this.user = this.tokenService.getUser();
-        this.noizzyID = params['id']; // Obtén el ID del Noizzy desde la ruta
+        this.noizzyID = params['id']; 
         this.isModalNoizzitoOpen = false;
         this.isModalCancionOpen = false;
-        this.cargarDatosNoizzy(); // Carga los datos del Noizzy
+        this.cargarDatosNoizzy(); 
       });
 
       
       this.socketService.listen('actualizar-noizzito-ws').subscribe((data) => {
         console.log('Nueva interaccion recibida:', data);
         if(this.noizzyID==data.noizzy){
+          data.num_comentarios=0;
+          data.num_likes=0;
           this.noizzitos.unshift(data);
         }
       });

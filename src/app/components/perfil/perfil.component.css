@@ -129,6 +129,47 @@
     align-items: center;
     margin-bottom: 10px;
   }
+
+  .cancion-imagen {
+    height: 100%; 
+    aspect-ratio: 1 / 1;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    object-fit: cover;
+  }
+
+  .cancion-info {
+    display: inline-flex; 
+    align-items: center;
+    gap: 10px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    height: 60px;
+    width: 400px;
+    border: 1.2px solid #D2D1D1;
+    box-sizing: border-box;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  
+
+  .cancion-nombre,.cancion-artista{
+    font-size: 14px;
+    color: var(--letra3);
+    margin: 0;
+    white-space: nowrap; 
+    overflow: hidden;    
+    text-overflow: ellipsis; 
+    flex: 1;
+  }
+
+  .cancion-nombre {
+    font-weight: bold;
+  }
   
   .avatar {
     width: 40px;
@@ -166,6 +207,15 @@
     border-radius: 20px; 
     cursor: pointer;
   }
+
+  .cancion-detalle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+
   
 
   .textos {

@@ -5,10 +5,15 @@
   </div>
   <div *ngFor="let noizzy of noizzys">
     <div class="noizzy-card" [routerLink]="['/home/noizzitos', noizzy.id]">
-      <div class="noizzy-header">
-        <img [src]="noizzy.fotoPerfil && noizzy.fotoPerfil !== 'DEFAULT' ? noizzy.fotoPerfil : 'nouser.png'" alt="Avatar" class="avatar" [routerLink]="['/home/perfil', noizzy.nombreUsuario]" />
-        <span class="username" [routerLink]="['/home/perfil', noizzy.nombreUsuario]">{{ noizzy.nombreUsuario }}</span>
+      <div class="noizzy-header" *ngIf="noizzy.tipo === 'artista'">
+        <img [src]="noizzy.fotoPerfil && noizzy.fotoPerfil !== 'DEFAULT' ? noizzy.fotoPerfil : 'nouser.png'" alt="Avatar" class="avatar" [routerLink]="['/home/artista', noizzy.nombreUsuario]" />
+        <span class="username" [routerLink]="['/home/artista', noizzy.nombreUsuario]">{{ noizzy.nombre }}</span>
       </div>
+      <div class="noizzy-header" *ngIf="noizzy.tipo === 'oyente'">
+        <img [src]="noizzy.fotoPerfil && noizzy.fotoPerfil !== 'DEFAULT' ? noizzy.fotoPerfil : 'nouser.png'" alt="Avatar" class="avatar" [routerLink]="['/home/perfil', noizzy.nombreUsuario]" />
+        <span class="username" [routerLink]="['/home/perfil', noizzy.nombreUsuario]">{{ noizzy.nombre }}</span>
+      </div>
+      
       <div class="noizzy-content">
         <p>{{ noizzy.texto }}</p>
         <!-- Mostrar información de la canción si está asociada -->
@@ -19,7 +24,7 @@
       </div>
       <div class="noizzy-footer">
         <button class="btn-like" (click)="darLike(noizzy.like, noizzy.id); $event.stopPropagation()"><i [ngClass]="noizzy.like ? 'fas fa-thumbs-up' : 'far fa-thumbs-up'"></i> {{ noizzy.num_likes }}</button>
-        <button class="btn-comment" (click)="abrirModalNoizzito(noizzy.id); $event.stopPropagation()"><i class="far fa-comment-dots"></i> {{ noizzy.num_comentarios }}</button>
+        <button class="btn-comment" (click)="abrirModalNoizzito(noizzy.id); $event.stopPropagation()"><i class="far fa-comments"></i> {{ noizzy.num_comentarios }}</button>
       </div>
     </div>
   </div>

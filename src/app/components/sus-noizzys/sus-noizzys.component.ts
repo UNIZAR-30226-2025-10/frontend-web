@@ -43,6 +43,8 @@ export class SusNoizzysComponent implements OnInit {
 
     this.socketService.listen('actualizar-noizzy-ws').subscribe((data: any) => {
       if(data.nombreUsuario==this.nombreUsuario){
+        data.num_comentarios=0;
+        data.num_likes=0;
         this.noizzys.unshift(data);
       }
     });
@@ -57,6 +59,7 @@ export class SusNoizzysComponent implements OnInit {
     this.authService.pedirSusNoizzys(nombreUsuario).subscribe({
       next: (response) => {
         this.noizzys = response.noizzys;
+        console.log('Noizzys cargados:', this.noizzys);
       },
       error: (err) => {
         console.error('Error al cargar los Noizzys:', err);
