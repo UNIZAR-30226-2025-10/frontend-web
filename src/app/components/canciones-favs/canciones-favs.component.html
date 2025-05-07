@@ -18,8 +18,8 @@
 
 <div class="bottom-div">
     <div *ngFor="let song of canciones; let i = index">
-        <div class="song" (mouseenter)="hoverIndex = i+1"  (mouseleave)="hoverIndex = null">
-            <p class="song-index" style="margin-right:12px; margin-top: 12px; opacity: 0.8; width: 10px;"><strong *ngIf="!hoverIndex || hoverIndex !== i+1">{{ i + 1 }}</strong><button style="border:none; background-color: transparent; margin: 0px; padding: 0px; color:#000e3b; opacity: 0.8; font-size: 11px;" *ngIf="hoverIndex === i+1" (click)="playSong(song.id)"><i class="fas fa-play"></i></button> </p>
+        <div class="song" >
+            <p class="song-index" style="margin-right:12px; margin-top: 12px; opacity: 0.8; width: 10px;"><strong *ngIf="!hoverIndex || hoverIndex !== i+1">{{ i + 1 }}</strong></p>
             <img [src]="song.fotoPortada ? song.fotoPortada : 'no_cancion.png'" alt="{{ song.nombre }}">
             <div class="song-title">
                 <strong>{{song.nombre}}</strong>

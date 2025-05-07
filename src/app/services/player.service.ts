@@ -49,10 +49,14 @@ export class PlayerService {
       this.trackIndividual = null;
       
       this.coleccionActual.index = listaColeccion.findIndex((id: any) => id === track);
+      console.log('indice antes:', track)
+      console.log('indice:', this.coleccionActual.index)
 
       this.authService.pedirOtraCancion(track)
       .subscribe({
         next: (response) => { 
+          console.log('response:', response)
+          console.log('track:', track)
           const currentTrack: Track = {
             nombre: response.nombre,
             nombreArtisticoArtista: response.nombreArtisticoArtista,
@@ -341,7 +345,9 @@ setTrackInCollection(idColeccion: string, idCancion: any, listaIds: any[]): void
     this.coleccionActual.ordenNatural = listaIds
   }
 
-  this.setTrack(idCancion, listaIds)
+  console.log('idCancion:', idCancion)  
+
+  this.setTrack(idCancion, this.coleccionActual.orden)
 }
 
 }

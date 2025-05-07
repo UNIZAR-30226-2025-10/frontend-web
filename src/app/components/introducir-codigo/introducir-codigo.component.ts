@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import {TokenService} from '../../services/token.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-introducir-codigo',
@@ -19,7 +20,7 @@ export class IntroducirCodigoComponent {
 
   isPasswordVisible: boolean = false;
 
-  constructor(private router: Router, private authService: AuthService, private route: ActivatedRoute, private tokenService: TokenService) {}
+  constructor(private router: Router, private authService: AuthService, private route: ActivatedRoute, private tokenService: TokenService,private notificationService: NotificationService) {}
 
   togglePassword(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
@@ -41,6 +42,14 @@ export class IntroducirCodigoComponent {
         if (error.status === 400) {
           this.errorMessage = 'Código incorrecto.';
         } 
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');

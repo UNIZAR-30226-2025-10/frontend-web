@@ -39,6 +39,8 @@
     flex-direction: column; /* Alineación en columna */
     justify-content: center; /* Centra los elementos verticalmente */
     height: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .seguidores {

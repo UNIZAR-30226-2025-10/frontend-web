@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router'; 
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-admin',
@@ -16,7 +17,7 @@ export class AdminComponent implements OnInit{
   solicitudes: any[] = [];
   credentials= { correo:'', valido:false}
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router) {}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private notificationService: NotificationService) {}
 
   ngOnInit() {
     this.obtenerSolicitudes();
@@ -29,6 +30,14 @@ export class AdminComponent implements OnInit{
       },
       error: (error) => {
         console.log('Error en la solicitud', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');
@@ -48,6 +57,14 @@ export class AdminComponent implements OnInit{
       },
       error: (error) => {
         console.log('Error al aceptar la solicitud', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');
@@ -64,6 +81,14 @@ export class AdminComponent implements OnInit{
       },
       error: (error) => {
         console.log('Error al aceptar la solicitud', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');
@@ -79,6 +104,14 @@ export class AdminComponent implements OnInit{
       },
       error: (error) => {
         console.error('Error al cerrar la sesión:', error);
+        // No esta logeado
+        if (error.status === 401) {
+          this.tokenService.clearStorage();
+          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000); 
+        }
       },
       complete: () => {
         console.log('Petición completada');

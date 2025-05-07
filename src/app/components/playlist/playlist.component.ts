@@ -13,6 +13,7 @@ import { Location } from '@angular/common';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { switchMap } from 'rxjs/operators';
 import { NotificationService } from '../../services/notification.service';
+import { FavoritosService } from '../../services/favoritos.service';
 
 
 @Component({
@@ -128,7 +129,7 @@ export class PlaylistComponent {
     }
 
 
-    constructor(private el: ElementRef, private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private route: ActivatedRoute,private location: Location,  private subirCloudinary: SubirCloudinary, private notificationService: NotificationService){}
+    constructor(private favoritosService: FavoritosService, private el: ElementRef, private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private route: ActivatedRoute,private location: Location,  private subirCloudinary: SubirCloudinary, private notificationService: NotificationService){}
 
     ngOnInit(): void {
       const playlistId = this.route.snapshot.paramMap.get('id'); 
@@ -254,6 +255,7 @@ export class PlaylistComponent {
   //Lógica de reproducción
   onTrackClick(track: any) {
     const idsCanciones = this.playlist.canciones.map((c: {id: any}) => c.id);
+    console.log('IDs cancion:', track.id);
     this.playerService.setTrackInCollection(String(this.currentPlaylistId), track.id, idsCanciones)
   }
 
@@ -298,6 +300,7 @@ export class PlaylistComponent {
           console.log('Canción eliminada de favoritos:', id);
           this.playlist.canciones = this.playlist.canciones.filter((c: { id: string; }) => c.id !== id);
         }
+        this.favoritosService.actualizarFavMarco(id);
       },
       error: (error) => {
         console.error("Error al guardar en favoritos:", error);

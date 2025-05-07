@@ -38,6 +38,12 @@ interface Cancion {
   featuring: any[];
 }
 
+interface Track {
+  id: string;
+  nombre: string;
+  nombreArtisticoArtista: string;
+  fotoPortada: string;
+}
 
 @Component({
   selector: 'app-artista',
@@ -328,7 +334,15 @@ toggleFav(id: any) {
     return `${minutos}:${segundosRestantes.toString().padStart(2, "0")}`;
   }
 
-  playSong(id: any) {}
+  playSong(song: any) {
+    const currentTrack: Track = {
+      nombre: song.nombre,
+      nombreArtisticoArtista: this.artista.nombreArtistico,
+      fotoPortada: song.fotoPortada,
+      id: song.id
+    };
+    this.playerService.setTrack(currentTrack);
+  }
 
   abrirDesplegable(index: number) {
     

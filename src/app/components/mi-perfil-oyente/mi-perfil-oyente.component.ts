@@ -313,9 +313,10 @@ export class MiPerfilOyenteComponent implements OnInit {
         this.cerrarModalContrasena();
       },
       error: (error) => {
+        this.mensajeError = error.error.error
         console.error("Error al cambiar la contraseña:", error);
         // No esta logeado
-        if (error.status === 401) {
+        if (this.mensajeError === 'Token inválido.') {
           this.tokenService.clearStorage();
           this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
           setTimeout(() => {
@@ -530,7 +531,7 @@ onFileSelectedPlaylist(event:any) {
         this.mensajeError = error.error.error
         console.error('Error al eliminar la cuenta:', error);
         // No esta logeado
-        if (error.status === 401) {
+        if (this.mensajeError === 'Token inválido.') {
           this.tokenService.clearStorage();
           this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
           setTimeout(() => {

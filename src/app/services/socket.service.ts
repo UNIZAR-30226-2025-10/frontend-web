@@ -8,14 +8,13 @@ import { TokenService } from './token.service';
 })
 export class SocketService {
   private socket!: Socket;
-  private SERVER_URL = 'https://api-noizz.onrender.com'; // Cambia por tu servidor
-
+  private SERVER_URL = 'http://localhost:5000'; 
   constructor(private tokenService: TokenService) {}
 
   connect() {
     const token = this.tokenService.getToken(); // Asegúrate de obtener el token JWT
 
-    this.socket = io('https://api-noizz.onrender.com', {
+    this.socket = io('http://localhost:5000', {
       extraHeaders: {
         Authorization: `Bearer ${token}`
       }
