@@ -8,11 +8,20 @@
         <div class="container">       
             <div *ngFor="let artist of recientes; let i = index" class="artist-card" [ngClass]="{ 'primer-elemento': i === 0 }">          
                 <ng-container *ngIf="artist.type === 'reciente'">
-                    <div class="dentro-card">
-                        <img [src]="artist.fotoPortada && artist.fotoPortada !== 'DEFAULT' ? artist.fotoPortada : 'no_cancion.png'" [alt]="artist.nombre" [ngClass]="{'coleccion-img': artist.type === 'reciente'}">
-                        <strong style="display: block; text-align: left;">{{ artist.nombre}}</strong>
-                        <p>{{ artist.autor }}</p>
-                    </div>
+                    <ng-container *ngIf="artist.tipo === 'playlist'">
+                        <div class="dentro-card" [routerLink]="['/home/playlist', artist.id]">
+                            <img [src]="artist.fotoPortada && artist.fotoPortada !== 'DEFAULT' ? artist.fotoPortada : 'no_cancion.png'" [alt]="artist.nombre" [ngClass]="{'coleccion-img': artist.type === 'reciente'}">
+                            <strong style="display: block; text-align: left;">{{ artist.nombre}}</strong>
+                            <p>{{ artist.autor }}</p>
+                        </div>
+                     </ng-container>
+                     <ng-container *ngIf="artist.tipo === 'album'">
+                        <div class="dentro-card" [routerLink]="['/home/album', artist.id]">
+                            <img [src]="artist.fotoPortada && artist.fotoPortada !== 'DEFAULT' ? artist.fotoPortada : 'no_cancion.png'" [alt]="artist.nombre" [ngClass]="{'coleccion-img': artist.type === 'reciente'}">
+                            <strong style="display: block; text-align: left;">{{ artist.nombre}}</strong>
+                            <p>{{ artist.autor }}</p>
+                        </div>
+                     </ng-container>
                 </ng-container>
 
                 <ng-container *ngIf="artist.type === 'artista'">

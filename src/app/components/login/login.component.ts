@@ -8,6 +8,7 @@ import { TokenService } from '../../services/token.service';
 import { PlayerService } from '../../services/player.service';
 import { ProgressService } from '../../services/progress.service';
 import { FavoritosService } from '../../services/favoritos.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,7 @@ export class LoginComponent {
 
   @Output() trackClicked = new EventEmitter<any>();
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private favoritosService: FavoritosService) {}
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private playerService: PlayerService, private progressService: ProgressService, private favoritosService: FavoritosService, private themeService : ThemeService) {}
 
 
   togglePassword(): void {
@@ -50,6 +51,8 @@ export class LoginComponent {
         if (response.usuario) {
           this.tokenService.setUser(response.usuario);
         }
+
+        this.themeService.setThemeFromUserPreference(response.usuario.claro);
 
         if (response.tipo === "pendiente") {
           this.router.navigate(['/pendiente']);

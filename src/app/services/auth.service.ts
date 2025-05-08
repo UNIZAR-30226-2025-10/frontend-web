@@ -194,6 +194,8 @@ export class AuthService {
 
   }
 
+
+
   pedirMisDatosOyente(): Observable<any> {
     const token = this.tokenService.getToken();
 
@@ -1737,5 +1739,23 @@ export class AuthService {
   
     const body = { id: id }
     return this.http.delete(`${this.apiUrl}/delete-noizzy`, { body, headers } );
+  }
+
+  cambiarTema(claro:boolean): Observable<any> {
+    const token = this.tokenService.getToken();
+  
+    if (!token) {
+      console.error('No se encontró el token');
+      return of({ error: 'No autorizado' });
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const body = { claro: claro};
+  
+    return this.http.patch(`${this.apiUrl}/change-claro`, body, { headers: headers });
   }
 }

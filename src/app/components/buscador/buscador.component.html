@@ -10,7 +10,7 @@
     <div class="right-icons">
       <div class="theme-toggle-wrapper">
         <div class="theme-toggle-container">
-          <button (click)="toggleTheme()" class="theme-toggle" [ngClass]="{'dark-mode': isDarkMode}" aria-label="Toggle theme">
+          <button (click)="toggleTheme(!isDarkMode)" class="theme-toggle" [ngClass]="{'dark-mode': isDarkMode}" aria-label="Toggle theme">
             <div class="toggle-track">
               <div class="toggle-thumb">
                 <span class="icon">{{ isDarkMode ? '🌙' : '☀️' }}</span>
