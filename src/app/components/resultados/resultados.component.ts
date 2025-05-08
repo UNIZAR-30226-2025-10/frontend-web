@@ -41,6 +41,7 @@ export class ResultadosComponent implements OnInit {
     this.resultadosService.resultados$
     .subscribe({
       next: (data) => {
+        console.log('Datos recibidos:', data);
         // Guardar los valores en las variables correspondientes
         this.artists = data.artistas ?? [];
         this.tracks = data.canciones ?? [];
@@ -96,6 +97,8 @@ export class ResultadosComponent implements OnInit {
 
   cambiarFiltro(filtro: string) {
     this.filtroActivo = filtro;
+    console.log('Filtro activo:', this.filtroActivo);
+
   }
 
   onScroll(event: Event): void {

@@ -32,6 +32,7 @@ export class MiPerfilArtistaComponent implements OnInit {
   isModalOpen = false;
   isModalContrasenaOpen = false;
   isModalEliminarOpen = false;
+  isModalPlaylistOpen = false;
 
   oyente: misDatos = { nombreUsuario: '', nombreArtistico: '', biografia: '', nSeguidores: 0, nSeguidos: 0 };
   misCanciones: any[] = [];
@@ -39,6 +40,10 @@ export class MiPerfilArtistaComponent implements OnInit {
   topArtistas: any[] = [];
   ultimasCanciones: any[] = [];
   misPlaylists: any[] = [];
+
+  fotoPortada!: string;
+  fileP!: File;
+  nombrePlaylist: string = '';
 
   mensajeError = '';
   credentials= {contrasenya:''};
@@ -133,6 +138,10 @@ export class MiPerfilArtistaComponent implements OnInit {
   abrirModalEliminar() {
     this.isPasswordIntroducida = false;
     this.isModalEliminarOpen = true;
+  }
+
+  abrirModalPlaylist() {
+    this.isModalPlaylistOpen = true;
   }
 
  
@@ -458,6 +467,121 @@ export class MiPerfilArtistaComponent implements OnInit {
 
   navigateToSubirAlbum() {
     this.router.navigate(['/home/subir-album']);
+  }
+
+  cerrarModalPlaylist() {
+    this.isModalPlaylistOpen = false;
+    this.fotoPortada = '';
+  }
+
+  guardarCambiosPlaylist() {
+    if (this.fileP) { 
+        this.subirCloudinary.uploadFile(this.fileP, 'playlist').pipe(
+            switchMap((url) => {
+                console.log('Imagen subida:', url);
+                this.fotoPortada = url;
+                return this.authService.crearPlaylist(this.fotoPortada, this.nombrePlaylist);
+            })
+        ).subscribe({
+            next: () => {
+                this.authService.pedirMisPlaylists()
+                .subscribe({
+                  next: (response) => {
+                    console.log("RES",response)
+                    this.misPlaylists = response.playlists;
+                  },
+                  error: (error) => {
+                    console.error("Error al obtener las playlists:", error);
+                    // No esta logeado
+                    if (error.status === 401) {
+                      this.tokenService.clearStorage();
+                      this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                      setTimeout(() => {
+                        this.router.navigate(['/login']);
+                      }, 3000); 
+                    }
+                  },
+                  complete: () => {
+                    console.log("Playlists recuperadas con éxito");
+                  }
+                });
+                const imagenHtml = this.fotoPortada && this.fotoPortada !== "DEFAULT"
+                ? `<img src="${this.fotoPortada}" width="30" style="border-radius:5px;" />`
+                : `<img src="no_cancion.png" width="30" style="border-radius:5px;" />`;
+
+                this.notificationService.showSuccess(`${imagenHtml} Playlist ${this.nombrePlaylist} creada.`);
+                this.cerrarModalPlaylist();
+                console.log("Playlist creada con éxito");
+            },
+            error: (error) => {
+                console.error("Error al crear la playlist", error);
+                // No esta logeado
+                if (error.status === 401) {
+                  this.tokenService.clearStorage();
+                  this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                  setTimeout(() => {
+                    this.router.navigate(['/login']);
+                  }, 3000); 
+                }
+            }
+        });
+    } else {
+        const foto = this.fotoPortada ? this.fotoPortada : "DEFAULT"; // Imagen predeterminada
+        this.authService.crearPlaylist(foto, this.nombrePlaylist)
+        .subscribe({
+            next: () => { 
+                this.authService.pedirMisPlaylists()
+                .subscribe({
+                  next: (response) => {
+                    this.misPlaylists = response.playlists;
+                  },
+                  error: (error) => {
+                    console.error("Error al obtener las playlists:", error);
+                    // No esta logeado
+                    if (error.status === 401) {
+                      this.tokenService.clearStorage();
+                      this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                      setTimeout(() => {
+                        this.router.navigate(['/login']);
+                      }, 3000); 
+                    }
+                  },
+                  complete: () => {
+                    console.log("Playlists recuperadas con éxito");
+                  }
+                });  
+                this.cerrarModalPlaylist();
+                const imagenHtml = this.fotoPortada && this.fotoPortada !== "DEFAULT"
+                ? `<img src="${this.fotoPortada}" width="30" style="border-radius:5px;" />`
+                : `<img src="no_cancion.png" width="30" style="border-radius:5px;" />`;
+
+                this.notificationService.showSuccess(`${imagenHtml} Playlist ${this.nombrePlaylist} creada.`);
+                console.log("Playlist creada con éxito");
+            },
+            error: (error) => {
+                console.error("Error al crear la playlist:", error);
+                // No esta logeado
+                if (error.status === 401) {
+                  this.tokenService.clearStorage();
+                  this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+                  setTimeout(() => {
+                    this.router.navigate(['/login']);
+                  }, 3000); 
+                }
+            }
+        });
+    }
+}
+
+  onFileSelectedPlaylist(event:any) {
+    this.fileP = event.target.files[0];
+    if (this.fileP) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+            this.fotoPortada = e.target.result; // Asigna la URL base64 de la imagen a la variable fotoPortada
+        };
+        reader.readAsDataURL(this.fileP);
+    }
   }
   
 

@@ -332,7 +332,7 @@ export class MiPerfilOyenteComponent implements OnInit {
   }
 
   guardarCambiosPlaylist() {
-    if (this.fileP) { // Verifica si hay un archivo seleccionado
+    if (this.fileP) { 
         this.subirCloudinary.uploadFile(this.fileP, 'playlist').pipe(
             switchMap((url) => {
                 console.log('Imagen subida:', url);

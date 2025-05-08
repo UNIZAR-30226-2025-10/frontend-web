@@ -34,6 +34,9 @@
             </div>
         </div>
     </div>
+    <div *ngIf="tracks.length  === 0 && filtroActivo === 'canciones'" class="sin-resultados">
+        <p>No hay resultados</p> 
+    </div>
 
     <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'artistas'">
         <div *ngIf="artists.length > 0">
@@ -49,6 +52,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div *ngIf="artists.length === 0 && filtroActivo === 'artistas'" class="sin-resultados">
+        <p>No hay resultados</p> 
     </div>
 
     <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'albumes'">
@@ -66,6 +72,9 @@
             </div>
         </div>
     </div>
+    <div *ngIf="albums.length === 0 && filtroActivo === 'albumes'" class="sin-resultados">
+        <p>No hay resultados</p>    
+    </div>
 
     <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'perfiles'">
         <div *ngIf="perfiles.length > 0">
@@ -82,21 +91,31 @@
             </div>
         </div>
     </div>
+    <div *ngIf="perfiles.length === 0 && filtroActivo === 'perfiles'" class="sin-resultados">
+        <p>No hay resultados</p>    
+    </div>
     
 
-    <div *ngIf="filtroActivo === 'todo' || filtroActivo === 'playlists'">
-        <div *ngIf="playlists.length > 0">
-            <h2><strong>Playlists</strong></h2>
-            <div class="artists-container">       
-                <div *ngFor="let playlist of playlists; let i = index" class="playlist-card" [ngClass]="{ 'primer-elemento': i === 0 }">  
-                    <div class="dentro-playlist-card"><a [routerLink]="['/home/playlist',playlist.id]"> 
-                    <img [src]="playlist.fotoPortada  && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" alt="{{ playlist.nombre }}">        
-                    <strong>{{ playlist.nombre }}</strong>
-                    <p>{{ playlist.nombreUsuarioCreador }}</p>
-                    </a>
-                </div>
+    <div *ngIf="(filtroActivo === 'todo' || filtroActivo === 'playlists') && playlists.length > 0">
+        <h2><strong>Playlists</strong></h2>
+        <div class="artists-container">       
+        <div *ngFor="let playlist of playlists; let i = index" class="playlist-card" [ngClass]="{ 'primer-elemento': i === 0 }">  
+            <div class="dentro-playlist-card">
+            <a [routerLink]="['/home/playlist',playlist.id]"> 
+                <img [src]="playlist.fotoPortada && playlist.fotoPortada !== 'DEFAULT' ? playlist.fotoPortada : 'no_cancion.png'" alt="{{ playlist.nombre }}">        
+                <strong>{{ playlist.nombre }}</strong>
+                <p>{{ playlist.nombreUsuarioCreador }}</p>
+            </a>
             </div>
         </div>
+        </div>
+    </div>
+    <div *ngIf="filtroActivo === 'playlists' && playlists.length === 0" class="sin-resultados">
+        <p>No hay resultados</p>
+    </div>
+    
+    <div *ngIf="playlists.length === 0 && albums.length === 0 && perfiles.length === 0 && tracks.length === 0 && artists.length === 0 && filtroActivo === 'todo'" class="sin-resultados">
+        <p>No hay resultados</p>
     </div>
 </div>
 

@@ -153,43 +153,7 @@
           </div>
       </div>     
     </div>
-      <div *ngIf="!playlist?.canciones?.length" class="empty-playlist-container">
-        <div class="empty-state-message">
-            <p>Busca canciones para añadir a tu lista</p>
-        </div>
-        
-        <div class="search-songs-container">
-            <div class="search-input-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input 
-                    type="text" 
-                    placeholder="Buscar canciones, artistas o álbumes" 
-                    [(ngModel)]="searchSongTerm" 
-                    (input)="searchSongsForPlaylist()"
-                    class="search-songs-input"
-                >
-            </div>
-            
-            <div class="search-results-container" *ngIf="searchResults?.length">
-                <div *ngFor="let cancion of searchResults" class="search-result-item" >
-                    <div class="song-image-wrapper">
-                        <img [src]="cancion.fotoPortada || 'no_cancion.png'" alt="{{ cancion.nombre }}">
-                    </div>
-                    <div class="song-details">
-                        <div style="font-weight: bold;">{{ cancion.nombre }}</div>
-                        <div class="artist-name">{{ cancion.nombreArtisticoArtista }}</div>
-                    </div>
-                    <div class="add-button" (click)="anadiraPlaylist(currentPlaylistId, cancion.id)">
-                        <i class="fas fa-plus" style="color:white;"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="no-results" *ngIf="searchSongTerm && !searchResults?.length">
-                <p style="margin-bottom: 0;">No se encontraron resultados para "{{ searchSongTerm }}"</p>
-            </div>
-        </div>
-    </div>
+
     <div class="playlist">
         <div *ngFor="let cancion of playlist?.canciones; let i = index" 
              class="song" 
@@ -265,6 +229,45 @@
           </div>
         </div>
       </div>
+
+      <div  class="empty-playlist-container" *ngIf="esMiPlaylist || soyColaborador">
+        <div class="empty-state-message">
+            <p>Busca canciones para añadir a tu lista</p>
+        </div>
+        
+        <div class="search-songs-container">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    placeholder="Buscar canciones, artistas o álbumes" 
+                    [(ngModel)]="searchSongTerm" 
+                    (input)="searchSongsForPlaylist()"
+                    class="search-songs-input"
+                >
+            </div>
+            
+            <div class="search-results-container" *ngIf="searchResults?.length">
+                <div *ngFor="let cancion of searchResults" class="search-result-item" >
+                    <div class="song-image-wrapper">
+                        <img [src]="cancion.fotoPortada || 'no_cancion.png'" alt="{{ cancion.nombre }}">
+                    </div>
+                    <div class="song-details">
+                        <div style="font-weight: bold;">{{ cancion.nombre }}</div>
+                        <div class="artist-name">{{ cancion.nombreArtisticoArtista }}</div>
+                    </div>
+                    <div class="add-button" (click)="anadiraPlaylist(currentPlaylistId, cancion.id)">
+                        <i class="fas fa-plus" style="color:white;"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="no-results" *ngIf="searchSongTerm && !searchResults?.length">
+                <p style="margin-bottom: 0;">No se encontraron resultados para "{{ searchSongTerm }}"</p>
+            </div>
+        </div>
+    </div>
+
       <div *ngIf="isModalPlaylistOpen" class="modal-overlay">
         <div class="modal-content">
             <div class="cabecera" style="display: flex;justify-content: space-between;">

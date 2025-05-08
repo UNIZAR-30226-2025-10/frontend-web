@@ -120,6 +120,7 @@ export class PerfilComponent implements OnInit{
     .subscribe({
       next: () => {   
         this.oyente.siguiendo = !this.oyente.siguiendo;
+        this.oyente.nSeguidores += this.oyente.siguiendo ? 1 : -1;
       },
       error: (error) => {
         console.error('Error al seguir o dejar de seguir', error);

@@ -273,6 +273,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
         this.audioElementRef.nativeElement.play();
         this.isPlaying = true;
         this.isFavorite = response.fav;
+        this.playerService.forzarPlay('musicplayer')
         console.log('Reproduciendo:', this.currentTrack.nombre);
       } else {
         console.error('No se pudo obtener el audio de la canción');

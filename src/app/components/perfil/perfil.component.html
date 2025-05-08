@@ -12,7 +12,12 @@
 
             <div class="column2">   
                 <div *ngIf="oyente.nombre">
-                    <h1>{{oyente.nombre}}</h1>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h1 style="margin: 0;">{{ oyente.nombre }}</h1>
+                        <button class="btn-noizz" style="margin-left: 20px;" (click)="toggleSeguir()">
+                          <h5 style="margin: 0;">{{ oyente.siguiendo ? 'Siguiendo' : 'Seguir' }}</h5>
+                        </button>
+                      </div>                      
                     <div class="seguidores">
                         <a>
                             <h4><strong> {{oyente.nSeguidores}} {{ oyente.nSeguidores === 1 ? ' Seguidor' : ' Seguidores' }}</strong></h4>
@@ -28,9 +33,6 @@
         </div>
 
         <div class="botones">
-            <button class="btn-noizz" (click)="toggleSeguir()">
-                <h5 style="margin: 0px;">{{ oyente.siguiendo ? 'Siguiendo' : 'Seguir' }} </h5>
-            </button> 
             <button class="btn-noizz" [routerLink]="['/home/noizzys', oyente.nombre]">
                 <h5 style="margin: 0px;">Ver Más Noizzys</h5>
             </button>                       

@@ -404,6 +404,7 @@ export class PlaylistComponent {
       next: (response) => {   
         console.log('Cancion añadida', response);
         this.notificationService.showSuccess(`Cancion añadidida a la playlist`);
+        this.getPlaylist(playlistId);
       },
       error: (error) => {
         if (error.status === 409) {

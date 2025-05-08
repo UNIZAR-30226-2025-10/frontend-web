@@ -22,7 +22,10 @@
         <!-- Mostrar información de la canción si está asociada -->
         <div *ngIf="noizzy.cancion" class="cancion-info" (click)="playSong(noizzy.cancion); $event.stopPropagation()">
           <img [src]="noizzy.cancion.fotoPortada || 'default-image.png'" alt="{{ noizzy.cancion.nombre }}" class="cancion-imagen" />
-          <p class="cancion-nombre">{{ noizzy.cancion.nombre}} - {{ noizzy.cancion.nombreArtisticoArtista }}</p>
+          <div class="cancion-detalle">
+            <p class="cancion-nombre">{{ noizzy.cancion.nombre}}</p>
+            <p class="cancion-artista">{{ noizzy.cancion.nombreArtisticoArtista }}</p>
+          </div>
         </div>
       </div>
       <div class="noizzy-footer">

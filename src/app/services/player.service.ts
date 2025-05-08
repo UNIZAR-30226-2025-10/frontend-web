@@ -268,6 +268,10 @@ togglePlay(emisor: string): void {
   }
 }
 
+forzarPlay(emisor: string): void {
+  this.isPlayingSubject.next({play:true, emisor: emisor});
+}
+
 toggleShuffle(emisor: string, isShuffle: boolean): void {
 
   //El modo pasa a ser aleatorio
