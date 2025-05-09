@@ -60,6 +60,8 @@ body {
     transition: background-color 0.3s ease;
     background: linear-gradient(to right, var(--repro) 0%, #8ca4ff 0%, var(--repro) 0%);
   }
+
+
   
   .progress-bar::-webkit-slider-thumb {
     -webkit-appearance: none;

@@ -360,13 +360,15 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
         this.secondsListened++;
       }
      
+      
       const progressPercent = (this.currentTime / this.duration) * 100;
       const progressBar = document.querySelector('.progress-bar') as HTMLElement;
-      if (progressBar) {
-        progressBar.style.background = `linear-gradient(to right, #8ca4ff ${progressPercent}%,var(--repro) ${progressPercent}%)`;
+      if (!this.duration || this.duration === 0) {
+        progressBar.style.background = `linear-gradient(to right, var(--repro) 0%, var(--repro) 100%)`;
+      } else {
+        const progressPercent = (this.currentTime / this.duration) * 100;
+        progressBar.style.background = `linear-gradient(to right, #8ca4ff 0%, #8ca4ff ${progressPercent}%, var(--repro) ${progressPercent}%, var(--repro) 100%)`;
       }
-
-
     });
   }
   }
