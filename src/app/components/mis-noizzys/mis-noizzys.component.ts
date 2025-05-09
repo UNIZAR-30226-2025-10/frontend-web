@@ -72,7 +72,11 @@ export class MisNoizzysComponent implements OnInit {
   darLike(like: any, idNoizzy: any): void {
     this.authService.likearNoizzy(!like, idNoizzy).subscribe({
       next: (response) => {
-        this.cargarMisNoizzys(); 
+        const noizzyPadre = this.noizzys.find(n => n.id === idNoizzy);
+        if (noizzyPadre) {
+          noizzyPadre.num_likes += like ? -1 : 1;
+          noizzyPadre.like = !like; 
+        } 
       },
       error: (err) => {
         console.error('Error al dar like:', err);
@@ -133,7 +137,6 @@ export class MisNoizzysComponent implements OnInit {
         this.textoPostNoizzy = '';
         this.idPostNoizzy = null;
         this.cancionSeleccionada = null; // Limpia la canción seleccionada
-        //this.cargarMisNoizzys();
         this.cerrarModalNoizzy();
       },
       error: (err) => {
@@ -163,6 +166,10 @@ export class MisNoizzysComponent implements OnInit {
         this.textoPostNoizzito = '';
         this.idPostNoizzito = null;
         this.cancionSeleccionadaNoizzito = null; // Limpia la canción seleccionada
+        const noizzyPadre = this.noizzys.find(n => n.id === this.noizzyContestado);
+        if (noizzyPadre) {
+          noizzyPadre.num_comentarios += 1;
+        } 
         this.cerrarModalNoizzito();
       },
       error: (err) => {
@@ -280,7 +287,7 @@ export class MisNoizzysComponent implements OnInit {
   eraseNoizzy(idNoizzy: string): void {
     this.authService.borrarNoizzy(idNoizzy).subscribe({
       next: (response) => {
-        this.cargarMisNoizzys(); 
+        this.noizzys = this.noizzys.filter((n: { id: string; }) => n.id !== idNoizzy); 
         this.notificationService.showSuccess('Noizzy eliminado');
       },
       error: (err) => {

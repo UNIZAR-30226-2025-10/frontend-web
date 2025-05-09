@@ -56,6 +56,13 @@ export class NoizzitosComponent implements OnInit {
           data.num_comentarios=0;
           data.num_likes=0;
           this.noizzitos.unshift(data);
+          this.noizzy.num_comentarios += 1;
+        }
+        else{
+          const noizzyPadre = this.noizzitos.find((n: { id: any; }) => n.id === data.noizzy);
+          if (noizzyPadre) {
+            noizzyPadre.num_comentarios += 1;
+          }
         }
       });
     }
@@ -89,7 +96,16 @@ export class NoizzitosComponent implements OnInit {
     darLike(like: any, idNoizzy: any): void {
         this.authService.likearNoizzy(!like, idNoizzy).subscribe({
           next: (response) => {
-            this.cargarDatosNoizzy(); 
+            if (idNoizzy == this.noizzyID){
+              this.noizzy.num_likes += like ? -1 : 1;
+              this.noizzy.like = !like; 
+            } else{
+              const noizzyPadre = this.noizzitos.find((n: { id: any; }) => n.id === idNoizzy);
+              if (noizzyPadre) {
+                noizzyPadre.num_likes += like ? -1 : 1;
+                noizzyPadre.like = !like; 
+              }
+            }
           },
           error: (err) => {
             console.error('Error al dar like:', err);
@@ -143,7 +159,6 @@ export class NoizzitosComponent implements OnInit {
             this.textoPostNoizzito = '';
             this.idPostNoizzito = null;
             this.cancionSeleccionadaNoizzito = null; // Limpia la canción seleccionada
-            this.cargarDatosNoizzy();
             this.cerrarModalNoizzito();
           },
           error: (err) => {
@@ -272,7 +287,7 @@ export class NoizzitosComponent implements OnInit {
           if(volver){
             this.location.back();
           }else{
-            this.cargarDatosNoizzy(); 
+            this.noizzitos = this.noizzitos.filter((n: { id: string; }) => n.id !== idNoizzy); 
           }
         },
         error: (err) => {

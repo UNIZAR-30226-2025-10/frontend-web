@@ -8,7 +8,7 @@
  
       <!-- Lista de Noizzys -->
   <div *ngIf="noizzys.length === 0">
-    <p>No hay Noizzys</p>
+    <p class="no-noizzys-container">No hay Noizzys</p>
   </div>
   <div *ngFor="let noizzy of noizzys">
     <div class="noizzy-card" [routerLink]="['/home/noizzitos', noizzy.id]">

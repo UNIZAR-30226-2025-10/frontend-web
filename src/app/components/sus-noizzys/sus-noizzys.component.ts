@@ -78,7 +78,11 @@ export class SusNoizzysComponent implements OnInit {
   darLike(like: boolean, idNoizzy: string): void {
     this.authService.likearNoizzy(!like, idNoizzy).subscribe({
       next: (response) => {
-        this.cargarSusNoizzys(this.nombreUsuario); 
+        const noizzyPadre = this.noizzys.find(n => n.id === idNoizzy);
+        if (noizzyPadre) {
+          noizzyPadre.num_likes += like ? -1 : 1;
+          noizzyPadre.like = !like; 
+        } 
       },
       error: (err) => {
         console.error('Error al dar like:', err);
@@ -129,7 +133,10 @@ export class SusNoizzysComponent implements OnInit {
         this.textoPostNoizzito = '';
         this.idPostNoizzito = null;
         this.cancionSeleccionada = null; // Limpia la canción seleccionada
-        this.cargarSusNoizzys(this.nombreUsuario);
+        const noizzyPadre = this.noizzys.find(n => n.id === this.noizzyContestado);
+        if (noizzyPadre) {
+          noizzyPadre.num_comentarios += 1;
+        } 
         this.cerrarModalNoizzito();
       },
       error: (err) => {
