@@ -40,7 +40,7 @@
         <div class="repros">{{ cancion.reproducciones }} {{ cancion.reproducciones === 1 ? ' reproducción' : ' reproducciones' }}</div>
         <div class="controls">
           <span>{{ cancion.duracion | duration }}</span>
-          <button class="favorite-btn" style="display:flex; align-items: center;" (click)="toggleFav(cancion.id)" [ngClass]="{'disabled-btn': !currentTrack}">
+          <button class="favorite-btn" style="display:flex; align-items: center;" (click)="toggleFav(cancion.id);$event.stopPropagation()" [ngClass]="{'disabled-btn': !currentTrack}">
               <i [ngClass]="cancion.fav ? 'fas fa-heart' : 'far fa-heart'"></i>
             </button>
             <div class="circle-plus" (click)="toggleDropdown(cancion.id); $event.stopPropagation()">
