@@ -23,6 +23,8 @@ export class NotificacionesComponent {
   interacciones: any[] = [];
   nuevaMusica: any[] = [];
 
+  mensajeError = '';
+
 
   hayInvitaciones = false;
   hayInteracciones = false;
@@ -186,7 +188,7 @@ export class NotificacionesComponent {
   }
 
   verNovedades(novedad:any): void {
-    this.irAlbum(novedad.id);
+    this.irAlbum(novedad.album);
     this.quitarNovedades(novedad);
   }
 
@@ -205,15 +207,16 @@ export class NotificacionesComponent {
           this.nuevaMusica = this.nuevaMusica.filter(novedad => novedad.id !== id);
         },
         error: (error) => {
+          this.mensajeError = error.error.error
           console.error("Error al quitar las novedades", error);
           // No esta logeado
-        if (error.status === 401) {
-          this.tokenService.clearStorage();
-          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 3000); 
-        }
+          if (this.mensajeError === 'Token inválido.') {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Novedades eliminadas con éxito");
@@ -229,14 +232,16 @@ export class NotificacionesComponent {
         },
         error: (error) => {
           console.error("Error al quitar las novedades", error);
+          this.mensajeError = error.error.error
+          console.error("Error al quitar las novedades", error);
           // No esta logeado
-        if (error.status === 401) {
-          this.tokenService.clearStorage();
-          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 3000); 
-        }
+          if (this.mensajeError === 'Token inválido.') {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
         },
         complete: () => {
           console.log("Novedades eliminadas con éxito");

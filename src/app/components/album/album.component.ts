@@ -70,6 +70,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
   nombre: string = '';
   fotoNueva!: string;
   file:  File | null = null;router: any;
+  mensajeError: string = '';
 ;
 
   album: Album = { nombre: '', fotoPortada: '', nombreArtisticoArtista: '', fechaPublicacion: '', duracion: 0, reproducciones: 0, favs: 0, canciones: []};
@@ -167,14 +168,15 @@ export class AlbumComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error al autenticar:', error);
-        // No esta logeado
-        if (error.status === 401) {
-          this.tokenService.clearStorage();
-          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 3000); 
-        }
+        this.mensajeError = error.error.error
+          // No esta logeado
+          if (this.mensajeError === 'Token inválido.') {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
       },
       complete: () => {
         console.log('Petición completada');
