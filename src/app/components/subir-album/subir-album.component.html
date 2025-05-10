@@ -62,7 +62,26 @@
     </div>
     <button *ngIf="archivoSeleccionado" class="eliminar-archivo" (click)="eliminarArchivo()">Eliminar archivo</button>
     </div>
-    <button type="submit" (click)="agregarCancion(tituloCancion.value, artistasFt.value)">Añadir canción</button>
+    <button type="submit" (click)="agregarCancion(tituloCancion.value, artistasFt.value)">Crear álbum</button>
+
+
+        <!-- Popup para continuar o terminar -->
+    <div *ngIf="isPopupContinuarOpen" class="modal-overlay">
+      <div class="modal-content-popup">
+        <div class="cabecera-popup">
+          <button (click)="cerrarPopupContinuar()" class="btn-cerrar-popup"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="contenido-popup">
+          <p style="font-size: 20px; color: var(--letra); font-weight: bold; text-align: center;">
+            ¿Quieres seguir añadiendo canciones?
+          </p>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 0px;">
+          <button (click)="terminarYRedirigir()" class="btn-guardar-terminar">Terminar</button>
+          <button (click)="cerrarPopupContinuar()" class="btn-guardar-continuar">Continuar</button>
+        </div>
+      </div>
+    </div>
 
   
     <!-- Popup para crear un álbum -->

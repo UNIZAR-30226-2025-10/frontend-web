@@ -25,6 +25,13 @@ input{
       color: var(--letra);
     }
   
+    .btn-guardar.terminar {
+      background-color: #ff4d4d;
+    }
+
+    .btn-guardar.terminar:hover {
+      background-color: #d32f2f;
+    }
      
     .album-selection {
       margin-top: 20px;
@@ -475,4 +482,78 @@ input{
   .btn-guardar:hover {
     background-color: #0056b3;
   }
-  
+
+.modal-content-popup {
+  margin-top: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  width: 350px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 90%; 
+  padding-bottom: 20px;
+}
+ 
+.cabecera-popup {
+  position: relative;
+  background: none; 
+  border: none; 
+  cursor: pointer; 
+  color: var(--letra); 
+}
+
+.cabecera-popup:hover {
+  color: red; 
+}
+
+.btn-cerrar-popup {
+  position: relative; 
+  left: 85%;
+  background: none; 
+  border: none; 
+  cursor: pointer; 
+  color: var(--letra); 
+}
+
+.btn-cerrar-popup:hover {
+  color: red; 
+  background: none !important;
+}
+
+.contenido-popup {
+  margin-top: 0px;
+  text-align: center; 
+}
+
+.btn-guardar-continuar {
+  color: var(--letra); 
+  margin-top: 23px; 
+  display: block; 
+  background-color: #8CA4FF; 
+  color: black; 
+  border: none; 
+  border-radius: 20px; 
+  cursor: pointer; 
+  margin-right: 50px;
+}
+
+.btn-guardar-terminar {
+  color: var(--letra); 
+  margin-top: 23px; 
+  display: block; 
+  background-color: #ff4d4d; 
+  color: black; 
+  border: none; 
+  border-radius: 20px; 
+  cursor: pointer; 
+  margin-left: 50px;
+}
+
+.btn-guardar-continuar:hover {
+  background-color: #b8c7fd; 
+}
+
+.btn-guardar-terminar:hover {
+  background-color: #fa7676; 
+}
+
+

@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SubirCloudinary } from '../../services/subir-cloudinary.service';
 import { switchMap, map } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { NotificationService } from '../../services/notification.service';
 
 
@@ -35,9 +36,9 @@ export class SubirAlbumComponent implements OnInit {
   @ViewChild('tituloCancion') tituloCancionInput!: ElementRef<HTMLInputElement>;
   @ViewChild('artistasFt') artistasFtInput!: ElementRef<HTMLInputElement>;
   tokenService: any;
-  router: any;
+  isPopupContinuarOpen: boolean = false; // Controla la visibilidad del popup de continuar
 
-  constructor(private authService: AuthService,  private subirCloudinary: SubirCloudinary, private notificationService: NotificationService) {}
+  constructor(private authService: AuthService,  private subirCloudinary: SubirCloudinary, private router: Router, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.cargarAlbumes(); 
@@ -66,6 +67,19 @@ export class SubirAlbumComponent implements OnInit {
       }
     });
   }
+
+  abrirPopupContinuar(): void {
+    this.isPopupContinuarOpen = true;
+  }
+
+  cerrarPopupContinuar(): void {
+    this.isPopupContinuarOpen = false;
+  }
+
+  terminarYRedirigir(): void {
+    this.isPopupContinuarOpen = false;
+    this.router.navigate(['/home/miPerfilArtista']);
+  } 
 
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen; // Alterna el estado del menú desplegable
@@ -374,6 +388,7 @@ export class SubirAlbumComponent implements OnInit {
         this.tituloCancionInput.nativeElement.value = '';
         if (this.artistasFtInput.nativeElement.value) { this.artistasFtInput.nativeElement.value = ''; }
         console.log("Datos de canción guardados con éxito");
+        this.abrirPopupContinuar();
       },
       error: (error) => {
         console.error("Error al guardar los nuevos datos de álbum/canción:", error);
@@ -387,5 +402,6 @@ export class SubirAlbumComponent implements OnInit {
         }
       }
     });
+
   }  
 }
