@@ -34,7 +34,6 @@
     padding: 0;
     margin: 10px 0;
     display: block;
-    flex-basis: calc(16.66% - 10px); /* 6 imágenes por fila */
 }
 
 .filters {
