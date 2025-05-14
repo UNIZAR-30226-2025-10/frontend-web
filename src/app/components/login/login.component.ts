@@ -53,6 +53,8 @@ export class LoginComponent {
         }
 
         this.themeService.setThemeFromUserPreference(response.usuario.claro);
+        console.log("Tema de la base:", response.usuario.claro ? 'claro' : 'oscuro');
+        console.log("respuesta:", response);
 
         if (response.tipo === "pendiente") {
           this.router.navigate(['/pendiente']);

@@ -20,6 +20,7 @@ export class ThemeService {
   toggleTheme(claro:boolean): void {
     const isDark = document.body.classList.toggle('dark-theme');
     localStorage.setItem(this.THEME_KEY, isDark ? 'dark-theme' : '');
+    console.log("Tema cambiado a:", claro ? 'claro' : 'oscuro');
     this.authService.cambiarTema(claro)
       .subscribe({
         next: (response) => {

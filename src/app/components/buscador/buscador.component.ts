@@ -202,7 +202,7 @@ export class BuscadorComponent implements OnInit, OnDestroy{
 
 
   toggleTheme(claro: boolean) {
-    this.themeService.toggleTheme(claro);
+    this.themeService.toggleTheme(!claro);
   }
 
   get isDarkMode() {
