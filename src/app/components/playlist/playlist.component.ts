@@ -405,7 +405,7 @@ export class PlaylistComponent {
     .subscribe({
       next: (response) => {   
         console.log('Cancion añadida', response);
-        this.notificationService.showSuccess(`Cancion añadidida a la playlist`);
+        this.notificationService.showSuccess(`Cancion añadida con éxito a la playlist`);
         this.getPlaylist(playlistId);
       },
       error: (error) => {

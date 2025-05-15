@@ -325,7 +325,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
     .subscribe({
       next: (response) => {   
         console.log('Cancion añadida', response);
-        this.notificationService.showSuccess(`Cancion añadidida a la playlist`);
+        this.notificationService.showSuccess(`Cancion añadida con éxito a la playlist`);
       },
       error: (error) => {
         console.error("Error al obtener añadir la cancion a la playlist:", error);
