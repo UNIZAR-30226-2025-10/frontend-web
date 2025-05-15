@@ -48,6 +48,9 @@ input{
   background-color: var(--campos);
 }
 
+.toggle-seleccion{
+  color:var(--letra);
+}
 .campo {
   /*margin-bottom: 0px;*/
   /*position: relative;*/

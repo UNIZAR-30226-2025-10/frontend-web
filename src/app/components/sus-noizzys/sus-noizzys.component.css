@@ -189,6 +189,10 @@ input{
   color: #333;
 }
 
+.toggle-seleccion{
+  color:var(--letra);
+}
+
 .btn-cerrar {
   background: none;
   border: none;

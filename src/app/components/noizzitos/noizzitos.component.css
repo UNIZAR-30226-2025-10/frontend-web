@@ -168,6 +168,10 @@ textarea {
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
+.toggle-seleccion{
+  color:var(--letra);
+}
+
 .campo-buscador {
   display: flex;
   align-items: center;
