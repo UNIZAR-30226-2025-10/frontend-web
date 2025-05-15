@@ -383,13 +383,15 @@ export class PlaylistComponent {
       error: (error) => {
         console.error("Error al obtener los datos de la playlist:", error);
         // No esta logeado
-        if (error.status === 401) {
-          this.tokenService.clearStorage();
-          this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 3000); 
-        }
+        this.mensajeError = error.error.error
+          // No esta logeado
+          if (this.mensajeError === 'Token inválido.') {
+            this.tokenService.clearStorage();
+            this.notificationService.showSuccess('Sesión iniciada en otro dispositivo');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000); 
+          }
       },
       complete: () => {
         console.log("Playlist recuperada con éxito");
