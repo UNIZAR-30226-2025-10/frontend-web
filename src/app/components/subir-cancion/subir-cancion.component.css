@@ -207,6 +207,7 @@ select {
   border: none;
   border-radius: 4px;
   background-color: var(--campos);
+  color: var(--letra3);
 }
 
 .file-upload {
